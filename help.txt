@@ -1,4 +1,3 @@
-Haha yes
 To call WAV parsing:
 ./WAVparse Audios/audio_name.wav samples_left=0 samples_right=2000 freq_left=100 freq_right=200
 
