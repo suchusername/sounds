@@ -4,3 +4,4 @@ To call WAV parsing:
 
 samples_left, samples_right - left and right bounds of samples to show on a samples graph
 freq_left, freq_right - left and right bounds of frequencies to show on spectrum
+this is Alim
