@@ -1,0 +1,2 @@
+1. Manually set input file format (WAV, MP3, ...) or detect the format automatically? (second option seems more likely)
+2. fft.py fails to write to a file.

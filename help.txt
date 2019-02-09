@@ -1,0 +1,5 @@
+To call WAV parsing:
+./WAVparse Audios/audio_name.wav samples_left=0 samples_right=2000 freq_left=100 freq_right=200
+
+samples_left, samples_right - left and right bounds of samples to show on a samples graph
+freq_left, freq_right - left and right bounds of frequencies to show on spectrum
