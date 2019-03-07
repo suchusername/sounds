@@ -22,6 +22,11 @@
 
 \usepackage{tabularx}
 \usepackage{makecell}
+\usepackage{multirow}
+
+\newcolumntype{q}{>{\hsize=.4\hsize}X}
+\newcolumntype{w}{>{\hsize=1.35\hsize}X}
+\newcolumntype{e}{>{\hsize=.25\hsize}X}
 
 \usepackage{titling}
 \renewcommand\maketitlehooka{\null\mbox{}\vfill}
@@ -85,19 +90,94 @@
 
 \newpage
 
-\tableofcontents
+\renewcommand\contentsname{\huge Содержание}
+\setcounter{tocdepth}{2}
+\Large \tableofcontents
+\normalsize
 
 \newpage 
 
-\section{Описание задачи}
+\section[Описание задачи]{\huge Описание задачи}
 
 \subsection{Аннотация}
+
+\qquad Целью проекта является, в первую очередь, повышение командных навыков вышеперечисленных студентов второго курса ФУПМа (далее — мы). Нам в голову пришла мысль написать веб-приложение, способное распознавать различные музыкальные инструменты на загруженной пользователем аудиозаписи. Как выяснилось, данная задача является открытой проблемой в машинном обучении. Многие ведущие учёные приложили руку к её решению, тем не менее точных результатов до сих пор получено не было. Мы решили попробовать, если не решить эту проблему, то хотя бы помочь мировому сообществу в увеличении размера датасета для дальнейшего обучения. \\
+
+Пользователю предлагается возможность записать свой инструмент на диктофон или же загрузить готовый файл на сервер. После этого нейронная сеть пытается предсказать, что за инструмент звучит на аудиозаписи. Пользователь отправит сообщение о том, угадала ли сеть, а аудиозапись может быть использована далее для дальнешего обучения нашей или каких-либо других моделей. \\
+
+Здесь будет заключительный абзац.
+
 \subsection{Техническое задание}
+
+\begin{table}[H]
+\begin{tabularx}{\textwidth}{qwe}
+\hline
+\multicolumn{1}{|c|}{Член команды} & \multicolumn{1}{c|}{Задача} & \multicolumn{1}{c|}{Срок} \\ \hline
+ &  &  \\ \hline
+\multicolumn{1}{|c|}{\multirow{3}{*}{Бухараев Алим}} & \multicolumn{1}{c|}{Изучение сверточных и рекуррентных нейронных сетей} & \multicolumn{1}{c|}{} \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Составление модели-классификатора} & \multicolumn{1}{c|}{} \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{} \\ \hline
+ &  &  \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{Прохоров Юрий}} & \multicolumn{1}{c|}{Реализация анализатора файла формата .WAV} & \multicolumn{1}{c|}{20.02.19} \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{\makecell{Спектральный анализ аудиозаписей с помощью дискретного \\ преобразования Фурье}} & \multicolumn{1}{c|}{} \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{} \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{} \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{} \\ \hline
+ &  &  \\ \hline
+\multicolumn{1}{|c|}{\multirow{3}{*}{Савелов Михаил}} & \multicolumn{1}{c|}{\makecell{Поиск большого числа мелодий, пригодных для использования \\ в качестве обучающей выборки}} & \multicolumn{1}{c|}{} \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{} \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{} \\ \hline
+ &  &  \\ \hline
+\multicolumn{1}{|c|}{\multirow{5}{*}{Яушев Фарух}} & \multicolumn{1}{c|}{Изучение языков HTML5, JavaScript и CSS} & \multicolumn{1}{c|}{} \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Моделирование пользовательского интерфейса} & \multicolumn{1}{c|}{} \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{} \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{} \\ \cline{2-3} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{} \\ \hline
+\end{tabularx}
+\end{table}
+
+\underline{Клиентская часть:}
+\begin{enumerate}
+\item Придумать функционал и скелет веб-страницы. \\
+\qquad --- библиотека jquery
+\item Реализовать этот скелет. \\
+\qquad --- заготовки CSS структур есть на сайте codepen.io
+\item Связать внешний микрофон с кнопкой (возможно преобразовать в .WAV) \\
+\qquad --- либо сразу загружать .WAV файл
+\item Интерактивная графика (библиотека SVG, ...)
+\end{enumerate}
+\vskip 0.7cm
+\noindent \underline{Серверная часть:}
+\begin{enumerate}
+\item Распарсить .WAV файл  \\
+\qquad --- возможно научиться парсить MP3
+\item Преобразовать к нужному виду \\
+\qquad --- FFT \\
+\qquad --- выделить пики \\
+\qquad --- ... \\
+\qquad --- спектрограмма (для визуализации)
+\item Понять, какой формат ввода будет у нейронной сети. 
+\item Написать нейронную сеть \\
+\qquad --- библиотека TensorFlow 
+\item Попробовать решить задачу другими методами. \\
+\qquad --- случайный лес \\
+\qquad --- ...
+\item Собрать данные \\
+\qquad --- найти чистые записи музыкальных инструментов \\
+\qquad --- нарезать эти видео
+\end{enumerate}
+\vskip 0.7cm
+\noindent \underline{Промежуточная часть:}
+\begin{enumerate}
+\item Разобраться в клиент-серверном приложении: \\
+\qquad --- Remote Procedure Call
+\item ...
+\end{enumerate}
 \subsection{Используемые средства}
 
 \newpage
 
-\section{Методика}
+\section[Методика]{\huge Методика}
 \subsection{Обработка цифровых сигналов}
 \subsection{Подготовка обучаемой выборки}
 \subsection{Модель распознавания}
@@ -106,13 +186,13 @@
 
 \newpage
 
-\section{Документация}
+\section[Документация]{\huge Документация}
 \subsection{Описание файлов}
 \subsection{Конкретные файлы}
 
 \newpage
 
-\section{Ссылки}
+\section[Ссылки]{\huge Ссылки}
 
 \end{document}
 
