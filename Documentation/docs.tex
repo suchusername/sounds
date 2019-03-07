@@ -23,6 +23,10 @@
 \usepackage{tabularx}
 \usepackage{makecell}
 
+\usepackage{titling}
+\renewcommand\maketitlehooka{\null\mbox{}\vfill}
+\renewcommand\maketitlehookd{\vfill\null}
+
 %\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
 %\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 
@@ -37,14 +41,61 @@
 
 \usepackage{fancyhdr}
 \pagestyle{fancy}
+\thispagestyle{empty}
 \fancyhead{}
 \fancyfoot{}
 \fancyfoot[R]{ \thepage\ }
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{1pt}
 
-\begin{document}	
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=false, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+    %linkcolor=blue,  %choose some color if you want links to stand out
+}
 
+\begin{document}
+
+\text{}
+\vskip 8cm
+\begin{center}
+\begin{minipage}{0.8\textwidth}
+\begin{center}
+\Huge Веб-приложение для распознавания музыкальных инструментов
+\end{center}
+\end{minipage}
+\end{center}
+
+\vskip 7cm
+
+\begin{flushright}
+\Large \underline{Авторы}: \\
+Бухараев Алим \\
+Прохоров Юрий \\
+Савелов Михаил \\
+Яушев Фарух
+\end{flushright}
+
+\vskip 3.6cm
+
+\begin{center}
+2019
+\end{center}
+
+\newpage
+
+\tableofcontents
+
+\newpage 
+
+\section{\huge Описание задачи}
+
+\subsection{Техническое задание}
+
+\newpage
+
+\section{\huge }
 
 \end{document}
 
