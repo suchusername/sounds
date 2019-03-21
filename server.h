@@ -56,6 +56,7 @@ public:
 	int BlockAlign; // == NumChannels * BitsPerSample/8
 	int BitDepth; // a.k.a. # bits per sample
 	
+	WAV_File(); // default constructor for prototype object for Object Factory
 	~WAV_File(); // from "WAVparse.cc"
 	int getObjId() const; // returns a code that it is a WAV file
 	int init(bytevector); // parsing "WAVparse.cc"
