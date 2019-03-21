@@ -1,6 +1,9 @@
+#pragma once
 #include <string>
 
 #define CONFIG_H
+
+const std::string FILE_SAVE_DIRECTORY = "Audios/Archive"; // path from root of directory
 
 const std::string DEFAULT_FILE_NAME = "Audios/tone1sec.wav";
 const int SAMPLES_PER_LINE = 16;
