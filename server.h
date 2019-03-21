@@ -16,15 +16,15 @@ public:
 	~bytevector();
 	// receiving bytes in chunks? depends on buffer size
 	
-	int write_to_file(string const &);
+	int write_to_file(string const &) const;
 	int read_from_file(string const &);
-	void print();
+	void print() const;
 };
 
 class SObject { // Serializable Object
 public:
 	virtual int getObjId() const = 0; // identificator of a class
-	virtual int init(bytevector) = 0; // initialize a copied prototype object with bytevector values
+	virtual int init(bytevector const &) = 0; // initialize a copied prototype object with bytevector values
 	virtual bytevector serialize() const = 0; // convert class object to bytevector
 	virtual SObject * clone() const = 0; // copy a prototype
 };
@@ -35,14 +35,14 @@ public:
 	int size; // file size in bytes
 	int fd; // file descriptor so we can close the file later
 	
-	int *data; // pointer to mmap object with data points (or should it be just an array?)
+	int *data; // pointer to mmap object with the whole file (or should it point to a heap array?)
 	int NumSamples; // number of points in data
 	int SampleRate; // number of points per second
 
 	AudioFile(string file_id, int size, int fd, int *data, int NumSamples, int SampleRate); // look at geometry.cc on March 1st
-	virtual ~AudioFile();
+	//virtual ~AudioFile();
 	virtual int getObjId() const = 0; 
-	virtual int init(bytevector) = 0;
+	virtual int init(bytevector const &) = 0;
 	virtual bytevector serialize() const = 0;
 	virtual AudioFile * clone() const = 0;
 };
@@ -59,9 +59,11 @@ public:
 	WAV_File(); // default constructor for prototype object for Object Factory
 	~WAV_File(); // from "WAVparse.cc"
 	int getObjId() const; // returns a code that it is a WAV file
-	int init(bytevector); // parsing "WAVparse.cc"
+	int init(bytevector const &); // parsing "WAVparse.cc"
 	bytevector serialize() const; // compressing to a file of WAV format
 	WAV_File * clone() const; // for Object Factory
+	
+	void print() const;
 };
 
 class Query : public SObject {
@@ -69,7 +71,7 @@ private:
 	string file_id; // 8 first bytes of a Query bytevector
 public:
 	virtual int getObjId() const = 0;
-	virtual int init(bytevector) = 0;
+	virtual int init(bytevector const &) = 0;
 	virtual bytevector serialize() const = 0;
 	virtual Query * clone() const = 0;
 };
@@ -77,7 +79,7 @@ public:
 class Crop : public Query {
 public:
 	int getObjId() const; // id of crop function
-	int init(bytevector); // for Object Factory
+	int init(bytevector const &); // for Object Factory
 	bytevector serialize() const; // convert to bytevector
 	Query * clone() const; // for Object Factory
 	// add more specifications

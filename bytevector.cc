@@ -38,7 +38,7 @@ bytevector::~bytevector() {
 	}
 }
 
-int bytevector::write_to_file(string const &name) {
+int bytevector::write_to_file(string const &name) const {
 	/* 
 	name - name of a file created
 	
@@ -55,12 +55,12 @@ int bytevector::write_to_file(string const &name) {
 	
 	string path = FILE_SAVE_DIRECTORY + "/" + name;
 	int fd = open(path.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0666);
-	if (fd < 0) throw "bytevector::write_to_file: could not create a file.";
+	if (fd < 0) throw "bytevector::write_to_file(): could not create a file.";
 	
 	int err = write(fd, body, size);
 	if (err < 0) {
 		close(fd);
-		throw "bytevector::write_to_file: error writing to file.";
+		throw "bytevector::write_to_file(): error writing to file.";
 	}
 	
 	close(fd);
@@ -81,12 +81,12 @@ int bytevector::read_from_file(string const &name) {
 	string path = FILE_SAVE_DIRECTORY + "/" + name;
 	
 	int fd = open(path.c_str(), O_RDONLY, 0666);
-	if (fd < 0) throw "bytevector::read_from_file: could not open a file.";
+	if (fd < 0) throw "bytevector::read_from_file(): could not open a file.";
 	
 	int fsize = FdGetFileSize(fd);
 	if (fsize < 0) {
 		close(fd);
-		throw "bytevector::read_from_file: could not get file size.";
+		throw "bytevector::read_from_file(): could not get file size.";
 	}
 	
 	if (fsize == 0) {
@@ -106,14 +106,14 @@ int bytevector::read_from_file(string const &name) {
 	int err = read(fd, body, size);
 	if (err < 0) {
 		close(fd);
-		throw "bytevector::read_from_file: error reading from a file.";
+		throw "bytevector::read_from_file(): error reading from a file.";
 	}
 	
 	close(fd);
 	return 0;
 }
 
-void bytevector::print() {
+void bytevector::print() const {
 	printf("size = %d, body = ", size);
 	for (int i = 0; i < size; i++) printf("%c", body[i]);
 	printf("\n");

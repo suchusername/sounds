@@ -1,22 +1,23 @@
 #include <stdio.h>
 #include <string>
 #include "bytevector.cc"
+#include "WAV_File.cc"
 
 int main() {
-	string y = "abc";
-	bytevector x(y.c_str(), 3);
-	bytevector xx;
- 	x.print();
 	
-	string name = "test.txt";
 	try {
-		x.write_to_file(name);
-		xx.print();
-		xx.read_from_file(name);
+		string fname = "sound.wav";
+		bytevector V;
+		V.read_from_file(fname);
+		//V.print();
+		WAV_File file;
+		
+		
+		file.init(V);
+		file.print();
+		
 	} catch(const char *err) {
 		printf("%s\n", err);
 	}
-	xx.print();
-	
 	
 }
