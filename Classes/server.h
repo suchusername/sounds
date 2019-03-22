@@ -1,20 +1,20 @@
 #pragma once
 #include <string>
-#include "config.h"
+#include <vector>
+#include "../config.h"
 using namespace std;
 
-// Currently all class members are in public, will sort that out later
+// TODO: Currently all class members are in public, will sort that out later
 
 class bytevector {
 public:
 	char *body;
 	int size;
 	bytevector();
-	bytevector(const char *, int);
+	bytevector(const char *, int); // TODO: what if length of const char * is less than given int?
 	bytevector(string const&);
-	// other constructors?
+	// TODO: other constructors?
 	~bytevector();
-	// receiving bytes in chunks? depends on buffer size
 	
 	int write_to_file(string const &) const;
 	int read_from_file(string const &);
@@ -35,16 +35,19 @@ public:
 	int size; // file size in bytes
 	int fd; // file descriptor so we can close the file later
 	
-	int *data; // pointer to mmap object with the whole file (or should it point to a heap array?)
+	int *data; // pointer to mmap object with the whole file
 	int NumSamples; // number of points in data
 	int SampleRate; // number of points per second
 
-	AudioFile(string file_id, int size, int fd, int *data, int NumSamples, int SampleRate); // look at geometry.cc on March 1st
-	//virtual ~AudioFile();
+	AudioFile(string file_id, int size, int fd, int *data, int NumSamples, int SampleRate);
+	virtual ~AudioFile() {};
 	virtual int getObjId() const = 0; 
 	virtual int init(bytevector const &) = 0;
 	virtual bytevector serialize() const = 0;
 	virtual AudioFile * clone() const = 0;
+	
+	virtual void print() const = 0;
+	virtual void getSamples() const = 0;
 };
 
 class WAV_File : public AudioFile {
@@ -57,7 +60,7 @@ public:
 	int BitDepth; // a.k.a. # bits per sample
 	
 	WAV_File(); // default constructor for prototype object for Object Factory
-	~WAV_File(); // from "WAVparse.cc"
+	~WAV_File(); 
 	int getObjId() const; // returns a code that it is a WAV file
 	int init(bytevector const &); // parsing "WAVparse.cc"
 	bytevector serialize() const; // compressing to a file of WAV format
@@ -82,5 +85,44 @@ public:
 	int init(bytevector const &); // for Object Factory
 	bytevector serialize() const; // convert to bytevector
 	Query * clone() const; // for Object Factory
-	// add more specifications
+	// TODO: add more specifications
 };
+
+
+class DataSamples : public SObject {
+public:
+	int N; // number of points on a 2D plane
+	double *y; // pointer to array with values
+	// x values can be uniformly distributed (as in most cases), so we do not save it here
+	
+	DataSamples();
+	DataSamples(const double *, int); // TODO: what if size of const double * is less than int?
+	DataSamples(vector<double> const &);
+	
+	virtual ~DataSamples() {};
+	virtual int getObjId() const = 0; // identificator of a class
+	virtual int init(bytevector const &) = 0; // initialize a copied prototype object with bytevector values
+	virtual bytevector serialize() const = 0; // convert class object to bytevector
+	virtual DataSamples * clone() const = 0; // copy a prototype
+	virtual void print() const = 0;
+};
+
+class UniformDataSamples : public DataSamples {
+public:
+	double x_0; // most left point
+	double delta_x; // interval between x coordinates
+	
+	UniformDataSamples();
+	UniformDataSamples(const double *, int, double, double); // TODO: what if size of const double * is less than int?
+	UniformDataSamples(vector<double> const &, double, double);
+	UniformDataSamples(UniformDataSamples const &);
+	UniformDataSamples &operator=(UniformDataSamples const &);
+	
+	~UniformDataSamples();
+	int getObjId() const; // identificator of a class
+	int init(bytevector const &); // initialize a copied prototype object with bytevector values
+	bytevector serialize() const; // convert class object to bytevector
+	UniformDataSamples * clone() const; // copy a prototype
+	void print() const;
+};
+

@@ -5,8 +5,9 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <iostream>
+
 #include "bytevector.cc"
-#include "config.h"
+#include "../config.h"
 using namespace std;
 
 static int readStringFromFile(int *data, int pos, int len, string &buf, int fileSize) { // len - length of a string to read
