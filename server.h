@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "../config.h"
+#include "config.h"
 using namespace std;
 
 // TODO: Currently all class members are in public, will sort that out later
@@ -10,13 +10,15 @@ class bytevector {
 public:
 	char *body;
 	int size;
-	bytevector();
+	bytevector(int n = 0);
 	bytevector(const char *, int); // TODO: what if length of const char * is less than given int?
 	bytevector(string const&);
 	// TODO: other constructors?
 	~bytevector();
 	
-	int write_to_file(string const &) const;
+	char operator[](int) const;
+	char & operator[](int);
+	int write_to_file(string const &) const; // TODO: generalize (do not want to write in Audios directory)
 	int read_from_file(string const &);
 	void print() const;
 };

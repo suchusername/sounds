@@ -1,5 +1,5 @@
 #pragma once
-#include "server.h"
+#include "../server.h"
 
 #include <string>
 #include <stdio.h>
@@ -16,9 +16,12 @@ static long FdGetFileSize(int fd) {
     return rc == 0 ? stat_buf.st_size : -1;
 }
 
-bytevector::bytevector() {
-	body = nullptr;
-	size = 0;
+bytevector::bytevector(int n) : size(n) {
+	if (n == 0) {
+		body = nullptr;
+	} else {
+		body = new char[n]();
+	}
 }
 
 bytevector::bytevector(const char *A, int n) {
@@ -37,6 +40,16 @@ bytevector::~bytevector() {
 	if (size > 0) {
 		delete [] body;
 	}
+}
+
+char bytevector::operator[](int k) const {
+	if (k >= size) throw "bytevector::operator[]() const: index out of range";
+	return body[k];
+}
+
+char & bytevector::operator[](int k) {
+	if (k >= size) throw "bytevector::operator[](): index out of range";
+	return body[k];
 }
 
 int bytevector::write_to_file(string const &name) const {

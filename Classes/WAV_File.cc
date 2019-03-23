@@ -1,5 +1,5 @@
 #pragma once
-#include "server.h"
+#include "../server.h"
 
 #include <string>
 #include <fcntl.h>
@@ -37,6 +37,13 @@ AudioFile::AudioFile(string file_id, int size, int fd, int *data, int NumSamples
 
 WAV_File::WAV_File() : AudioFile("", 0, -1, nullptr, 0, 0), Subchunk1Size(0), AudioFormat(0), NumChannels(0), ByteRate(0), BlockAlign(0), BitDepth(0) {}
 // constructor for a prototype that is used by object factory
+// file description as per http://soundfile.sapp.org/doc/WaveFormat/
+	// if PCM then extra parameters do not exists and total data offset from the beginning of the file is 44 bytes (or 11 blocks)
+	//The default byte ordering assumed for WAVE data files is little-endian. Files written using the big-endian byte ordering scheme have the identifier RIFX instead of RIFF.
+	//The sample data must end on an even byte boundary. Whatever that means.
+	//8-bit samples are stored as unsigned bytes, ranging from 0 to 255. 16-bit samples are stored as 2's-complement signed integers, ranging from -32768 to 32767.
+	//There may be additional subchunks in a Wave data stream. If so, each will have a char[4] SubChunkID, and unsigned long SubChunkSize, and SubChunkSize amount of data.
+	//RIFF stands for Resource Interchange File Format.
 
 WAV_File::~WAV_File() {
 	// since the file corresponding to an AudioFile is always opened while the audio is being used, we need to close fd upon destruction and unmap the memory
