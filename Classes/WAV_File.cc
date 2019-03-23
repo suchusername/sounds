@@ -1,13 +1,13 @@
 #pragma once
 #include "../server.h"
+#include "AudioFile.cc"
+#include "bytevector.cc"
+#include "../config.h"
 
 #include <string>
 #include <fcntl.h>
 #include <unistd.h>
 #include <iostream>
-
-#include "bytevector.cc"
-#include "../config.h"
 using namespace std;
 
 static int readStringFromFile(int *data, int pos, int len, string &buf, int fileSize) { // len - length of a string to read
@@ -32,8 +32,6 @@ static int readStringFromFile(int *data, int pos, int len, string &buf, int file
 	}
 	return 0;
 }
-
-AudioFile::AudioFile(string file_id, int size, int fd, int *data, int NumSamples, int SampleRate) : file_id(file_id), size(size), fd(fd), data(data), NumSamples(NumSamples), SampleRate(SampleRate) {}
 
 WAV_File::WAV_File() : AudioFile("", 0, -1, nullptr, 0, 0), Subchunk1Size(0), AudioFormat(0), NumChannels(0), ByteRate(0), BlockAlign(0), BitDepth(0) {}
 // constructor for a prototype that is used by object factory
@@ -74,8 +72,8 @@ int WAV_File::init(bytevector const &v) {
 	*/
 	
 	// how to name the file? maybe file code should come in bytevector?
-	string fcode = "file_code_123";
-	string fname = fcode + ".wav"; // this needs to change
+	string fcode = "file_code_123";  // this needs to change
+	string fname = "../" + FILE_SAVE_DIRECTORY + "/" + fcode + ".wav";
 	v.write_to_file(fname);
 	
 	file_id = fcode;

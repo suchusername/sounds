@@ -67,7 +67,8 @@ int bytevector::write_to_file(string const &name) const {
 	//printf("bytevector::write_to_disc(%s)\n", name.c_str());
 	if (size == 0) return 1;
 	
-	string path = FILE_SAVE_DIRECTORY + "/" + name;
+	//string path = FILE_SAVE_DIRECTORY + "/" + name;
+	string path = name;
 	int fd = open(path.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (fd < 0) throw "bytevector::write_to_file(): could not create a file.";
 	

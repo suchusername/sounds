@@ -3,7 +3,7 @@
 #include <vector>
 #include "Classes/bytevector.cc"
 #include "Classes/WAV_File.cc"
-#include "Classes/DataSamples.cc"
+#include "Classes/UniformDataSamples.cc"
 
 int main() {	
 	try {
