@@ -3,28 +3,41 @@
 #include "bytevector.cc"
 #include "DataSamples.cc"
 
-
+#include <math.h>
 #include <vector>
 #include <iostream>
 
 using namespace std;
 
-static void writeDouble(double x, bytevector &b, int pos) {
-	if (pos+7 >= b.size) throw "DataSamples::serialize(): error writing double to bytevector";
-	unsigned long long X = (unsigned long long) x;
-	for (int i = 0; i < 8; i++) {
-		b[pos+i] = (char) (X % 256);
-		X >>= 8;
+static void writeInt(int x, bytevector &b, int pos) {
+	int x_ = x + (1 << 30);
+	for (int i = 0; i < 4; i++) {
+		b[pos+i] = (char) (x_ % 256);
+		x_ >>= 8;
 	}
+}
+static int readInt(bytevector const &b, int pos) {
+	int N_ = 0;
+	for (int i = 0; i < 4; i++) {
+		N_ += ((256 + (int) b[pos+i]) % 256) << (8*i);
+	}
+	return N_ - (1 << 30);
+}
+
+static void writeDouble(double x, bytevector &b, int pos) {
+	if (pos+7 >= b.size) throw "UniformDataSamples::serialize(): error writing double to bytevector";
+	if ((x >= 1e9) || (x <= 1-1e9)) throw "UniformDataSamples::serialize(): double out of range";
+	int X = floor(x);
+	writeInt(X, b, pos);
+	int Y = floor((x - X) * 1e9);
+	writeInt(Y, b, pos+4);
 }
 
 static double readDouble(bytevector const &b, int pos) {
-	if (pos+7 >= b.size) throw "DataSamples::init(): error reading double from bytevector";
-	unsigned long long X = 0;
-	for (int i = 0; i < 8; i++) {
-		X += (unsigned long long) b[pos+i] << (8*i);
-	}
-	return (double) X;
+	double a1 = (double) readInt(b, pos);
+	double a2 = (double) readInt(b, pos+4);
+	//cout << readInt(b, pos) << " " << readInt(b, pos+4) << endl;
+	return a1 + a2 * 1e-9;
 }
 
 UniformDataSamples::UniformDataSamples() : DataSamples(), x_0(0), delta_x(0) {}
@@ -51,6 +64,16 @@ UniformDataSamples & UniformDataSamples::operator=(UniformDataSamples const &vec
 	return *this;
 }
 
+double & UniformDataSamples::operator[](int k) {
+	if ((k < 0) || (k >= N)) throw "UniformDataSamples::operator[](): index out of range";
+	return y[k];
+}
+
+double UniformDataSamples::operator[](int k) const {
+	if ((k < 0) || (k >= N)) throw "UniformDataSamples::operator[](): index out of range";
+	return y[k];
+}
+
 UniformDataSamples::~UniformDataSamples() {
 	if (y != nullptr) delete [] y;
 }
@@ -69,10 +92,7 @@ int UniformDataSamples::init(bytevector const &v) {
 	*/
 	
 	if (v.size < 4) throw "UniformDataSamples::init(): bytevector is too short (cannot read N)";
-	int N_ = 0;
-	for (int i = 0; i < 4; i++) {
-		N_ += ((int) v[i]) << (8*i);
-	}
+	int N_ = readInt(v, 0);
 	if (v.size < 20+8*N_) throw "UniformDataSamples::init(): bytevector is too short";
 	N = N_;
 	x_0 = readDouble(v, 4);
@@ -90,25 +110,28 @@ bytevector UniformDataSamples::serialize() const {
 	Creates a bytevector - compressed version of UniformDataSamples object. 
 	TODO: change format: different architectures have different double formats (possible send as a string?)
 	
+	Only works for doubles with absolute value < 10^9!
+	
 	Format:
 	4 bytes: N (int)
-	8 bytes: x_0 (double)
-	8 bytes: delta_x (double)
-	8*N bytes: values of y (double)
+	8 bytes: x_0 (4+4 bytes)
+	8 bytes: delta_x (4+4 bytes)
+	(4+4)*N bytes:
+		4 bytes: integer part of a double
+		4 bytes: decimal part of a double
 	
 	Return value:
 	bytevector object
 	*/
 	
 	bytevector v(20+8*N);
-	int N_ = N;
-	for (int i = 0; i < 4; i++) {
-		v[i] = (char) (N_ % 256);
-		N_ >>= 8;
-	}
+	
+	writeInt(N, v, 0);
 	writeDouble(x_0, v, 4);
 	writeDouble(delta_x, v, 12);
-	for (int i = 0; i < N; i++) writeDouble(y[i], v, 20+8*i);
+	for (int i = 0; i < N; i++) {
+		writeDouble(y[i], v, 20+8*i);
+	}
 		
 	return v;
 }

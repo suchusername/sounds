@@ -120,6 +120,9 @@ public:
 	UniformDataSamples(UniformDataSamples const &);
 	UniformDataSamples &operator=(UniformDataSamples const &);
 	
+	double &operator[](int);
+	double operator[](int) const; 
+		
 	~UniformDataSamples();
 	int getObjId() const; // identificator of a class
 	int init(bytevector const &); // initialize a copied prototype object with bytevector values
