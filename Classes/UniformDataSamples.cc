@@ -40,7 +40,7 @@ static double readDouble(bytevector const &b, int pos) {
 	return a1 + a2 * 1e-9;
 }
 
-UniformDataSamples::UniformDataSamples() : DataSamples(), x_0(0), delta_x(0) {}
+UniformDataSamples::UniformDataSamples(int n) : DataSamples(n), x_0(0), delta_x(0) {}
 
 UniformDataSamples::UniformDataSamples(const double *y, int n, double x_0, double d) : DataSamples(y, n), x_0(x_0), delta_x(d) {}
 

@@ -6,7 +6,13 @@
 
 using namespace std;
 
-DataSamples::DataSamples() : N(0), y(nullptr) {}
+DataSamples::DataSamples(int n) : N(n) {
+	if (n == 0) {
+		y = nullptr;
+	} else {
+		y = new double[n]();
+	}
+}
 
 DataSamples::DataSamples(const double *vals, int n) : N(n) { // we are guaranteed that n is size of const double*
 	if (n == 0) {

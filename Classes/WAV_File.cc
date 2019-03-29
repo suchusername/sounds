@@ -1,5 +1,7 @@
 #pragma once
 #include "../server.h"
+#include "DataSamples.cc"
+#include "UniformDataSamples.cc"
 #include "AudioFile.cc"
 #include "bytevector.cc"
 #include "../config.h"
@@ -73,7 +75,7 @@ int WAV_File::init(bytevector const &v) {
 	
 	// how to name the file? maybe file code should come in bytevector?
 	string fcode = "file_code_123";  // this needs to change
-	string fname = "../" + FILE_SAVE_DIRECTORY + "/" + fcode + ".wav";
+	string fname = FILE_SAVE_DIRECTORY + "/" + fcode + ".wav";
 	v.write_to_file(fname);
 	
 	file_id = fcode;
@@ -116,9 +118,9 @@ int WAV_File::init(bytevector const &v) {
 	readStringFromFile(data, 9, 4, buf, size);
 	if (buf != "data") throw "WAV_File::init(): parsing error: audio format is not PCM (Pulse-code modulation) at byte #9";
 	this->NumSamples = 8 * data[10] / NumChannels / BitDepth;
+	NumSamples = NumSamples / 2 * 2; // it has to be even because 1 sample = 16 bytes (half of integer)
 	
 	// all fields, except "fd" and "data" are filled. Now opening a file that was created earlier.
-	fname = FILE_SAVE_DIRECTORY + "/" + fname;
 	//cout << fname << endl;
 	fd = open(fname.c_str(), O_RDONLY);
 	if (fd < 0) throw "WAV_File::init(): failed to open a file";
@@ -134,6 +136,8 @@ int WAV_File::init(bytevector const &v) {
 
 bytevector WAV_File::serialize() const {
 	bytevector v;
+	string path = FILE_SAVE_DIRECTORY + "/" + file_id + ".wav";
+	v.read_from_file(path);
 	return v;
 }
 
@@ -142,6 +146,24 @@ WAV_File * WAV_File::clone() const {
 	return f;
 }
 
+UniformDataSamples WAV_File::getSamples() const {
+	/*
+	Returns a container with all data points
+	TODO: add stereo container	
+	*/
+	
+	if (NumChannels != 1) throw "WAV_File::getSamples(): audio not in mono format";
+	UniformDataSamples u(NumSamples);
+	u.x_0 = 0;
+	u.delta_x = 1 / ((double) SampleRate);	
+	
+	for (int i = 0; i < NumSamples / 2; i++) {
+		u[2*i] = (double) (data[11+i] % (1 << 16));
+		u[2*i+1] = (double) (data[11+i] >> 16);
+	}
+	
+	return u;
+}
 
 void WAV_File::print() const {
 	cout << "file_id: " << file_id << endl;
