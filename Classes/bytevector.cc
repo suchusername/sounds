@@ -12,7 +12,7 @@
 #include <iostream>
 using namespace std;
 
-static long FdGetFileSize(int fd) {
+long bytevector::FdGetFileSize(int fd) {
     struct stat stat_buf;
     int rc = fstat(fd, &stat_buf);
     return rc == 0 ? stat_buf.st_size : -1;
@@ -85,6 +85,10 @@ int bytevector::write_to_file(string const &name) const {
 	return 0;
 }
 
+int bytevector::len() const {
+	return size;
+}
+
 int bytevector::read_from_file(string const &name) {
 	/*
 	name - name of a file that is opened
@@ -129,6 +133,20 @@ int bytevector::read_from_file(string const &name) {
 	
 	close(fd);
 	return 0;
+}
+
+void bytevector::writeString(const string &str, int pos) {
+	if (pos + str.length() > size) throw "bytevector::writeString(): a string is too long.";
+	for (int i = 0; i < str.length(); i++) body[pos+i] = str[i];
+}
+
+void bytevector::writeInt(int x, int pos) { // writes in little-endian
+	if (pos + 4 > size) throw "bytevector::writeInt(): integer does not fit.";
+	int x_ = x;
+	for (int i = 0; i < 4; i++) {
+		body[pos+i] = (char) (x_ % 256);
+		x_ >>= 8;
+	}
 }
 
 void bytevector::print() const {

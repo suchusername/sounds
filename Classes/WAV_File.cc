@@ -60,7 +60,7 @@ int WAV_File::getObjId() const {
 	return 0;
 }
 
-int WAV_File::init(bytevector const &v) {
+int WAV_File::init(bytevector const &v, const string & fcode) {
 	/*
 	data - container with bytes of WAV file (and maybe code of a file?)
 	
@@ -74,61 +74,79 @@ int WAV_File::init(bytevector const &v) {
 	*/
 	
 	// how to name the file? maybe file code should come in bytevector?
-	string fcode = "file_code_123";  // this needs to change
 	string fname = FILE_SAVE_DIRECTORY + "/" + fcode + ".wav";
 	v.write_to_file(fname);
 	
 	file_id = fcode;
-	size = v.size; // if v doesn't have extra bytes for code
+	size = v.size;
 	data = (int *) v.body; // temporarily
 	
 	string fileType, fileFormat;
 	int err = readStringFromFile(data, 0, 4, fileType, size);
-	if (err) throw "WAV_File::init(): parsing error: unable to read header";
+	if (err) throw "WAV_File::init(): parsing error: unable to read header.";
 	
 	err = readStringFromFile(data, 2, 4, fileFormat, size);
-	if (err) throw "WAV_File::init(): parsing error: unable to read header";
+	if (err) throw "WAV_File::init(): parsing error: unable to read header.";
 	
 	if ((fileType != "RIFF") && (fileFormat != "WAVE")) {
-		throw "WAV_File::init(): parsing error: format is not RIFF WAVE (bytes #0 and #2)";
+		throw "WAV_File::init(): parsing error: format is not RIFF WAVE (bytes #0 and #2).";
 	}
 	
 	if (size < 44) {
-		throw "WAV_File::init(): parsing error: file is too short";
+		throw "WAV_File::init(): parsing error: file is too short.";
 	}
 	
 	if (data[1]+8 != size) {
-		throw "WAV_File::init(): parsing error: incorrect file size in WAV file in byte #1";
+		throw "WAV_File::init(): parsing error: incorrect file size in WAV file in byte #1.";
 	}
 	
-	string buf;
+	string buf, buf_;
 	readStringFromFile(data, 3, 4, buf, size); // here size is guaranteed to be correct
-	if (buf != "fmt ") throw "WAV_File::init(): parsing error: unable to read header at byte #3";
+	if (buf != "fmt ") throw "WAV_File::init(): parsing error: unable to read header at byte #3.";
 	
 	this->Subchunk1Size = data[4];
 	this->AudioFormat = data[5] % (1 << 16);
 	if (AudioFormat != 1) {
-		throw "WAV_File::init(): parsing error: audio format is not PCM (Pulse-code modulation) at byte #5";
+		throw "WAV_File::init(): parsing error: audio format is not PCM (Pulse-code modulation) at byte #5.";
 	}
 	this->NumChannels = data[5] >> 16;
 	this->SampleRate = data[6];
 	this->ByteRate = data[7];
 	this->BlockAlign = data[8] % (1 << 16);
 	this->BitDepth = data[8] >> 16;
+	if (BitDepth != 16) throw "WAV_File::init(): parsing error: bit depth is not equal to 16 at byte 8.";
 	readStringFromFile(data, 9, 4, buf, size);
-	if (buf != "data") throw "WAV_File::init(): parsing error: audio format is not PCM (Pulse-code modulation) at byte #9";
-	this->NumSamples = 8 * data[10] / NumChannels / BitDepth;
+	
+	this->offset = 0;
+	if (buf == "LIST") { // space for extra params
+		offset = data[10] + 8;
+	}
+	
+	readStringFromFile(data, 9 + (offset/4), 4, buf, size);
+	buf = buf.substr(offset % 4, 4 - (offset % 4));
+	readStringFromFile(data, 10 + (offset/4), offset % 4, buf_, size);
+	buf = buf + buf_;
+	//cout << "buf = " << buf << endl;
+	if (buf != "data") throw "WAV_File::init(): parsing error: audio format is not PCM (Pulse-code modulation) (at byte #9).";
+	
+	if (offset % 4 == 0) {
+		this->NumSamples = 8 * data[10+offset/4] / NumChannels / BitDepth;
+	} else if (offset % 4 == 2) {
+		this->NumSamples = (data[10+offset/4] >> 16) + (data[11+offset/4] % (1 << 16) << 16);
+		this->NumSamples = 8 * NumSamples / NumChannels / BitDepth;
+	}
+	
 	NumSamples = NumSamples / 2 * 2; // it has to be even because 1 sample = 16 bytes (half of integer)
 	
 	// all fields, except "fd" and "data" are filled. Now opening a file that was created earlier.
 	//cout << fname << endl;
 	fd = open(fname.c_str(), O_RDONLY);
-	if (fd < 0) throw "WAV_File::init(): failed to open a file";
+	if (fd < 0) throw "WAV_File::init(): failed to open a file.";
 	
 	data = (int *)mmap(0, size, PROT_READ, MAP_SHARED, fd, 0);
 	if (data == MAP_FAILED) {
 		close(fd);
-		throw "WAV_File::init(): error mmaping the file";
+		throw "WAV_File::init(): error mmaping the file.";
 	}
 
 	return 0;
@@ -149,21 +167,49 @@ WAV_File * WAV_File::clone() const {
 UniformDataSamples WAV_File::getSamples() const {
 	/*
 	Returns a container with all data points
-	TODO: add stereo container	
+	If sound is stereo, then only first channel is considered (TODO: change?)
 	*/
 	
-	if (NumChannels != 1) throw "WAV_File::getSamples(): audio not in mono format";
 	UniformDataSamples u(NumSamples);
 	u.x_0 = 0;
-	u.delta_x = 1 / ((double) SampleRate);	
-	
-	for (int i = 0; i < NumSamples / 2; i++) {
-		u[2*i] = (double) (data[11+i] % (1 << 16));
-		u[2*i+1] = (double) (data[11+i] >> 16);
+	u.delta_x = 1 / ((double) SampleRate);
+	if (NumChannels == 1) {
+		if (offset % 4 == 0) {
+			for (int i = 0; i < NumSamples / 2; i++) {
+				u[2*i] = (double) (short) (data[11+offset/4+i] % (1 << 16));
+				u[2*i+1] = (double) (short) (data[11+offset/4+i] >> 16);
+			}
+		} else if (offset % 4 == 2) {
+			u[0] = (double) (short) (data[11+offset/4] >> 16);
+			for (int i = 0; i < NumSamples / 2 - 1; i++) {
+				u[2*i+1] = (double) (short) (data[11+offset/4+i] % (1 << 16));
+				u[2*i+2] = (double) (short) (data[11+offset/4+i] >> 16);
+			}
+			u[NumSamples-1] = (double) (short) (data[11 + offset/4 + NumSamples/2 - 1] % (1 << 16));
+		} else {
+			throw "WAV_File::getSamples(): offset must be even.";
+		}
+		
+	} else if (NumChannels == 2) {
+		if (offset % 4 == 0) {
+			for (int i = 0; i < NumSamples; i++) {
+				u[i] = (double) (short) (data[11+offset/4+i] % (1 << 16));
+			}
+		}
+		if (offset % 4 == 2) {
+			for (int i = 0; i < NumSamples; i++) {
+				u[i] = (double) (short) (data[11+offset/4+i] >> 16);
+			}			
+		} else {
+			throw "WAV_File::getSamples(): offset must be even.";
+		}
+		
+	} else {
+		throw "WAV_File::getSamples(): Audio can only have 1 or 2 channels.";
 	}
-	
 	return u;
 }
+
 
 void WAV_File::print() const {
 	cout << "file_id: " << file_id << endl;
@@ -176,6 +222,6 @@ void WAV_File::print() const {
 	cout << "BlockAlign: " << BlockAlign << endl;
 	cout << "BitDepth: " << BitDepth << endl;
 	cout << "NumSamples: " << NumSamples << endl;
+	cout << "Duration: " << (double) NumSamples / SampleRate << "s" << endl;
 }
-
 

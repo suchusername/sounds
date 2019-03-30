@@ -9,14 +9,14 @@
 
 using namespace std;
 
-static void writeInt(int x, bytevector &b, int pos) {
+void UniformDataSamples::writeInt(int x, bytevector &b, int pos) const {
 	int x_ = x + (1 << 30);
 	for (int i = 0; i < 4; i++) {
 		b[pos+i] = (char) (x_ % 256);
 		x_ >>= 8;
 	}
 }
-static int readInt(bytevector const &b, int pos) {
+int UniformDataSamples::readInt(bytevector const &b, int pos) const {
 	int N_ = 0;
 	for (int i = 0; i < 4; i++) {
 		N_ += ((256 + (int) b[pos+i]) % 256) << (8*i);
@@ -24,7 +24,7 @@ static int readInt(bytevector const &b, int pos) {
 	return N_ - (1 << 30);
 }
 
-static void writeDouble(double x, bytevector &b, int pos) {
+void UniformDataSamples::writeDouble(double x, bytevector &b, int pos) const {
 	if (pos+7 >= b.size) throw "UniformDataSamples::serialize(): error writing double to bytevector";
 	if ((x >= 1e9) || (x <= 1-1e9)) throw "UniformDataSamples::serialize(): double out of range";
 	int X = floor(x);
@@ -33,7 +33,7 @@ static void writeDouble(double x, bytevector &b, int pos) {
 	writeInt(Y, b, pos+4);
 }
 
-static double readDouble(bytevector const &b, int pos) {
+double UniformDataSamples::readDouble(bytevector const &b, int pos) const {
 	double a1 = (double) readInt(b, pos);
 	double a2 = (double) readInt(b, pos+4);
 	//cout << readInt(b, pos) << " " << readInt(b, pos+4) << endl;
@@ -82,7 +82,7 @@ int UniformDataSamples::getObjId() const {
 	return 0;
 }
 
-int UniformDataSamples::init(bytevector const &v) {
+int UniformDataSamples::init(bytevector const &v, const string & s) {
 	/*
 	Initializes an object UniformDataSamples from its bytevector. Format is defined below.
 	
@@ -147,3 +147,29 @@ void UniformDataSamples::print() const {
 	for (int i = 0; i < N; i++) cout << " " << y[i];
 	cout << endl;
 }
+
+void UniformDataSamples::crop(int l, int r, bool move_x0) {
+	// Select a subarray of numbers from indices [l, r)
+	// if move_x0 = False, x_0 of new array is the same
+	
+	if ((r > N) || (r < 0)) r = N;
+	if ((l >= N) || (l < 0)) l = 0;
+	if (l > r) {
+		l ^= r;
+		r ^= l;
+		l ^= r;
+	}
+	N = r - l;
+	x_0 = move_x0 ? (x_0 + l*delta_x) : x_0;
+	if (l == r) {
+		delete [] y;
+		y = nullptr;
+		return;
+	}
+	
+	double *z = new double[r-l];
+	for (int i = 0; i < r-l; i++) z[i] = y[l+i];
+	delete [] y;
+	y = z;	
+}
+
