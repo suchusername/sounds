@@ -158,12 +158,36 @@ public:
 	int right;
 	
 	Crop();
-	Crop(string, int l = 0, int r = -1);
+	Crop(const string &, int l = 0, int r = -1);
 	
 	int getObjId() const; // id of crop function
 	int init(bytevector const &, const string &s = ""); // for Object Factory
 	bytevector serialize() const; // convert to bytevector
 	Crop * clone() const; // for Object Factory
+	
+	void print() const;
+	void transform(WAV_File *, const string &) const;
+};
+
+class Volume : public Query {
+public:
+	void writeInt(int, bytevector &, int) const;
+	int readInt(bytevector const &, int) const;
+	void writeDouble(double, bytevector &, int) const;
+	double readDouble(bytevector const &, int) const;
+	
+public:
+	// Multiplies every value by k
+	// If value exceeds max = 32768 then it stays there
+	double k;
+	
+	Volume();
+	Volume(const string &, double);
+	
+	int getObjId() const;
+	int init(bytevector const &, const string &s = "");
+	bytevector serialize() const;
+	Volume * clone() const;
 	
 	void print() const;
 	void transform(WAV_File *, const string &) const;

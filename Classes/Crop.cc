@@ -9,7 +9,7 @@ using namespace std;
 
 Crop::Crop() : Query(), left(0), right(0) {}
 
-Crop::Crop(string s, int l, int r) : Query(s), left(l), right(r) {}
+Crop::Crop(const string &s, int l, int r) : Query(s), left(l), right(r) {}
 
 int Crop::getObjId() const {
 	//TODO
@@ -54,15 +54,11 @@ void Crop::transform(WAV_File *file, const string &new_id) const {
 	/*
 	Performs transformation of a file.
 	Saves it under name new_id.
-	Only works for mono files.
 	*/
 	if (!is_number(new_id)) throw "Crop::transform(): new file id must be an integer";
 	
 	UniformDataSamples arr = file->getSamples();
-	//cout << arr[10022] << endl;
 	arr.crop(left, right, 0);
-	
-	//arr.print();
 		
 	bytevector b(44 + 2*arr.N);
 	b.writeString("RIFF", 0);
