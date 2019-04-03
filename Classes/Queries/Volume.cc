@@ -1,7 +1,7 @@
 #pragma once
-#include "../server.h"
-#include "bytevector.cc"
-#include "Query.cc"
+#include "../../server.h"
+#include "../bytevector.cc"
+#include "../Query.cc"
 
 #include <math.h>
 #include <string>

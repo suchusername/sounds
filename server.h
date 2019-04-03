@@ -193,4 +193,22 @@ public:
 	void transform(WAV_File *, const string &) const;
 };
 
+class BitSampleRate : public Query {
+public:
+	// Reduces BitRate and SampleRate of a song
+	int bits; // 16 by default, new BitRate
+	int block; // 1 by default, number of samples that have the same value
+	
+	BitSampleRate();
+	BitSampleRate(const string &, int, int);
+	
+	int getObjId() const;
+	int init(bytevector const &, const string &s = "");
+	bytevector serialize() const;
+	BitSampleRate * clone() const;
+	
+	void print() const;
+	void transform(WAV_File *, const string &) const;
+};
+
 
