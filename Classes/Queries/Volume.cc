@@ -1,5 +1,6 @@
 #pragma once
 #include "../../server.h"
+#include "../../config.h"
 #include "../bytevector.cc"
 #include "../Query.cc"
 
@@ -24,8 +25,8 @@ int Volume::readInt(bytevector const &b, int pos) const {
 }
 
 void Volume::writeDouble(double x, bytevector &b, int pos) const {
-	if (pos+7 >= b.size) throw "UniformDataSamples::serialize(): error writing double to bytevector";
-	if ((x >= 1e9) || (x <= 1-1e9)) throw "UniformDataSamples::serialize(): double out of range";
+	if (pos+7 >= b.size) throw "UniformDataSamples::serialize(): error writing double to bytevector.";
+	if ((x >= 1e9) || (x <= 1-1e9)) throw "UniformDataSamples::serialize(): double out of range.";
 	int X = floor(x);
 	writeInt(X, b, pos);
 	int Y = floor((x - X) * 1e9);
@@ -42,42 +43,28 @@ double Volume::readDouble(bytevector const &b, int pos) const {
 
 Volume::Volume() : Query(), k(1) {}
 
-Volume::Volume(const string &s, double k) : Query(s), k(k) {}
-
-int Volume::getObjId() const {
-	//TODO
-	return 0;
-}
+Volume::Volume(const string &s, double k, int l, int r, bool smooth) : Query(s), k(k), left(l), right(r), smooth(smooth) {}
 
 int Volume::init(bytevector const &v, const string &s) {
-	if (v.len() != 16) throw "Volume::init(): bytevector size must be 16 bytes";
-	file_id = to_string(readUll(v, 0));
-	k = readDouble(v, 8);
+	throw "Volume::init(): not implemented.";
 	return 0;
 }
 
 bytevector Volume::serialize() const {
-	/*
-	8 bytes: file_id (unsigned long long)
-	8 bytes: k (4+4 bytes, integer part of double and decimal part)
-	*/
-	
-	if (!is_number(file_id)) throw "Volume::serialize(): file_id must be an integer";
-	
-	bytevector v(16);
-	writeUll(stoull(file_id), v, 0);
-	writeDouble(k, v, 8);
-	return v;	
+	// redundant
+	throw "Volume::serialize(): not implemented.";
+	bytevector b;
+	return b;
 }
 
-Volume * Volume::clone() const {
-	Volume *c;
-	return c;
-}
 
 void Volume::print() const {
+	cout << "--- Volume query ---" << endl;
 	cout << "file_id = " << file_id << endl;
 	cout << "k = " << k << endl;
+	cout << "left = " << left << endl;
+	cout << "right = " << right << endl;
+	cout << "smooth = " << (int)smooth << endl;
 }
 
 void Volume::transform(WAV_File *file, const string &new_id) const {
@@ -85,15 +72,66 @@ void Volume::transform(WAV_File *file, const string &new_id) const {
 	Performs transformation of a file.
 	Saves it under name new_id.
 	*/
-	if (!is_number(new_id)) throw "Crop::transform(): new file id must be an integer";
 	
 	UniformDataSamples arr = file->getSamples();
 	
-	for (int i = 0; i < file->NumSamples; i++) {
-		arr[i] = (int) (arr[i] * k);
-		if (arr[i] > 32767) arr[i] = 32767;
-		if (arr[i] < -32767) arr[i] = 32767;
+	int l = left;
+	int r = right;
+	
+	if ((r > arr.N) || (r < 0)) r = arr.N;
+	if ((l >= arr.N) || (l < 0)) l = 0;
+	if (l > r) {
+		l ^= r;
+		r ^= l;
+		l ^= r;
 	}
+	
+	//cout << "l = " << l << ", r = " << r << endl;
+	//cout << file->NumSamples << " " << arr.N << endl;
+	
+	if (smooth) {
+		// multiplies a signal by linear function with 2 second fade in / fade out		
+		
+		int fade = QUERY_VOLUME_DEFAULT_FADE_IN;
+		if (2*fade > r - l) {
+			fade = (r - l) / 2;
+		}
+		if (fade == 0) throw "Volume::transform(): fade is equal to 0.";
+		
+		cout << l << " " << r << " " << fade << endl;
+		
+		double alpha = ((double) (k-1)) / ((double) fade);
+		double beta = ((double) (1-k)*l) / ((double) fade) + 1;
+		
+		for (int i = l; i < l+fade; i++) {
+			arr[i] = (int) (arr[i] * (alpha * i + beta));
+			if (arr[i] > 32767) arr[i] = 32767;
+			if (arr[i] < -32767) arr[i] = 32767;
+		}
+		
+		for (int i = l+fade; i < r-fade; i++) {
+			arr[i] = (int) (arr[i] * k);
+			if (arr[i] > 32767) arr[i] = 32767;
+			if (arr[i] < -32767) arr[i] = 32767;
+		}
+		
+		alpha = ((double) (1-k)) / ((double) fade);
+		beta = ((double) (k-1)*r) / ((double) fade) + 1;
+		
+		for (int i = r-fade; i < r; i++) {
+			arr[i] = (int) (arr[i] * (alpha * i + beta));
+			if (arr[i] > 32767) arr[i] = 32767;
+			if (arr[i] < -32767) arr[i] = 32767;
+		}
+		
+	} else {
+		for (int i = l; i < r; i++) {
+			arr[i] = (int) (arr[i] * k);
+			if (arr[i] > 32767) arr[i] = 32767;
+			if (arr[i] < -32767) arr[i] = 32767;
+		}
+	}
+	
 		
 	bytevector b(44 + 2*arr.N);
 	b.writeString("RIFF", 0);

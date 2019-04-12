@@ -11,38 +11,15 @@ Crop::Crop() : Query(), left(0), right(0) {}
 
 Crop::Crop(const string &s, int l, int r) : Query(s), left(l), right(r) {}
 
-int Crop::getObjId() const {
-	//TODO
-	return 0;
-}
-
 int Crop::init(bytevector const &v, const string &s) {
-	if (v.len() != 16) throw "Crop::init(): bytevector size must be 16 bytes";
-	file_id = to_string(readUll(v, 0));
-	left = readInt(v, 8);
-	right = readInt(v, 12);	
+	throw "Crop::init(): not implemented.";
 	return 0;
 }
 
 bytevector Crop::serialize() const {
-	/*
-	8 bytes: file_id (unsigned long long)
-	4 bytes: left (int)
-	4 bytes: right (int)
-	*/
-	
-	if (!is_number(file_id)) throw "Crop::serialize(): file_id must be an integer";
-	
-	bytevector v(16);
-	writeUll(stoull(file_id), v, 0);
-	writeInt(left, v, 8);
-	writeInt(right, v, 12);
-	return v;	
-}
-
-Crop * Crop::clone() const {
-	Crop *c;
-	return c;
+	throw "Crop::serialize(): not implemented.";
+	bytevector b;
+	return b;
 }
 
 void Crop::print() const {
@@ -55,7 +32,6 @@ void Crop::transform(WAV_File *file, const string &new_id) const {
 	Performs transformation of a file.
 	Saves it under name new_id.
 	*/
-	if (!is_number(new_id)) throw "Crop::transform(): new file id must be an integer";
 	
 	UniformDataSamples arr = file->getSamples();
 	arr.crop(left, right, 0);

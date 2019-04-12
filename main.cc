@@ -12,7 +12,7 @@
 #include <iostream>
 using namespace std;
 
-int main() {	
+int main() {
 	try {
 		bytevector b;
 		b.read_from_file("Audios/alltta_bucket.wav");
@@ -20,11 +20,15 @@ int main() {
 		A.init(b);
 		A.print();
 		
-		BitSampleRate Q("123", 1, 16);
-		Q.print();
-		Q.transform(&A, "27347823");
+		Crop X("", 0, 2000000);
+		X.transform(&A, "hahahha");
+		
+		Volume Y("", 0.05, 200000, 1800000, 1);
+		Y.print();
+		Y.transform(&A, "hahahha");
 		
 	} catch(const char *err) {
 		printf("%s\n", err);
 	}
 }
+

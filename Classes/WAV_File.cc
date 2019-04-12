@@ -56,10 +56,6 @@ WAV_File::~WAV_File() {
 	} // else data = v.body and fd = -1 (as default)
 }
 
-int WAV_File::getObjId() const {
-	return 0;
-}
-
 int WAV_File::init(bytevector const &v, const string & fcode) {
 	/*
 	data - container with bytes of WAV file (and maybe code of a file?)
@@ -157,11 +153,6 @@ bytevector WAV_File::serialize() const {
 	string path = FILE_SAVE_DIRECTORY + "/" + file_id + ".wav";
 	v.read_from_file(path);
 	return v;
-}
-
-WAV_File * WAV_File::clone() const {
-	WAV_File *f;
-	return f;
 }
 
 UniformDataSamples WAV_File::getSamples() const {

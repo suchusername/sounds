@@ -31,10 +31,8 @@ public:
 
 class SObject { // Serializable Object
 public:
-	virtual int getObjId() const = 0; // identificator of a class
 	virtual int init(bytevector const &, const string &) = 0; // initialize a copied prototype object with bytevector values
 	virtual bytevector serialize() const = 0; // convert class object to bytevector
-	virtual SObject * clone() const = 0; // copy a prototype
 };
 
 class DataSamples : public SObject {
@@ -48,10 +46,8 @@ public:
 	DataSamples(vector<double> const &);
 	
 	virtual ~DataSamples() {};
-	virtual int getObjId() const = 0; // identificator of a class
 	virtual int init(bytevector const &, const string &) = 0; // initialize a copied prototype object with bytevector values
 	virtual bytevector serialize() const = 0; // convert class object to bytevector
-	virtual DataSamples * clone() const = 0; // copy a prototype
 	virtual void print() const = 0;
 };
 
@@ -76,10 +72,8 @@ public:
 	double operator[](int) const; 
 		
 	~UniformDataSamples();
-	int getObjId() const; // identificator of a class
 	int init(bytevector const &, const string &s = ""); // initialize a copied prototype object with bytevector values
 	bytevector serialize() const; // convert class object to bytevector
-	UniformDataSamples * clone() const; // copy a prototype
 	
 	void print() const;
 	void crop(int, int, bool); // only leave the [l,r) part of vector
@@ -97,10 +91,8 @@ public:
 
 	AudioFile(string file_id, int size, int fd, int *data, int NumSamples, int SampleRate);
 	virtual ~AudioFile() {};
-	virtual int getObjId() const = 0; 
 	virtual int init(bytevector const &, const string &) = 0;
 	virtual bytevector serialize() const = 0;
-	virtual AudioFile * clone() const = 0;
 	
 	virtual void print() const = 0;	
 };
@@ -117,10 +109,8 @@ public:
 	
 	WAV_File(); // default constructor for prototype object for Object Factory
 	~WAV_File(); 
-	int getObjId() const; // returns a code that it is a WAV file
 	int init(bytevector const &, const string &fcode = DEFAULT_FCODE); // parsing "WAVparse.cc"
 	bytevector serialize() const; // compressing to a file of WAV format
-	WAV_File * clone() const; // for Object Factory
 	
 	UniformDataSamples getSamples() const; // returns a container with data points
 	void print() const;
@@ -137,14 +127,12 @@ public:
 	bool is_number(const string &) const;
 	
 public:
-	string file_id; // 8 first bytes of a Query bytevector
+	string file_id; // name of a file to edit
 	
 	Query();
 	Query(string);
-	virtual int getObjId() const = 0;
 	virtual int init(bytevector const &, const string &) = 0;
 	virtual bytevector serialize() const = 0;
-	virtual Query * clone() const = 0;
 	
 	virtual void print() const = 0;
 	virtual void transform(WAV_File *, const string &) const = 0; // string - new id of a file
@@ -160,10 +148,8 @@ public:
 	Crop();
 	Crop(const string &, int l = 0, int r = -1);
 	
-	int getObjId() const; // id of crop function
-	int init(bytevector const &, const string &s = ""); // for Object Factory
+	int init(bytevector const &, const string &s = "");
 	bytevector serialize() const; // convert to bytevector
-	Crop * clone() const; // for Object Factory
 	
 	void print() const;
 	void transform(WAV_File *, const string &) const;
@@ -177,17 +163,24 @@ public:
 	double readDouble(bytevector const &, int) const;
 	
 public:
-	// Multiplies every value by k
-	// If value exceeds max = 32768 then it stays there
+	/*
+	Multiplies every value in [left, right) by k
+	If value exceeds max = 32768 then it stays there
+	
+	If (smooth == true) then values are multiplied by a smooth function with peak =k.
+	
+	*/
+	
 	double k;
+	int left;
+	int right;
+	bool smooth;
 	
 	Volume();
-	Volume(const string &, double);
+	Volume(const string &, double, int l = 0, int r = -1, bool smooth = false);
 	
-	int getObjId() const;
 	int init(bytevector const &, const string &s = "");
 	bytevector serialize() const;
-	Volume * clone() const;
 	
 	void print() const;
 	void transform(WAV_File *, const string &) const;
@@ -202,10 +195,8 @@ public:
 	BitSampleRate();
 	BitSampleRate(const string &, int, int);
 	
-	int getObjId() const;
 	int init(bytevector const &, const string &s = "");
 	bytevector serialize() const;
-	BitSampleRate * clone() const;
 	
 	void print() const;
 	void transform(WAV_File *, const string &) const;

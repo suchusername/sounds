@@ -78,10 +78,6 @@ UniformDataSamples::~UniformDataSamples() {
 	if (y != nullptr) delete [] y;
 }
 
-int UniformDataSamples::getObjId() const {
-	return 0;
-}
-
 int UniformDataSamples::init(bytevector const &v, const string & s) {
 	/*
 	Initializes an object UniformDataSamples from its bytevector. Format is defined below.
@@ -134,11 +130,6 @@ bytevector UniformDataSamples::serialize() const {
 	}
 		
 	return v;
-}
-
-UniformDataSamples * UniformDataSamples::clone() const {
-	UniformDataSamples *u;
-	return u;
 }
 
 void UniformDataSamples::print() const {

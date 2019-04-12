@@ -12,16 +12,8 @@ BitSampleRate::BitSampleRate() : Query(), bits(16), block(1) {}
 
 BitSampleRate::BitSampleRate(const string &s, int bits, int block) : Query(s), bits(bits), block(block) {}
 
-int BitSampleRate::getObjId() const {
-	//TODO
-	return 0;
-}
-
 int BitSampleRate::init(bytevector const &v, const string &s) {
-	if (v.len() != 16) throw "BitSampleRate::init(): bytevector size must be 16 bytes";
-	file_id = to_string(readUll(v, 0));
-	bits = readInt(v, 8);
-	block = readInt(v, 12);	
+	throw "BitSampleRate::init(): not implemented.";
 	return 0;
 }
 
@@ -32,18 +24,10 @@ bytevector BitSampleRate::serialize() const {
 	4 bytes: block (int)
 	*/
 	
-	if (!is_number(file_id)) throw "BitSampleRate::serialize(): file_id must be an integer";
+	throw "BitSampleRate::serialize(): not implemented.";
 	
-	bytevector v(16);
-	writeUll(stoull(file_id), v, 0);
-	writeInt(bits, v, 8);
-	writeInt(block, v, 12);
+	bytevector v;
 	return v;	
-}
-
-BitSampleRate * BitSampleRate::clone() const {
-	BitSampleRate *c;
-	return c;
 }
 
 void BitSampleRate::print() const {
@@ -59,7 +43,6 @@ void BitSampleRate::transform(WAV_File *file, const string &new_id) const {
 	Multiplies the signal by such an amount that there are no overflows and reduces bit rate and sample rate.
 	*/
 	
-	if (!is_number(new_id)) throw "BitSampleRate::transform(): new file id must be an integer.";
 	if ((bits < 1) || (bits > 16)) throw "BitSampleRate::transform(): invalid bit rate.";
 	if (block < 1) throw "BitSampleRate::transform(): invalid block size.";
 	
@@ -71,7 +54,7 @@ void BitSampleRate::transform(WAV_File *file, const string &new_id) const {
 		if (arr[i] < -max) max= -arr[i];
 	}
 	double k = (double) 28000 / (double) max;
-	Volume V("999999999", k);
+	Volume V("", k);
 	V.transform(file, "1");
 	
 	for (int i = 0; i < arr.N; i++) {
