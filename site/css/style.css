@@ -1,9 +1,9 @@
-
 body{
   background: rgba(120,120,120,0.9);
 }
 
 .row_1{
+	height: 40px;
 	text-align: center;
 	font-family: Courier New;
 	color: #ffffff;
@@ -75,6 +75,3 @@ form button:hover{
 form button:active{
   border:0;
 }
-
-
-
