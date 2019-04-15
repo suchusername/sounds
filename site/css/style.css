@@ -3,10 +3,24 @@ body{
   background: rgba(120,120,120,0.9);
 }
 
-row_1{
-	height : 40px;
+.row_1{
+	text-align: center;
+	font-family: Courier New;
+	color: #ffffff;
 }
 
+.el_1_1:hover 
+{
+	background: rgba(0,0,0,0.9);
+}
+.el_1_2:hover
+{
+	background: rgba(0,0,0,0.9);
+}
+.el_1_3:hover
+{
+	background: rgba(0,0,0,0.9);
+}
 
 form{
   position: sticky;
@@ -26,7 +40,7 @@ form p{/**/
   text-align: center;
  
   color: #ffffff;
-  font-family: Arial;
+  font-family: Courier New;
 }
 form input{
  position: absolute;
@@ -52,6 +66,7 @@ form button{
   border-bottom: 4px solid #117A60;
   transition: all .2s ease;
   outline: none;
+  font-family: Courier New;
 }
 form button:hover{
   background: #149174;
