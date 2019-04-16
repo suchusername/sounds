@@ -91,6 +91,7 @@ public:
 
 	AudioFile(string file_id, int size, int fd, int *data, int NumSamples, int SampleRate);
 	virtual ~AudioFile() {};
+	virtual int load(string const &) = 0;
 	virtual int init(bytevector const &, const string &) = 0;
 	virtual bytevector serialize() const = 0;
 	
@@ -109,6 +110,7 @@ public:
 	
 	WAV_File(); // default constructor for prototype object for Object Factory
 	~WAV_File(); 
+	int load(string const &);
 	int init(bytevector const &, const string &fcode = DEFAULT_FCODE); // parsing "WAVparse.cc"
 	bytevector serialize() const; // compressing to a file of WAV format
 	
@@ -202,4 +204,12 @@ public:
 	void transform(WAV_File *, const string &) const;
 };
 
+
+/* Raw API */
+
+string sounds_crop(const string &name, const string &new_name, int left, int right);
+
+string sounds_volume(const string &name, const string &new_name, double k, int left, int right, bool smooth);
+
+string sounds_info(const string &name);
 

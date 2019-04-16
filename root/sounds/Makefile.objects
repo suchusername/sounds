@@ -1,0 +1,8 @@
+sounds.lo: /Users/apple/Desktop/MIPT/ICT/SoundProject/root/sounds/sounds.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/Users/apple/Desktop/MIPT/ICT/SoundProject/root/sounds $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /Users/apple/Desktop/MIPT/ICT/SoundProject/root/sounds/sounds.cc -o sounds.lo 
+$(phplibdir)/sounds.la: ./sounds.la
+	$(LIBTOOL) --mode=install cp ./sounds.la $(phplibdir)
+
+./sounds.la: $(shared_objects_sounds) $(SOUNDS_SHARED_DEPENDENCIES)
+	$(LIBTOOL) --mode=link $(CC) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_sounds) $(SOUNDS_SHARED_LIBADD)
+

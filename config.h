@@ -3,10 +3,12 @@
 
 #define CONFIG_H
 
+const std::string PATH_TO_AUDIOS_PHP = "..";
+
 const int QUERY_VOLUME_DEFAULT_FADE_IN = 300000; // used by Volume::transform()
 
 const std::string FILE_SAVE_DIRECTORY = "Audios/Archive"; // path from root of directory, used by WAV_File::init()
-const std::string DEFAULT_FCODE = "123234782374"; // TODO: remove, used by WAV_File::init()
+const std::string DEFAULT_FCODE = "../Audios/Archive/temp"; // in relation to SoundProject/root, used by WAV_File::init(), 
 
 const std::string DEFAULT_FILE_NAME = "Audios/tone1sec.wav";
 const int SAMPLES_PER_LINE = 16;

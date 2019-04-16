@@ -56,6 +56,23 @@ WAV_File::~WAV_File() {
 	} // else data = v.body and fd = -1 (as default)
 }
 
+int WAV_File::load(string const &str) {
+	/*
+	Loads a file that a name 'str' from SoundProject directory
+	
+	Ex: A.load("Audios/alim.wav") will load a file with path: SoundProject/Audios/alim.wav
+	*/
+	try {
+		bytevector b;
+		b.read_from_file(str);
+		init(b);
+	} catch (const char *err) {
+		throw err;
+	}
+	
+	return 0;
+}
+
 int WAV_File::init(bytevector const &v, const string & fcode) {
 	/*
 	data - container with bytes of WAV file (and maybe code of a file?)
@@ -70,7 +87,9 @@ int WAV_File::init(bytevector const &v, const string & fcode) {
 	*/
 	
 	// how to name the file? maybe file code should come in bytevector?
-	string fname = FILE_SAVE_DIRECTORY + "/" + fcode + ".wav";
+	if (fcode.length() == 0) throw "WAV_File::init(): file name cannot be empty.";
+	
+	string fname = fcode + ".wav";
 	v.write_to_file(fname);
 	
 	file_id = fcode;

@@ -98,7 +98,7 @@ void Volume::transform(WAV_File *file, const string &new_id) const {
 		}
 		if (fade == 0) throw "Volume::transform(): fade is equal to 0.";
 		
-		cout << l << " " << r << " " << fade << endl;
+		//cout << l << " " << r << " " << fade << endl;
 		
 		double alpha = ((double) (k-1)) / ((double) fade);
 		double beta = ((double) (1-k)*l) / ((double) fade) + 1;

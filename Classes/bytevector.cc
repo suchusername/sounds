@@ -73,6 +73,8 @@ int bytevector::write_to_file(string const &name) const {
 	string path = name;
 	//cout << path << endl;
 	int fd = open(path.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0666);
+	//php_printf("path: %s\n", path.c_str());
+	//if (fd < 0) throw path.c_str();
 	if (fd < 0) throw "bytevector::write_to_file(): could not create a file.";
 	
 	int err = write(fd, body, size);
