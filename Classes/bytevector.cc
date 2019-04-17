@@ -105,6 +105,7 @@ int bytevector::read_from_file(string const &name) {
 	string path = name;
 	
 	int fd = open(path.c_str(), O_RDONLY, 0666);
+	//php_printf("path: %s\n", path.c_str());
 	if (fd < 0) throw "bytevector::read_from_file(): could not open a file.";
 	
 	int fsize = FdGetFileSize(fd);

@@ -17,7 +17,6 @@ using namespace std;
 
 string sounds_crop(const string &name, const string &new_name, int left, int right) {
 	try {
-			
 		//cout << name << " " << new_name << endl;
 			
 		bytevector b;
@@ -25,7 +24,10 @@ string sounds_crop(const string &name, const string &new_name, int left, int rig
 		WAV_File A;
 		A.init(b, new_name);
 		
-		Crop Q("", left, right);
+		int l = (int) (left / 1000 * A.SampleRate);
+		int r = (int) (right / 1000 * A.SampleRate);
+		
+		Crop Q("", l, r);
 		Q.transform(&A, new_name);
 		
 	} catch (const char *err) {
@@ -45,7 +47,10 @@ string sounds_volume(const string &name, const string &new_name, double k, int l
 		WAV_File A;
 		A.init(b, new_name);
 		
-		Volume Q("", k, left, right, smooth);
+		int l = (int) (left / 1000 * A.SampleRate);
+		int r = (int) (right / 1000 * A.SampleRate);
+		
+		Volume Q("", k, l, r, smooth);
 		Q.transform(&A, new_name);
 		
 	} catch (const char *err) {
@@ -72,7 +77,6 @@ string sounds_info(const string &name) {
 		ret += "Number of samples: " + to_string(A.NumSamples) + " samples<br>";
 		ret += "Duration: " + to_string((double) A.NumSamples / A.SampleRate) + " sec<br>";
 		ret += "<br>";
-		return ret;
 		
 	} catch (const char *err) {
 		printf("%s\n", err);
@@ -80,8 +84,11 @@ string sounds_info(const string &name) {
 		return error;
 	}
 	
+	return ret;
 }
 
-
+string sounds_classify(const string &name) {
+	return "Not implemented yet.";
+}
 
 

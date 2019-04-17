@@ -53,8 +53,8 @@ PHP_FUNCTION(sounds_crop) {
 	
 	string name_str(name);
 	string new_name_str(new_name);
-	name_str = PATH_TO_AUDIOS_PHP + "/" + name_str;
-	new_name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + new_name_str; 
+	name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + name_str;
+	new_name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + new_name_str;
 	
 	string ret = sounds_crop(name_str, new_name_str, (int)left, (int)right);
 	php_printf("ret = %s\n", ret.c_str());
@@ -80,7 +80,7 @@ PHP_FUNCTION(sounds_volume) {
 	
 	string name_str(name);
 	string new_name_str(new_name);
-	name_str = PATH_TO_AUDIOS_PHP + "/" + name_str;
+	name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + name_str;
 	new_name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + new_name_str;
 	
 	string ret = sounds_volume(name_str, new_name_str, k, (int) left, (int) right, (bool) smooth);
@@ -98,7 +98,7 @@ PHP_FUNCTION(sounds_info){
     }
 	
 	string name_str(name);
-	name_str = PATH_TO_AUDIOS_PHP + "/" + name_str;
+	name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + name_str;
 	
     string ret = sounds_info(name_str);
 

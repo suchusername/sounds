@@ -207,9 +207,23 @@ public:
 
 /* Raw API */
 
-string sounds_crop(const string &name, const string &new_name, int left, int right);
+string sounds_crop(const string &name, const string &new_name, double left = 0, double right = -1);
+// name - name of a file to edit
+// new_name - save edited file as (without extension .wav)
+// left - left crop border (in ms), 0 for minimum border
+// right - right crop border (in ms), -1 for maximum border
 
-string sounds_volume(const string &name, const string &new_name, double k, int left, int right, bool smooth);
+string sounds_volume(const string &name, const string &new_name, double k, double left = 0, double right = -1, bool smooth = false);
+// name - name of a file to edit
+// new_name - save edited file as (without extension .wav)
+// k - magnitude of change, 1 to make no changes
+// left - left border (in ms), 0 for minimum border
+// right - right border (in ms), -1 for maximum border
+// smooth - whether to make changes smooth
+
+string sounds_classify(const string &name);
+// name - name of a file to classify
 
 string sounds_info(const string &name);
+// name - name of a file to view information about
 

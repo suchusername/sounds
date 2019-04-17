@@ -8,7 +8,8 @@ if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'])){
 }
 
 // Каталог, в который мы будем принимать файл:
-$uploaddir = './files/';
+$uploaddir = '../Audios/Archive/';
+$uploadfile_name = $_FILES['uploadfile']['name'];
 $uploadfile = $uploaddir.basename($_FILES['uploadfile']['name']); //разобраться с русскими буквами!
 
 //проверим на допустимость расширения файла, mime-типа и размера
@@ -35,8 +36,13 @@ if (copy($_FILES['uploadfile']['tmp_name'], $uploadfile))	{
 echo "<BR>";
 
 echo $uploadfile;
-echo "<br>"
-echo sounds_info('Audios/alltta_bucket.wav');
+echo "<br>";
+echo $uploadfile_name;
+echo "<br>";
+echo sounds_info($uploadfile_name);
+//echo sounds_crop('Audios/alltta_bucket.wav', 'cropped', 0, 8000);
+echo "<br>";
+echo "<br>";
 
 //Вставить код обработки файла
 echo "ArcType: ".$_POST['ArcType']."<BR>";
