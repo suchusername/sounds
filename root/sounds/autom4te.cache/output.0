@@ -4181,7 +4181,7 @@ $as_echo "$ext_output" >&6; }
 
 
 if test "$PHP_SOUNDS" = "yes"; then
-	CXX_FLAGS="-std=c++11"
+	CXXFLAGS="-std=c++11 -Wno-deprecated-register"
 	
   if test -z "$php_cxx_done"; then
     ac_ext=cpp

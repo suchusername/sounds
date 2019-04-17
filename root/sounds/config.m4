@@ -5,7 +5,7 @@ PHP_ARG_ENABLE(sounds,
 	[ --enable-sounds   Enable "sounds" extension support])
 
 if test "$PHP_SOUNDS" = "yes"; then
-	CXX_FLAGS="-std=c++11"
+	CXXFLAGS="-std=c++11 -Wno-deprecated-register"
 	PHP_REQUIRE_CXX()
 	PHP_SUBST(SOUNDS_SHARED_LIBADD)
 	PHP_ADD_LIBRARY(stdc++, 1, SOUNDS_SHARED_LIBADD)

@@ -48,8 +48,8 @@ void Query::writeShort(int x, bytevector &b, int pos) const {
 }
 
 bool Query::is_number(const string & s) const {
-	return true;
-    //return !s.empty() && find_if(s.begin(), s.end(), [](char c) { return !isdigit(c); }) == s.end();
+	//return true;
+    return !s.empty() && find_if(s.begin(), s.end(), [](char c) { return !isdigit(c); }) == s.end();
 }
 
 Query::Query() {}

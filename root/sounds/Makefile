@@ -30,7 +30,7 @@ CFLAGS_CLEAN = $(CFLAGS)
 CPP = cc -E
 CPPFLAGS = -DHAVE_CONFIG_H
 CXX = g++
-CXXFLAGS = -g -O2
+CXXFLAGS = -std=c++11 -Wno-deprecated-register
 CXXFLAGS_CLEAN = $(CXXFLAGS)
 EXTENSION_DIR = /usr/lib/php/extensions/no-debug-non-zts-20131226
 PHP_EXECUTABLE = /usr/bin/php

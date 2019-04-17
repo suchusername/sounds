@@ -30,8 +30,8 @@ Kernel configured for up to 4 processors.
 Processor type: x86_64h (Intel x86-64h Haswell)
 Processors active: 0 1 2 3
 Primary memory available: 8.00 gigabytes
-Default processor set: 274 tasks, 1073 threads, 4 processors
-Load average: 2.17, Mach factor: 1.84
+Default processor set: 269 tasks, 1114 threads, 4 processors
+Load average: 1.31, Mach factor: 2.68
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
@@ -249,7 +249,7 @@ clang: error: unknown argument: '-qversion'
 clang: error: no input files
 configure:4319: $? = 1
 configure:4323: checking whether we are using the GNU C++ compiler
-configure:4342: g++ -c   conftest.cpp >&5
+configure:4342: g++ -c -std=c++11 -Wno-deprecated-register  conftest.cpp >&5
 configure:4342: $? = 0
 configure:4351: result: yes
 configure:4360: checking whether g++ accepts -g
@@ -395,16 +395,16 @@ configure: failed program was:
 configure:5869: checking the maximum length of command line arguments
 configure:5981: result: 196608
 configure:5993: checking command to parse /usr/bin/nm -B output from cc object
-configure:6098: g++ -c -g -O2  conftest.cpp >&5
+configure:6098: g++ -c -std=c++11 -Wno-deprecated-register  conftest.cpp >&5
 configure:6101: $? = 0
 configure:6105: /usr/bin/nm -B conftest.o \| sed -n -e 's/^.*[ 	]\([BCDEGRST][BCDEGRST]*\)[ 	][ 	]*\([_A-Za-z][_A-Za-z0-9]*\)$/\1 \2 \2/p' \> conftest.nm
 configure:6108: $? = 0
 cannot find nm_test_var in conftest.nm
-configure:6098: g++ -c -g -O2  conftest.cpp >&5
+configure:6098: g++ -c -std=c++11 -Wno-deprecated-register  conftest.cpp >&5
 configure:6101: $? = 0
 configure:6105: /usr/bin/nm -B conftest.o \| sed -n -e 's/^.*[ 	]\([BCDEGRST][BCDEGRST]*\)[ 	][ 	]*_\([_A-Za-z][_A-Za-z0-9]*\)$/\1 _\2 \2/p' \> conftest.nm
 configure:6108: $? = 0
-configure:6160: g++ -o conftest -g -O2   conftest.cpp conftstm.o >&5
+configure:6160: g++ -o conftest -std=c++11 -Wno-deprecated-register   conftest.cpp conftstm.o >&5
 configure:6163: $? = 0
 configure:6201: result: ok
 configure:6205: checking for objdir
@@ -427,7 +427,7 @@ configure:6895: result: nmedit
 configure:6918: checking for -single_module linker flag
 configure:6939: result: yes
 configure:6941: checking for -exported_symbols_list linker flag
-configure:6957: g++ -o conftest -g -O2   -Wl,-exported_symbols_list,conftest.sym conftest.cpp -lstdc++  >&5
+configure:6957: g++ -o conftest -std=c++11 -Wno-deprecated-register   -Wl,-exported_symbols_list,conftest.sym conftest.cpp -lstdc++  >&5
 configure:6960: $? = 0
 configure:6974: result: yes
 configure:7092: checking if cc supports -fno-rtti -fno-exceptions
@@ -468,18 +468,18 @@ configure:10535: checking if the linker (/Applications/Xcode.app/Contents/Develo
 configure:10550: result: no
 configure:10601: checking whether the g++ linker (/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld) supports shared libraries
 configure:11499: result: yes
-configure:11520: g++ -c -g -O2  conftest.cpp >&5
+configure:11520: g++ -c -std=c++11 -Wno-deprecated-register  conftest.cpp >&5
 configure:11523: $? = 0
 configure:11679: checking for g++ option to produce PIC
 configure:11969: result: -fno-common
 configure:11977: checking if g++ PIC flag -fno-common works
-configure:11995: g++ -c -g -O2  -fno-common -DPIC conftest.cpp >&5
+configure:11995: g++ -c -std=c++11 -Wno-deprecated-register  -fno-common -DPIC conftest.cpp >&5
 configure:11999: $? = 0
 configure:12012: result: yes
 configure:12040: checking if g++ static flag -static works
 configure:12068: result: no
 configure:12078: checking if g++ supports -c -o file.o
-configure:12099: g++ -c -g -O2  -o out/conftest2.o conftest.cpp >&5
+configure:12099: g++ -c -std=c++11 -Wno-deprecated-register  -o out/conftest2.o conftest.cpp >&5
 configure:12103: $? = 0
 configure:12125: result: yes
 configure:12151: checking whether the g++ linker (/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld) supports shared libraries
@@ -619,7 +619,7 @@ CPP='cc -E'
 CPPFLAGS=' -DHAVE_CONFIG_H'
 CXX='g++'
 CXXCPP='g++ -E'
-CXXFLAGS='-g -O2'
+CXXFLAGS='-std=c++11 -Wno-deprecated-register'
 DEFS='-DHAVE_CONFIG_H'
 DSYMUTIL='dsymutil'
 ECHO='/bin/echo'
