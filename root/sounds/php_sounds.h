@@ -7,6 +7,7 @@
 PHP_FUNCTION(sounds_crop);
 PHP_FUNCTION(sounds_volume);
 PHP_FUNCTION(sounds_info);
+PHP_FUNCTION(sounds_classify);
 
 extern zend_module_entry sounds_module_entry;
 #define phpext_sounds_ptr &sounds_module_entry

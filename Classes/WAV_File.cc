@@ -65,7 +65,8 @@ int WAV_File::load(string const &str) {
 	try {
 		bytevector b;
 		b.read_from_file(str);
-		init(b);
+		file_id = str;
+		init(b, str);
 	} catch (const char *err) {
 		throw err;
 	}
@@ -73,7 +74,7 @@ int WAV_File::load(string const &str) {
 	return 0;
 }
 
-int WAV_File::init(bytevector const &v, const string & fcode) {
+int WAV_File::init(bytevector const &v, const string &fcode) {
 	/*
 	data - container with bytes of WAV file (and maybe code of a file?)
 	
@@ -86,11 +87,11 @@ int WAV_File::init(bytevector const &v, const string & fcode) {
 		or exception is thrown
 	*/
 	
-	// how to name the file? maybe file code should come in bytevector?
 	if (fcode.length() == 0) throw "WAV_File::init(): file name cannot be empty.";
 	
-	string fname = fcode + ".wav";
-	v.write_to_file(fname);
+	bool file_exists = (fcode == file_id); // whether needed file already exists (if init() was called from load())
+	if (!file_exists) v.write_to_file(fcode);
+	
 	
 	file_id = fcode;
 	size = v.size;
@@ -155,7 +156,7 @@ int WAV_File::init(bytevector const &v, const string & fcode) {
 	
 	// all fields, except "fd" and "data" are filled. Now opening a file that was created earlier.
 	//cout << fname << endl;
-	fd = open(fname.c_str(), O_RDONLY);
+	fd = open(fcode.c_str(), O_RDONLY);
 	if (fd < 0) throw "WAV_File::init(): failed to open a file.";
 	
 	data = (int *)mmap(0, size, PROT_READ, MAP_SHARED, fd, 0);
@@ -234,4 +235,12 @@ void WAV_File::print() const {
 	cout << "NumSamples: " << NumSamples << endl;
 	cout << "Duration: " << (double) NumSamples / SampleRate << "s" << endl;
 }
+
+string WAV_File::classify() const {
+	cout << "file_id: " << file_id << endl;
+	throw "WAV_File::classify(): Not implemented.";
+	return "OK";
+}
+
+
 

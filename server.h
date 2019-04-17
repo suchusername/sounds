@@ -95,6 +95,7 @@ public:
 	virtual int init(bytevector const &, const string &) = 0;
 	virtual bytevector serialize() const = 0;
 	
+	virtual string classify() const = 0;
 	virtual void print() const = 0;	
 };
 
@@ -115,6 +116,7 @@ public:
 	bytevector serialize() const; // compressing to a file of WAV format
 	
 	UniformDataSamples getSamples() const; // returns a container with data points
+	string classify() const;
 	void print() const;
 };
 
@@ -215,7 +217,7 @@ string sounds_crop(const string &name, const string &new_name, double left = 0, 
 
 string sounds_volume(const string &name, const string &new_name, double k, double left = 0, double right = -1, bool smooth = false);
 // name - name of a file to edit
-// new_name - save edited file as (without extension .wav)
+// new_name - save edited file as 
 // k - magnitude of change, 1 to make no changes
 // left - left border (in ms), 0 for minimum border
 // right - right border (in ms), -1 for maximum border

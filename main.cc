@@ -1,32 +1,30 @@
 #include <stdio.h>
 #include <string>
+#include <vector>
 
-#include "wrapper.h"
+#include "server.h"
+#include "Classes/DataSamples.cc"
+#include "Classes/bytevector.cc"
+#include "Classes/WAV_File.cc"
+#include "Classes/UniformDataSamples.cc"
+#include "Classes/Queries/Crop.cc"
+#include "Classes/Queries/Volume.cc"
+#include "Classes/Queries/BitSampleRate.cc"
 
 #include <iostream>
 using namespace std;
 
 int main() {
 	
-	sounds_crop("Audios/alltta_bucket.wav", "result", 1000000, -1);
-	sounds_volume("Audios/Archive/result.wav", "result", 0.05, 200000, 1800000, 1);
-	
-	//cout << sounds_hi("hihi") << endl;
-	
-	/*try {
+	try {
 		WAV_File A;
-		A.load("Audios/alltta_bucket.wav");
+		A.load("Audios/Archive/alim_A.wav");
 		A.print();
 		
-		Crop X("", 0, 2000000);
-		X.transform(&A, "hahahha");
-		
-		Volume Y("", 5, 200000, 1800000, 1);
-		Y.print();
-		Y.transform(&A, "hahahha");
+		A.classify();
 		
 	} catch(const char *err) {
 		printf("%s\n", err);
-	}*/
+	}
 }
 

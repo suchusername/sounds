@@ -13,6 +13,7 @@ static zend_function_entry sounds_functions[] = {
 	PHP_FE(sounds_crop, NULL)
 	PHP_FE(sounds_volume, NULL)
 	PHP_FE(sounds_info, NULL)
+	PHP_FE(sounds_classify, NULL)
     {NULL, NULL, NULL}
 };
 
@@ -90,7 +91,7 @@ PHP_FUNCTION(sounds_volume) {
 }
 
 
-PHP_FUNCTION(sounds_info){
+PHP_FUNCTION(sounds_info) {
     char *name;
     int name_len;
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &name, &name_len) == FAILURE) {
@@ -104,4 +105,23 @@ PHP_FUNCTION(sounds_info){
 
     RETURN_STRING(ret.c_str(), 1);
 }
+
+PHP_FUNCTION(sounds_classify) {
+    char *name;
+    int name_len;
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &name, &name_len) == FAILURE) {
+        RETURN_NULL();
+    }
+	
+	string name_str(name);
+	name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + name_str;
+	
+    string ret = sounds_classify(name_str);
+
+    RETURN_STRING(ret.c_str(), 1);
+}
+
+
+
+
 

@@ -12,10 +12,9 @@
 #include "Classes/Queries/BitSampleRate.cc"
 
 #include <iostream>
-#include <fstream>
 using namespace std;
 
-string sounds_crop(const string &name, const string &new_name, int left, int right) {
+string sounds_crop(const string &name, const string &new_name, double left, double right) {
 	try {
 		//cout << name << " " << new_name << endl;
 			
@@ -39,7 +38,7 @@ string sounds_crop(const string &name, const string &new_name, int left, int rig
 	return "OK";
 }
 
-string sounds_volume(const string &name, const string &new_name, double k, int left, int right, bool smooth) {
+string sounds_volume(const string &name, const string &new_name, double k, double left, double right, bool smooth) {
 	try {
 		
 		bytevector b;
@@ -63,13 +62,16 @@ string sounds_volume(const string &name, const string &new_name, double k, int l
 }
 
 string sounds_info(const string &name) {
+	
+	string ret;
+	
 	try {
 		bytevector b;
 		b.read_from_file(name);
 		WAV_File A;
 		A.init(b);
 		
-		string ret = "<br> <br> Stats: <br>";
+		ret = "<br> <br> Stats: <br>";
 		ret += "Size: " + to_string(A.size) + " bytes<br>";
 		ret += "Number of audio channels: " + to_string(A.NumChannels) + "<br>";
 		ret += "Sample rate: " + to_string(A.SampleRate) + " samples/sec<br>";
@@ -88,6 +90,23 @@ string sounds_info(const string &name) {
 }
 
 string sounds_classify(const string &name) {
+	
+	string ret;
+	
+	try {
+		bytevector b;
+		b.read_from_file(name);
+		WAV_File A;
+		A.init(b, name);
+		
+		ret = A.classify();
+		
+	} catch (const char *err) {
+		printf("%s\n", err);
+		string error(err);
+		return error;
+	}
+	
 	return "Not implemented yet.";
 }
 
