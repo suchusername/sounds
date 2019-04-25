@@ -33,10 +33,14 @@ void Crop::transform(WAV_File *file, const string &new_id) const {
 	Saves it under name new_id.
 	*/
 	
+	// Получет массив из точек аудиозаписи
 	UniformDataSamples arr = file->getSamples();
+	// Само преобразование
 	arr.crop(left, right, 0);
-		
-	bytevector b(44 + 2*arr.N);
+	
+	// Запись нового файла
+	// Начать катать
+	bytevector b(44 + 2*arr.N); 
 	b.writeString("RIFF", 0);
 	b.writeInt(36+2*arr.N, 4); // new size
 	b.writeString("WAVE", 8);
@@ -54,6 +58,7 @@ void Crop::transform(WAV_File *file, const string &new_id) const {
 	for (int i = 0; i < arr.N; i++) writeShort((int) arr[i], b, 44+2*i);
 	
 	file->init(b, new_id);	
+	// Закончить катать
 }
 
 
