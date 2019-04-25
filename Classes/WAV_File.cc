@@ -6,10 +6,14 @@
 #include "bytevector.cc"
 #include "../config.h"
 
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <stdlib.h>
 #include <string>
 #include <fcntl.h>
 #include <unistd.h>
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 static int readStringFromFile(int *data, int pos, int len, string &buf, int fileSize) { // len - length of a string to read
@@ -89,6 +93,7 @@ int WAV_File::init(bytevector const &v, const string &fcode) {
 	
 	if (fcode.length() == 0) throw "WAV_File::init(): file name cannot be empty.";
 	
+	//cout << fcode << " " << file_id << endl;
 	bool file_exists = (fcode == file_id); // whether needed file already exists (if init() was called from load())
 	if (!file_exists) v.write_to_file(fcode);
 	
@@ -210,6 +215,7 @@ UniformDataSamples WAV_File::getSamples() const {
 		if (offset % 4 == 2) {
 			for (int i = 0; i < NumSamples; i++) {
 				u[i] = (double) (short) (data[11+offset/4+i] >> 16);
+				//if (13500 < i && i < 13510) cout << u[i] << endl;
 			}			
 		} else {
 			throw "WAV_File::getSamples(): offset must be even.";
@@ -223,6 +229,7 @@ UniformDataSamples WAV_File::getSamples() const {
 
 
 void WAV_File::print() const {
+	cout << "--- WAV file information ---" << endl;
 	cout << "file_id: " << file_id << endl;
 	cout << "size: " << size << " bytes" << endl;
 	cout << "Subchunk1Size: " << Subchunk1Size << endl;
@@ -232,14 +239,32 @@ void WAV_File::print() const {
 	cout << "ByteRate: " << ByteRate << endl;
 	cout << "BlockAlign: " << BlockAlign << endl;
 	cout << "BitDepth: " << BitDepth << endl;
+	cout << "offset: " << offset << " (default = 0)" << endl;
 	cout << "NumSamples: " << NumSamples << endl;
 	cout << "Duration: " << (double) NumSamples / SampleRate << "s" << endl;
 }
 
 string WAV_File::classify() const {
+	
 	cout << "file_id: " << file_id << endl;
-	throw "WAV_File::classify(): Not implemented.";
-	return "OK";
+	pid_t pid = fork();
+	if (pid == 0) {
+	      execlp("echo", "echo", CLASSIFIER_FILE_NAME.c_str(), file_id.c_str(), NULL);
+		  perror("execl");
+		  throw "WAV_File::classify(): Not implemented1.";
+	} else {
+		wait(0);
+	}
+	
+	ifstream in_file(ANSWER_FILE_NAME.c_str());
+	char *buffer = new char[MAX_INSTRUMENT_NAME];
+	in_file.read(buffer, MAX_INSTRUMENT_NAME);
+	in_file.close();
+	
+	string ret(buffer);
+	delete [] buffer;
+	
+	return ret;
 }
 
 

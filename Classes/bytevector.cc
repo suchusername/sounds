@@ -71,7 +71,7 @@ int bytevector::write_to_file(string const &name) const {
 	
 	//string path = FILE_SAVE_DIRECTORY + "/" + name;
 	string path = name;
-	cout << path << endl;
+	//cout << path << endl;
 	int fd = open(path.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	//php_printf("path: %s\n", path.c_str());
 	//if (fd < 0) throw path.c_str();

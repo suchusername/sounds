@@ -2,7 +2,7 @@
 
 // Проверим, успешно ли загружен файл
 //echo basename($_FILES['uploadfile']['tmp_name']);
-if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'])){
+if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'])) {
   echo "Upload error (1)!";
   exit;
 }

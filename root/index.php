@@ -12,7 +12,7 @@
 <body>
 	
 <table width = 100%>
-	<tr  class = "row_1"> <!-- названия -->
+	<tr class = "row_1"> <!-- названия -->
 		<td class = "el_1_1" width = "20%">
 			Files
 		</td>
@@ -32,7 +32,7 @@
   				<button type="submit">Upload</button>
 			</form>
 			<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-			<script  src="js/index.js"></script>
+			<script src="js/index.js"></script>
 		</td>
 		<td class = "el_2_2">
 		</td>

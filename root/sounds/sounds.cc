@@ -117,6 +117,7 @@ PHP_FUNCTION(sounds_classify) {
 	name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + name_str;
 	
     string ret = sounds_classify(name_str);
+	php_printf("ret = %s<br>", ret.c_str());
 
     RETURN_STRING(ret.c_str(), 1);
 }

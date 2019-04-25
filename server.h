@@ -190,6 +190,21 @@ public:
 	void transform(WAV_File *, const string &) const;
 };
 
+class Speed : public Query {
+public:
+	// Changes the speed of an audio
+	double mult;
+	
+	Speed();
+	Speed(const string &, double); // number of arguments = # of parameters
+	
+	int init(bytevector const &, const string &s = "");
+	bytevector serialize() const;
+	
+	void print() const;
+	void transform(WAV_File *, const string &) const;
+};
+
 class BitSampleRate : public Query {
 public:
 	// Reduces BitRate and SampleRate of a song

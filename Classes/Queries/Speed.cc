@@ -7,27 +7,27 @@
 #include <iostream>
 using namespace std;
 
-Crop::Crop() : Query(), left(0), right(0) {}
+Speed::Speed() : Query(), mult(1) {}
 
-Crop::Crop(const string &s, int l, int r) : Query(s), left(l), right(r) {}
+Speed::Speed(const string &s, double m) : Query(s), mult(m) {}
 
-int Crop::init(bytevector const &v, const string &s) {
-	throw "Crop::init(): not implemented.";
+int Speed::init(bytevector const &v, const string &s) {
+	throw "Speed::init(): not implemented.";
 	return 0;
 }
 
-bytevector Crop::serialize() const {
-	throw "Crop::serialize(): not implemented.";
+bytevector Speed::serialize() const {
+	throw "Speed::serialize(): not implemented.";
 	bytevector b;
 	return b;
 }
 
-void Crop::print() const {
+void Speed::print() const {
 	cout << "file_id = " << file_id << endl;
-	cout << "left = " << left << ", right = " << right << endl;
+	cout << "mult = " << mult << endl;
 }
 
-void Crop::transform(WAV_File *file, const string &new_id) const {
+void Speed::transform(WAV_File *file, const string &new_id) const {
 	/*
 	Performs transformation of a file.
 	Saves it under name new_id.
@@ -35,8 +35,8 @@ void Crop::transform(WAV_File *file, const string &new_id) const {
 	
 	// Получет массив из точек аудиозаписи
 	UniformDataSamples arr = file->getSamples();
-	// Само преобразование
-	arr.crop(left, right, 0);
+	// Само преобразование массив arr
+	
 	
 	// Запись нового файла
 	// Начать катать
@@ -57,7 +57,6 @@ void Crop::transform(WAV_File *file, const string &new_id) const {
 	
 	for (int i = 0; i < arr.N; i++) writeShort((int) arr[i], b, 44+2*i);
 	
-	file->file_id = "";
 	file->init(b, new_id);	
 	// Закончить катать
 }

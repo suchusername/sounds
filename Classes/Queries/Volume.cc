@@ -125,10 +125,13 @@ void Volume::transform(WAV_File *file, const string &new_id) const {
 		}
 		
 	} else {
+		//cout << "l = " << l << ", r = " << r << endl;
 		for (int i = l; i < r; i++) {
+			//if (13500 < i && i < 13510) cout << arr[i] << endl;
 			arr[i] = (int) (arr[i] * k);
 			if (arr[i] > 32767) arr[i] = 32767;
 			if (arr[i] < -32767) arr[i] = 32767;
+			//if (10500 < i && i < 13510) cout << arr[i] << endl;
 		}
 	}
 	
@@ -148,8 +151,10 @@ void Volume::transform(WAV_File *file, const string &new_id) const {
 	b.writeString("data", 36);
 	b.writeInt(2*arr.N, 40);
 	
+	//for (int i = 0; i < arr.N; i++) if (10500 < i && i < 13510) cout << arr[i] << endl;
 	for (int i = 0; i < arr.N; i++) writeShort((int) arr[i], b, 44+2*i);
 	
+	file->file_id = "";
 	file->init(b, new_id);	
 }
 

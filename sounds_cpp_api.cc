@@ -107,7 +107,8 @@ string sounds_classify(const string &name) {
 		return error;
 	}
 	
-	return "Not implemented yet.";
+	php_printf("ret = %s<br>", ret.c_str());
+	return ret;
 }
 
 
