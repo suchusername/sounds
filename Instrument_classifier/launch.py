@@ -58,7 +58,7 @@ To use it, please:
     2) Open a terminal and go to that directory.
     3) Then use this command:
     python -W ignore launch.py your_file_name.wav
-    4) See the results in out.txt file in the same directory
+    4) See the results in answer.txt file in the same directory
 '''
 
 def get_wav_info(wav_filename):
@@ -182,8 +182,8 @@ X = X.reshape(train_shape)
 
 Y = model.predict(X)
 
-# Printing results to out.txt.
-with open('out.txt', 'w+') as f:
+# Printing results to answer.txt.
+with open('answer.txt', 'w+') as f:
     inst = what_is_it(Y)
     res = inst_probability(Y)
     print(str(inst), file=f) 
