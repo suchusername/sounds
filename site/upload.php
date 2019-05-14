@@ -103,8 +103,17 @@ function send_file($option){
 	echo '</ul>';
 	closedir($dir);
 	?>
-	<button id="btnfun1" name="btnfun1" onClick='location.href="?btn_f1=1"'>functon_1</button>
+	<p>
+	<button id="btnfun1" name="btn_vol" onClick='location.href="?btn_f1=1"'>Increase volume</button>
+	<input type="text" name="text_vol" id="text_vol" pattern="[0-9].[0-9].{3,}">
+	<script>
+	var text_vol = document.getElementById("text_vol");
+
+	</script>
+	</p>
+	<p>
 	<button id="btnfun2" name="btnfun2" onClick='location.href="?btn_f2=1"'>functon_2</button>
+	</p>
 
 </form>	
 
