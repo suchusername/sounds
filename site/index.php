@@ -1,32 +1,44 @@
-<html>
+
+<!DOCTYPE html>
+<html lang="en" >
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=Windows-1251">
-<link href="index.css" rel="stylesheet" type="text/css" />
-<title>File upload test</title>  
+  	<meta charset="UTF-8">
+ 	<title>Cool site</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="script.js"></script>
+		
+	
 </head>
+
 <body>
+<table width = 100%>
+	<tr  class = "row_1"> 
+		<td class = "el_1_1" width = "30%">
+			Files
+		</td>
+		<td class = "el_1_2">
+			What to do
+		</td>
+	</tr>
+	<tr class = "row_2" height = "300px">
+		<td  class = "el_2_1">
+	<form id="form1" action="upload.php" enctype="multipart/form-data" method="POST">
+		<div id = "div"> </div>
 
-<?php
-	header("Content-Type: text/html; charset=Windows-1251");
-?>
+		<button type="submit">Upload</button>
+	</form>		
+	<script  src="js/index.js"></script>
+
+	<button onclick="generateForm()">Add more files</button>
+		</td>
+		<td class = "el_2_2">
+		</td>
+	</tr>
 
 
-
-<form action=upload.php enctype='multipart/form-data' method='POST'>
-	File upload: <input name='uploadfile' type='file' />
-		<ul>
-		<INPUT TYPE=radio NAME='ArcType' ID='ArcType' VALUE=0 CHECKED /><label for='ArcType'>truncate</label><BR>
-		<BR>
-		<INPUT TYPE=radio NAME='ArcType' ID='ArcType' VALUE=1 CHECKED /><label for='ArcType'>enhance</label><BR>
-		<BR>
-		<INPUT TYPE=radio NAME='ArcType' ID='ArcType' VALUE=2 CHECKED /><label for='ArcType'>format</label><BR>
-		<BR>
-		<INPUT TYPE=radio NAME='ArcType' ID='ArcType' VALUE=3 CHECKED /><label for='ArcType'>merge</label><BR>
-		<BR>
-		<INPUT TYPE=radio NAME='ArcType' ID='ArcType' VALUE=4 CHECKED /><label for='ArcType'>frequencies</label>
-		</ul>
-		<button type='submit' name='submit'>Upload</button>
-</form>
+</table>
 
 </body>
 </html>
+
