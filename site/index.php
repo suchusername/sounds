@@ -19,7 +19,7 @@
 	</form>		
 	<script  src="js/index.js"></script>
 
-	<button onclick="generateForm()">Add more files</button>
+	<button onclick="generateForm()">Add more</button>
 </body>
 </html>
 
