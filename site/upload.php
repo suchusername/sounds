@@ -63,6 +63,29 @@ foreach ($output as $item) echo $item."<BR>";
 echo "<BR>";
 echo "<A href=" . $uploadfile . ">Download file</A>";
 */
+
+
+if($_GET['btn_f1']){send_file('function_1');}
+
+if($_GET['btn_f2']){send_file('function_2');}
+
+
+
+function send_file($option){
+	$out = []	
+	$radios = document.getElementsByName('file_radio');
+	for($i = 0; $i < $radios.length; $i++){
+		if($radios[$i].checked){
+			$fname = $radios[i].id;
+			$out = [$fname, $option];
+			
+			echo '<script language="javascript">';
+			echo 'alert("('.$out[0].', '.$out[1].')")';
+			echo '</script>';	
+		}
+	}
+}
+
 ?>
 
 <form action="" enctype="multipart/form-data" method="POST">
@@ -74,33 +97,14 @@ echo "<A href=" . $uploadfile . ">Download file</A>";
 	echo '<p>Содержимое каталога:</p><ul>';
 	while ($file = readdir($dir)) {
 		if($file != '.' && $file  != '..') {
-			echo "<li>$file <input type='checkbox' id='$file.' name='file_check' value=1></li>";
+			echo "<li>$file <input type='radio' id='$file' name='file_radio' value=1></li>";
 		}
 	}
 	echo '</ul>';
 	closedir($dir);
 	?>
-	<button onclick="foo()">Work whith selected files</button>
-	<script>
-	var check_boxes = document.getElementsByName('file_check');
-	var FTW = [];
-	var action = 'smth';
-	
-	function foo(){
-			
-		var Folder = './sound/';
-		//var fs = require('fs');
-		/*fs.readdirSync(Folder).forEach(file => {alert("Hello");
-			var check_box = document.getElementById(file)
-			if(check_box.name = 'file_check'){
-				if(check_box.checked){
-					FTW.append([file, action]);
-				}
-			}
-		});*/
-		alert("Hello");
-	}
-	
-	</script>
+	<button id="btnfun1" name="btnfun1" onClick='location.href="?btn_f1=1"'>functon_1</button>
+	<button id="btnfun2" name="btnfun2" onClick='location.href="?btn_f2=1"'>functon_2</button>
+
 </form>	
 
