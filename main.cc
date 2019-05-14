@@ -21,7 +21,7 @@ int main() {
 	
 	try {
 		WAV_File A;
-		A.load("Audios/Archive/bayan.wav");
+		A.load("../Audios/Archive/bayan.wav");
 		//A.print();
 		
 		/*Crop C("", 0, -1);

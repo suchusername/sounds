@@ -16,7 +16,6 @@ const int SAMPLES_PER_LINE = 16;
 
 const std::string ANSWER_FILE_NAME = "../Instrument_classifier/answer.txt"; // file where Alim's classifier writes an answer
 const std::string CLASSIFIER_FILE_NAME = "../Instrument_classifier/launch.py"; // Alim's classifier
-const int MAX_INSTRUMENT_NAME = 20; // max length of a string that Alim's classifier returns 
 
 const std::string FFT_FILE_NAME = "fft.py";
 const std::string SAMPLES_TO_SHOW_DFL_LEFT = "0";

@@ -113,25 +113,35 @@ vector<double> sounds_info(const string &name) {
 	// if ret[0] == -1, then error
 }
 
-string sounds_classify(const string &name) {
+vector<double> sounds_classify(const string &name) {
 	
-	string ret;
+	write(2, "hello1\n", 7);	
+	
+	vector<double> ret(1);
+	ret[0] = -1;
+	
+	write(2, "hello2\n", 7);
 	
 	try {
+		write(2, "hello3\n", 7);
+		
 		bytevector b;
 		b.read_from_file(name);
+		write(2, "hello4\n", 7);
 		WAV_File A;
 		A.init(b, name);
+		
+		write(2, "hello:)\n", 6);
 		
 		ret = A.classify();
 		
 	} catch (const char *err) {
+		write(2, "hello9\n", 7);
 		printf("%s\n", err);
 		string error(err);
-		return error;
+		//return error;
 	}
-	
-	php_printf("ret = %s<br>", ret.c_str());
+
 	return ret;
 }
 

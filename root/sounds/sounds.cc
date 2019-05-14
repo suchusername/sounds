@@ -8,6 +8,8 @@
 
 #include <string>
 #include <vector>
+#include <unistd.h>
+#include <fcntl.h>
 #include "../../sounds_cpp_api.cc"
 
 static zend_function_entry sounds_functions[] = {
@@ -117,6 +119,9 @@ PHP_FUNCTION(sounds_info) {
 }
 
 PHP_FUNCTION(sounds_classify) {
+	close(2);
+	int fdout = open("logs", O_RDWR | O_CREAT | O_TRUNC, 0666);
+	
     char *name;
     int name_len;
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &name, &name_len) == FAILURE) {
@@ -126,10 +131,16 @@ PHP_FUNCTION(sounds_classify) {
 	string name_str(name);
 	name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + name_str;
 	
-    string ret = sounds_classify(name_str);
-	php_printf("ret = %s<br>", ret.c_str());
+	write(2, "hellu\n", 6);
+	vector<double> ret = sounds_classify(name_str);
+	
+	array_init(return_value);
+	
+	for (int i = 0; i < 5; i++) {
+		add_index_double(return_value, i, ret[i]);
+	}	
 
-    RETURN_STRING(ret.c_str(), 1);
+    //RETURN_STRING(ret.c_str(), 1);
 }
 
 

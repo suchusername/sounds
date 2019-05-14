@@ -95,7 +95,7 @@ public:
 	virtual int init(bytevector const &, const string &) = 0;
 	virtual bytevector serialize() const = 0;
 	
-	virtual string classify() const = 0;
+	virtual vector<double> classify() const = 0;
 	virtual void print() const = 0;	
 };
 
@@ -116,7 +116,7 @@ public:
 	bytevector serialize() const; // compressing to a file of WAV format
 	
 	UniformDataSamples getSamples() const; // returns a container with data points
-	string classify() const;
+	vector<double> classify() const;
 	void print() const;
 };
 
@@ -238,7 +238,7 @@ string sounds_volume(const string &name, const string &new_name, double k, doubl
 // right - right border (in ms), -1 for maximum border
 // smooth - whether to make changes smooth
 
-string sounds_classify(const string &name);
+vector<double> sounds_classify(const string &name);
 // name - name of a file to classify
 
 vector<double> sounds_info(const string &name);

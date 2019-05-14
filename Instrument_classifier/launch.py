@@ -172,7 +172,7 @@ for s in range(a, b, 20):
     X.append(x)
 
 X = np.array(X)
-model = load_model('my_model.h5')
+model = load_model('../Instrument_classifier/my_model.h5')
 maxElement = 16462066.603519555
 X = X / maxElement # Normalizing data.
 
@@ -183,8 +183,8 @@ X = X.reshape(train_shape)
 Y = model.predict(X)
 
 # Printing results to answer.txt.
-with open('answer.txt', 'w+') as f:
+with open('../Instrument_classifier/answer.txt', 'w+') as f:
     inst = what_is_it(Y)
     res = inst_probability(Y)
-    print(str(inst), file=f) 
-    print(str(res[0]) + '% ' + str(res[1]) + '% ' + str(res[2]) + '% ' + str(res[3]) + '% ' + str(res[4]) + '%', file=f) 
+    f.write(str(inst) + '\n') 
+    f.write(str(res[0]) + ' ' + str(res[1]) + ' ' + str(res[2]) + ' ' + str(res[3]) + ' ' + str(res[4]) + '\n') 

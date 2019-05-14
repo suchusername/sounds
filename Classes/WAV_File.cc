@@ -245,34 +245,46 @@ void WAV_File::print() const {
 	cout << "Duration: " << (double) NumSamples / SampleRate << "s" << endl;
 }
 
-string WAV_File::classify() const {
+vector<double> WAV_File::classify() const {
 	
 	//cout << "file_id: " << file_id << endl;
-	//php_printf("pid = %d<br>", getpid());
 	pid_t pid = fork();
-	//php_printf("newpid = %d, errno = %d<br>", pid, errno);
 	if (pid == 0) {
-	    //execlp("echo", "echo", CLASSIFIER_FILE_NAME.c_str(), file_id.c_str(), NULL);
-		//execlp("mkfile", "mkfile", "0", "aaa", NULL);
-		execlp("echo", "echo", CLASSIFIER_FILE_NAME.c_str(), file_id.c_str(), NULL);
+		//string _path = "../" + file_id;
+		close(2);
+		int fdout = open("logs", O_RDWR | O_CREAT | O_TRUNC, 0666);
+		execlp("/Users/apple/miniconda3/bin/python3", "/Users/apple/miniconda3/bin/python3", "../Instrument_classifier/launch.py", file_id.c_str(), NULL);
 		perror("execl");
-		throw "WAV_File::classify(): Not implemented.";
+		//php_printf("errno = %d<br>", errno);
+		throw "WAV_File::classify(): Error executing python file.";
 	} else {
 		wait(0);
 	}
-	//php_printf("hey2");
 	
-	return "OK";
+	/*
+	instrument_guess:
+	0 - accordion
+	1 - piano
+	2 - violin
+	3 - guitar
+	4 - noise
+	5 - error
 	
-	ifstream in_file(ANSWER_FILE_NAME.c_str());
-	char *buffer = new char[MAX_INSTRUMENT_NAME];
-	in_file.read(buffer, MAX_INSTRUMENT_NAME);
+	guess_prob[0::4]: probabilities of results 0::4 respectively
+	*/
+	
+	int instrument_guess;
+	vector<double> guess_prob(5);
+	
+	
+	
+	ifstream in_file(ANSWER_FILE_NAME.c_str(), ios::in);
+	if (!in_file.is_open()) throw "WAV_File:: unable to open the file with answers.";
+	in_file >> instrument_guess;
+	for (int i = 0; i < 4; i++) in_file >> guess_prob[i];
 	in_file.close();
 	
-	string ret(buffer);
-	delete [] buffer;
-	
-	return ret;
+	return guess_prob;
 }
 
 

@@ -1,2 +1,2 @@
-with open('test_file.txt', 'w+') as f:
-    print('it works :)', file=f) 
+with open('../Instrument_classifier/test_file.txt', 'w+') as f:
+    f.write('it works :)') 

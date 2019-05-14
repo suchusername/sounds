@@ -1,0 +1,2 @@
+/Users/apple/miniconda3/lib/python3.5/si[Tue May 14 19:29:13.926049 2019] [:error] [pid 22206] [client ::1:50679] PHP Notice:  Undefined index: ArcType in /Users/apple/Desktop/MIPT/ICT/SoundProject/root/upload.php on line 70, referer: http://localhost/
+[Tue May 14 19:29:13.926243 2019] [:error] [pid 22206] [client ::1:50679] PHP Notice:  Undefined index: ArcType in /Users/apple/Desktop/MIPT/ICT/SoundProject/root/upload.php on line 71, referer: http://localhost/
