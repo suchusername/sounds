@@ -70,9 +70,9 @@ if($_GET['btn_f1']){send_file('function_1');}
 if($_GET['btn_f2']){send_file('function_2');}
 
 
-
+/*
 function send_file($option){
-	$out = []	
+	$out = [];	
 	$radios = document.getElementsByName('file_radio');
 	for($i = 0; $i < $radios.length; $i++){
 		if($radios[$i].checked){
@@ -85,6 +85,9 @@ function send_file($option){
 		}
 	}
 }
+*/
+
+echo $_POST['file_radio'];
 
 ?>
 
@@ -97,7 +100,7 @@ function send_file($option){
 	echo '<p>Содержимое каталога:</p><ul>';
 	while ($file = readdir($dir)) {
 		if($file != '.' && $file  != '..') {
-			echo "<li>$file <input type='radio' id='$file' name='file_radio' value=1></li>";
+			echo "<li>$file <input type='radio' id='$file' name='file_radio' value=$file></li>";
 		}
 	}
 	echo '</ul>';
@@ -105,11 +108,8 @@ function send_file($option){
 	?>
 	<p>
 	<button id="btnfun1" name="btn_vol" onClick='location.href="?btn_f1=1"'>Increase volume</button>
-	<input type="text" name="text_vol" id="text_vol" pattern="[0-9].[0-9].{3,}">
-	<script>
-	var text_vol = document.getElementById("text_vol");
-
-	</script>
+	<input type="text" name="text_vol" id="text_vol" pattern="[0-9].[0-9].{3,}" title = "Sample text">
+	
 	</p>
 	<p>
 	<button id="btnfun2" name="btnfun2" onClick='location.href="?btn_f2=1"'>functon_2</button>
