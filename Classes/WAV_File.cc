@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <fstream>
+#include <cerrno>
 using namespace std;
 
 static int readStringFromFile(int *data, int pos, int len, string &buf, int fileSize) { // len - length of a string to read
@@ -246,15 +247,22 @@ void WAV_File::print() const {
 
 string WAV_File::classify() const {
 	
-	cout << "file_id: " << file_id << endl;
+	//cout << "file_id: " << file_id << endl;
+	//php_printf("pid = %d<br>", getpid());
 	pid_t pid = fork();
+	//php_printf("newpid = %d, errno = %d<br>", pid, errno);
 	if (pid == 0) {
-	      execlp("echo", "echo", CLASSIFIER_FILE_NAME.c_str(), file_id.c_str(), NULL);
-		  perror("execl");
-		  throw "WAV_File::classify(): Not implemented1.";
+	    //execlp("echo", "echo", CLASSIFIER_FILE_NAME.c_str(), file_id.c_str(), NULL);
+		//execlp("mkfile", "mkfile", "0", "aaa", NULL);
+		execlp("echo", "echo", CLASSIFIER_FILE_NAME.c_str(), file_id.c_str(), NULL);
+		perror("execl");
+		throw "WAV_File::classify(): Not implemented.";
 	} else {
 		wait(0);
 	}
+	//php_printf("hey2");
+	
+	return "OK";
 	
 	ifstream in_file(ANSWER_FILE_NAME.c_str());
 	char *buffer = new char[MAX_INSTRUMENT_NAME];

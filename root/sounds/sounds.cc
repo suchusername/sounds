@@ -7,6 +7,7 @@
 #include "php_sounds.h"
 
 #include <string>
+#include <vector>
 #include "../../sounds_cpp_api.cc"
 
 static zend_function_entry sounds_functions[] = {
@@ -14,6 +15,7 @@ static zend_function_entry sounds_functions[] = {
 	PHP_FE(sounds_volume, NULL)
 	PHP_FE(sounds_info, NULL)
 	PHP_FE(sounds_classify, NULL)
+	PHP_FE(sounds_test, NULL)
     {NULL, NULL, NULL}
 };
 
@@ -101,9 +103,17 @@ PHP_FUNCTION(sounds_info) {
 	string name_str(name);
 	name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + name_str;
 	
-    string ret = sounds_info(name_str);
+	array_init(return_value);
+	
+    vector<double> ret = sounds_info(name_str);
+	//php_printf("%d, %d\n", (int) ret[0], (int) ret[1]);
 
-    RETURN_STRING(ret.c_str(), 1);
+    add_index_long(return_value, 0, (int) ret[0]);
+	add_index_long(return_value, 1, (int) ret[1]);
+	add_index_long(return_value, 2, (int) ret[2]);
+	add_index_long(return_value, 3, (int) ret[3]);
+	add_index_long(return_value, 4, (int) ret[4]);
+	add_index_double(return_value, 5, ret[5]);
 }
 
 PHP_FUNCTION(sounds_classify) {
@@ -122,6 +132,28 @@ PHP_FUNCTION(sounds_classify) {
     RETURN_STRING(ret.c_str(), 1);
 }
 
+
+PHP_FUNCTION(sounds_test) {
+	long x;
+	
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &x) == FAILURE) {
+        RETURN_NULL();
+    }
+	
+    //char *my_str;
+	//zval *mysubarray;
+	array_init(return_value);
+	add_index_long(return_value, 0, 123);
+	add_next_index_string(return_value, "hey", 1);
+	add_next_index_long(return_value, x+1000);
+	
+	
+	//convert_to_string(x);
+	//string ret(x);
+	//ret += " yeehaw";
+
+    //RETURN_STRING(ret.c_str(), 1);
+}
 
 
 

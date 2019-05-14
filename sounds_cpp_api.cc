@@ -61,9 +61,9 @@ string sounds_volume(const string &name, const string &new_name, double k, doubl
 	return "OK";
 }
 
-string sounds_info(const string &name) {
+vector<double> sounds_info(const string &name) {
 	
-	string ret;
+	/*string ret;
 	
 	try {
 		bytevector b;
@@ -84,9 +84,33 @@ string sounds_info(const string &name) {
 		printf("%s\n", err);
 		string error(err);
 		return error;
+	}*/
+	
+	vector<double> ret(6);
+	ret[0] = -1;
+	
+	try {
+		bytevector b;
+		b.read_from_file(name);
+		WAV_File A;
+		A.init(b);
+		
+		ret[0] = (double) A.size;
+		ret[1] = (double) A.NumChannels;
+		ret[2] = (double) A.SampleRate;
+		ret[3] = (double) A.BitDepth;
+		ret[4] = (double) A.NumSamples;
+		ret[5] = (double) A.NumSamples / A.SampleRate; // duration in seconds
+		
+	} catch (const char *err) {
+		printf("%s\n", err);
+		string error(err);
+		//return error;
 	}
 	
 	return ret;
+	
+	// if ret[0] == -1, then error
 }
 
 string sounds_classify(const string &name) {

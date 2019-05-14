@@ -241,6 +241,6 @@ string sounds_volume(const string &name, const string &new_name, double k, doubl
 string sounds_classify(const string &name);
 // name - name of a file to classify
 
-string sounds_info(const string &name);
+vector<double> sounds_info(const string &name);
 // name - name of a file to view information about
 

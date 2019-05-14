@@ -39,12 +39,24 @@ echo $uploadfile;
 echo "<br>";
 echo $uploadfile_name;
 echo "<br>";
-echo sounds_info($uploadfile_name);
+$audio_info = sounds_info($uploadfile_name);
+for($i = 0; $i < 6; $i++) {
+    echo $audio_info[$i];
+    echo "<br>";
+}
 echo "<br>";
 echo sounds_classify($uploadfile_name);
 //echo sounds_crop('Audios/alltta_bucket.wav', 'cropped.wav', 0, 8000);
 echo "<br>";
 echo "<br>";
+
+/*$arr_test = sounds_test(5);
+echo $arr_test[0];
+echo "<br>";
+echo $arr_test[1];
+echo "<br>";
+echo $arr_test[2];
+echo "<br>";*/
 
 //Вставить код обработки файла
 echo "ArcType: ".$_POST['ArcType']."<BR>";

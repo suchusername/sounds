@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+#include <unistd.h>
+
 #include "server.h"
 #include "Classes/DataSamples.cc"
 #include "Classes/bytevector.cc"
@@ -22,14 +24,14 @@ int main() {
 		A.load("Audios/Archive/bayan.wav");
 		//A.print();
 		
-		Crop C("", 0, -1);
+		/*Crop C("", 0, -1);
 		C.transform(&A, "Audios/Archive/bayanLOUD.wav");
 		
 		Volume V("", 0);
 		//V.print();
-		V.transform(&A, "Audios/Archive/bayanLOUD.wav");
+		V.transform(&A, "Audios/Archive/bayanLOUD.wav");*/
 		
-		//cout << A.classify() << endl;
+		cout << A.classify() << endl;
 		
 	} catch(const char *err) {
 		printf("%s\n", err);
