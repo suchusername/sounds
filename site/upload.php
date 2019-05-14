@@ -2,21 +2,22 @@
 
 // Проверим, успешно ли загружен файл
 //echo basename($_FILES['uploadfile']['tmp_name']);
-if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'])){
+for($i=0;$i<count($_FILES['uploadfile']['name']);$i++) {
+if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'][$i])) {
   echo "Upload error (1)!";
   exit;
 }
 
 // Каталог, в который мы будем принимать файл:
 $uploaddir = './sound/';
-$uploadfile = $uploaddir.basename($_FILES['uploadfile']['name']); //разобраться с русскими буквами!
+$uploadfile = $uploaddir.basename($_FILES['uploadfile']['name'][$i]); //разобраться с русскими буквами!
 
 //проверим на допустимость расширения файла, mime-типа и размера
 $blacklist = array(".php", ".phtml", ".php3", ".php4", ".html", ".htm");
 foreach ($blacklist as $item)
-  if(preg_match("/$item\$/i", $uploadfile)){
-    echo "File type forbidden!";
-    exit;
+  if(preg_match("/$item\$/i", $uploadfile)) {
+	echo "File type forbidden!";
+	exit;
   }
 $type = $_FILES['uploadfile']['type'];
 $size = $_FILES['uploadfile']['size'];
@@ -24,18 +25,22 @@ $size = $_FILES['uploadfile']['size'];
 //if ($size > 102400) exit; //размер не более 100кб
 
 // Копируем файл из каталога для временного хранения файлов:
-if (copy($_FILES['uploadfile']['tmp_name'], $uploadfile))	{
+if (copy($_FILES['uploadfile']['tmp_name'][$i], $uploadfile)) {
 	//echo "<h3>Upload success!!!</h3>";
 } else {
 	$errors = error_get_last();
 	echo "<h3>Upload error (2)!</h3> Error type: ".$errors['type']. ". Message: " .$errors['message'];
 	exit;
 }
+}
 
+
+
+/*
 echo "<BR>";
 //Вставить код обработки файла
 echo "ArcType: ".$_POST['ArcType']."<BR>";
-switch($_POST['ArcType']){
+switch($_POST['ArcType']) {
 	case 0:
 		echo "0";
 		break;
@@ -54,8 +59,48 @@ switch($_POST['ArcType']){
 }
 /*exec('ls -l', $output);
 foreach ($output as $item) echo $item."<BR>";
-*/
+
 echo "<BR>";
 echo "<A href=" . $uploadfile . ">Download file</A>";
-
+*/
 ?>
+
+<form action="" enctype="multipart/form-data" method="POST">
+	<?php
+	$current_dir = './sound/';
+	$dir = opendir($current_dir);
+
+	echo "<p>Каталог загрузки: $current_dir</p>";
+	echo '<p>Содержимое каталога:</p><ul>';
+	while ($file = readdir($dir)) {
+		if($file != '.' && $file  != '..') {
+			echo "<li>$file <input type='checkbox' id='$file.' name='file_check' value=1></li>";
+		}
+	}
+	echo '</ul>';
+	closedir($dir);
+	?>
+	<button onclick="foo()">Work whith selected files</button>
+	<script>
+	var check_boxes = document.getElementsByName('file_check');
+	var FTW = [];
+	var action = 'smth';
+	
+	function foo(){
+			
+		var Folder = './sound/';
+		//var fs = require('fs');
+		/*fs.readdirSync(Folder).forEach(file => {alert("Hello");
+			var check_box = document.getElementById(file)
+			if(check_box.name = 'file_check'){
+				if(check_box.checked){
+					FTW.append([file, action]);
+				}
+			}
+		});*/
+		alert("Hello");
+	}
+	
+	</script>
+</form>	
+
