@@ -1,4 +1,4 @@
-ХУЙ
+
 <!DOCTYPE html>
 <html lang="en" >
 
