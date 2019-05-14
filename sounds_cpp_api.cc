@@ -9,6 +9,7 @@
 #include "Classes/UniformDataSamples.cc"
 #include "Classes/Queries/Crop.cc"
 #include "Classes/Queries/Volume.cc"
+#include "Classes/Queries/Speed.cc"
 #include "Classes/Queries/BitSampleRate.cc"
 
 #include <iostream>
@@ -41,6 +42,9 @@ string sounds_crop(const string &name, const string &new_name, double left, doub
 string sounds_volume(const string &name, const string &new_name, double k, double left, double right, bool smooth) {
 	try {
 		
+		
+		//php_printf("sounds_volume(%s, %s, %lf, %lf, %lf, %d)\n", name.c_str(), new_name.c_str(), k, left, right, (int) smooth);
+		
 		bytevector b;
 		b.read_from_file(name);
 		WAV_File A;
@@ -50,6 +54,26 @@ string sounds_volume(const string &name, const string &new_name, double k, doubl
 		int r = (int) (right / 1000 * A.SampleRate);
 		
 		Volume Q("", k, l, r, smooth);
+		Q.transform(&A, new_name);
+		
+	} catch (const char *err) {
+		printf("%s\n", err);
+		string error(err);
+		return error;
+	}
+	
+	return "OK";
+}
+
+string sounds_speed(const string &name, const string &new_name, double mult) {
+	try {
+		
+		bytevector b;
+		b.read_from_file(name);
+		WAV_File A;
+		A.init(b, new_name);
+		
+		Speed Q("", mult);
 		Q.transform(&A, new_name);
 		
 	} catch (const char *err) {

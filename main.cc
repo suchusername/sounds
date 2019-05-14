@@ -21,17 +21,18 @@ int main() {
 	
 	try {
 		WAV_File A;
-		A.load("../Audios/Archive/bayan.wav");
+		A.load("Audios/alltta_bucket.wav");
 		//A.print();
 		
-		/*Crop C("", 0, -1);
-		C.transform(&A, "Audios/Archive/bayanLOUD.wav");
+		/*Speed S("", 0.8);
+		S.transform(&A, "Audios/Archive/sped_up_bucket.wav");*/
 		
-		Volume V("", 0);
+		Crop C("", 0, 100000);
+		C.transform(&A, "Audios/Archive/bayan_c.wav");
+		
+		/*Volume V("", 0);
 		//V.print();
 		V.transform(&A, "Audios/Archive/bayanLOUD.wav");*/
-		
-		cout << A.classify() << endl;
 		
 	} catch(const char *err) {
 		printf("%s\n", err);

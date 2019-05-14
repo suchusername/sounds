@@ -3,6 +3,7 @@
 #include "../bytevector.cc"
 #include "../Query.cc"
 
+#include <math.h>
 #include <string>
 #include <iostream>
 using namespace std;
@@ -33,13 +34,57 @@ void Speed::transform(WAV_File *file, const string &new_id) const {
 	Saves it under name new_id.
 	*/
 	
-	// Получет массив из точек аудиозаписи
-	UniformDataSamples arr = file->getSamples();
-	// Само преобразование массив arr
+	UniformDataSamples old_arr = file->getSamples();
 	
 	
-	// Запись нового файла
-	// Начать катать
+	if (mult == 0) throw "Speed::transform(): Speed multiplier cannot be equal to 0.";
+	
+	//php_printf("%f<br>", mult);
+	
+	double new_mult = mult;
+	int len = old_arr.N;
+	if (mult < 0) { // reversing an array
+		for (int i = 0; i < len/2; i++) {
+			double t = old_arr[i];
+			old_arr[i] = old_arr[len-1-i];
+			old_arr[len-1-i] = t;
+		}
+		new_mult *= -1;
+	} 
+	
+	if (new_mult == 2) new_mult += 0.0001;
+	old_arr.delta_x = 1 / new_mult; // converting to points from seconds and speeding up
+	// now points are not whole numbers, needs interpolation
+	
+	int new_len = floor(old_arr.delta_x * (len - 1)) + 1;
+	
+	php_printf("%d, %d<br>", new_len, len);
+	
+	UniformDataSamples arr(new_len);
+	arr.x_0 = 0;
+	arr.delta_x = old_arr.delta_x / file->SampleRate; // converting back to seconds
+	
+	for (int i = 0; i < len - 1; i++) { 
+		int l = ceil(i * old_arr.delta_x);
+		int r = floor((i+1) * old_arr.delta_x);
+		/*if (i < 20) {
+			cout << "i = " << i << ", dx*i = " << old_arr.delta_x * i << ", dx*(i+1) = " << old_arr.delta_x * (i + 1) << ", l = " << l << ", r = " << r << endl;
+		}*/
+		for (int j = l; j <= r; j++) { // going over all integers between 2 points
+			double alpha = ((double) j - old_arr.delta_x * i) / old_arr.delta_x;
+			arr[j] = round((1 - alpha) * old_arr[i] + alpha * old_arr[i+1]);
+			/*if (i < 20) {
+				cout << "	j = " << j << ", alpha = " << alpha << ", old_arr[i] = " << old_arr[i] << ", old_arr[i+1] = " << old_arr[i+1] << endl;
+			}*/
+		}
+	}
+	
+	/*int S = 0;
+	for (int i = 0; i < arr.N; i++) {
+		S += (old_arr[i] - arr[i]);
+	}
+	cout << S << endl;*/
+	
 	bytevector b(44 + 2*arr.N); 
 	b.writeString("RIFF", 0);
 	b.writeInt(36+2*arr.N, 4); // new size
@@ -57,8 +102,9 @@ void Speed::transform(WAV_File *file, const string &new_id) const {
 	
 	for (int i = 0; i < arr.N; i++) writeShort((int) arr[i], b, 44+2*i);
 	
+	php_printf("size = %d<br>", b.size);
+	
 	file->init(b, new_id);	
-	// Закончить катать
 }
 
 

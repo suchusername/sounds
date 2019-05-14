@@ -41,20 +41,20 @@ echo $uploadfile_name;
 echo "<br>";
 $audio_info = sounds_info($uploadfile_name);
 for($i = 0; $i < 6; $i++) {
-    echo $audio_info[$i];
+    echo round($audio_info[$i], 2);
     echo "<br>";
 }
 echo "<br>";
-$audio_probs = sounds_classify($uploadfile_name);
+/*$audio_probs = sounds_classify($uploadfile_name);
 $audio_tags = array('accordion', 'piano', 'violin', 'guitar', 'noise');
-echo "probabilities:";
+echo "probabilities: <br>";
 for ($i = 0; $i < 5; $i++) {
 	echo $audio_tags[$i];
 	echo " ";
 	echo $audio_probs[$i];
 	echo "<br>";
-}
-//echo sounds_volume('Audios/alltta_bucket.wav', 'cropped.wav', 0, 8000);
+}*/
+echo sounds_speed('alltta_bucket.wav', 'whew.wav', 1.5);
 echo "<br>";
 echo "<br>";
 

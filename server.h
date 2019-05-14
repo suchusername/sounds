@@ -226,9 +226,10 @@ public:
 
 string sounds_crop(const string &name, const string &new_name, double left = 0, double right = -1);
 // name - name of a file to edit
-// new_name - save edited file as (without extension .wav)
+// new_name - save edited file as (inclusing extension .wav)
 // left - left crop border (in ms), 0 for minimum border
 // right - right crop border (in ms), -1 for maximum border
+// ...returns OK
 
 string sounds_volume(const string &name, const string &new_name, double k, double left = 0, double right = -1, bool smooth = false);
 // name - name of a file to edit
@@ -237,6 +238,13 @@ string sounds_volume(const string &name, const string &new_name, double k, doubl
 // left - left border (in ms), 0 for minimum border
 // right - right border (in ms), -1 for maximum border
 // smooth - whether to make changes smooth
+// ...returns OK
+
+string sounds_speed(const string &name, const string &new_name, double mult);
+// name - name of a file to edit
+// new_name - save edited file as 
+// mult - speed multiplier (negative for reverse)
+// ...returns OK
 
 vector<double> sounds_classify(const string &name);
 // name - name of a file to classify

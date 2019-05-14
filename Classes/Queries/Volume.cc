@@ -86,6 +86,7 @@ void Volume::transform(WAV_File *file, const string &new_id) const {
 		l ^= r;
 	}
 	
+	
 	//cout << "l = " << l << ", r = " << r << endl;
 	//cout << file->NumSamples << " " << arr.N << endl;
 	

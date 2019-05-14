@@ -15,6 +15,7 @@
 static zend_function_entry sounds_functions[] = {
 	PHP_FE(sounds_crop, NULL)
 	PHP_FE(sounds_volume, NULL)
+	PHP_FE(sounds_speed, NULL)
 	PHP_FE(sounds_info, NULL)
 	PHP_FE(sounds_classify, NULL)
 	PHP_FE(sounds_test, NULL)
@@ -43,6 +44,10 @@ ZEND_GET_MODULE(sounds)
 #endif
 
 PHP_FUNCTION(sounds_crop) {
+	// name - name of a file in Audios/Archive
+	// new_name - new name of a file in Audios/Archive
+	
+	
 	char *name;
 	int name_len;
 	char *new_name;
@@ -54,7 +59,7 @@ PHP_FUNCTION(sounds_crop) {
 		RETURN_NULL();
 	}
 	
-	php_printf("sounds_crop(%s, %s, %ld, %ld)\n", name, new_name, left, right);
+	//php_printf("sounds_crop(%s, %s, %ld, %ld)\n", name, new_name, left, right);
 	
 	string name_str(name);
 	string new_name_str(new_name);
@@ -62,16 +67,19 @@ PHP_FUNCTION(sounds_crop) {
 	new_name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + new_name_str;
 	
 	string ret = sounds_crop(name_str, new_name_str, (int)left, (int)right);
-	php_printf("ret = %s\n", ret.c_str());
+	//php_printf("ret = %s\n", ret.c_str());
 	
 	RETURN_NULL();
 }
 
 PHP_FUNCTION(sounds_volume) {
+	close(2);
+	int fdout = open("logs", O_RDWR | O_CREAT | O_TRUNC, 0666);
+	
 	char *name;
-	int name_len;
+	long name_len;
 	char *new_name;
-	int new_name_len;
+	long new_name_len;
 	double k;
 	long left = 0;
 	long right = -1;
@@ -81,7 +89,7 @@ PHP_FUNCTION(sounds_volume) {
 		RETURN_NULL();
 	}
 	
-	php_printf("sounds_volume(%s, %s, %lf, %ld, %ld, %d)\n", name, new_name, k, left, right, (int) smooth);
+	//php_printf("sounds_volume(%s, %s, %lf, %ld, %ld, %d)\n", name, new_name, k, left, right, (int) smooth);
 	
 	string name_str(name);
 	string new_name_str(new_name);
@@ -89,7 +97,37 @@ PHP_FUNCTION(sounds_volume) {
 	new_name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + new_name_str;
 	
 	string ret = sounds_volume(name_str, new_name_str, k, (int) left, (int) right, (bool) smooth);
-	php_printf("ret = %s\n", ret.c_str());
+	//php_printf("ret = %s\n", ret.c_str());
+	
+	RETURN_NULL();	
+}
+
+
+PHP_FUNCTION(sounds_speed) {
+	close(2);
+	int fdout = open("logs", O_RDWR | O_CREAT | O_TRUNC, 0666);
+	
+	
+	char *name;
+	int name_len;
+	char *new_name;
+	int new_name_len;
+	double mult;
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ssd", &name, &name_len, &new_name, &new_name_len, &mult) == FAILURE) {
+		RETURN_NULL();
+	}
+	
+	//php_printf("sounds_speed(%s, %s, %lf)\n", name, new_name, mult);
+	//php_printf("hey<br>");
+	
+	string name_str(name);
+	string new_name_str(new_name);
+	name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + name_str;
+	new_name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + new_name_str;
+	
+	string ret = sounds_speed(name_str, new_name_str, 1.4);
+	//php_printf("ret = %s\n", ret.c_str());
 	
 	RETURN_NULL();	
 }
