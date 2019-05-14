@@ -3,35 +3,35 @@
 // Проверим, успешно ли загружен файл
 //echo basename($_FILES['uploadfile']['tmp_name']);
 for($i=0;$i<count($_FILES['uploadfile']['name']);$i++) {
-if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'][$i])) {
-  echo "Upload error (1)!";
-  exit;
-}
+	if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'][$i])) {
+	  echo "Upload error (1)!";
+	  exit;
+	}
 
-// Каталог, в который мы будем принимать файл:
-$uploaddir = './sound/';
-$uploadfile = $uploaddir.basename($_FILES['uploadfile']['name'][$i]); //разобраться с русскими буквами!
+	// Каталог, в который мы будем принимать файл:
+	$uploaddir = './sound/';
+	$uploadfile = $uploaddir.basename($_FILES['uploadfile']['name'][$i]); //разобраться с русскими буквами!
 
-//проверим на допустимость расширения файла, mime-типа и размера
-$blacklist = array(".php", ".phtml", ".php3", ".php4", ".html", ".htm");
-foreach ($blacklist as $item)
-  if(preg_match("/$item\$/i", $uploadfile)) {
-	echo "File type forbidden!";
-	exit;
-  }
-$type = $_FILES['uploadfile']['type'];
-$size = $_FILES['uploadfile']['size'];
-//if (($type != "audio/mpeg") && ($type != "audio/wav")) exit;
-//if ($size > 102400) exit; //размер не более 100кб
+	//проверим на допустимость расширения файла, mime-типа и размера
+	$blacklist = array(".php", ".phtml", ".php3", ".php4", ".html", ".htm");
+	foreach ($blacklist as $item)
+	  if(preg_match("/$item\$/i", $uploadfile)) {
+		echo "File type forbidden!";
+		exit;
+	  }
+	$type = $_FILES['uploadfile']['type'];
+	$size = $_FILES['uploadfile']['size'];
+	//if (($type != "audio/mpeg") && ($type != "audio/wav")) exit;
+	//if ($size > 102400) exit; //размер не более 100кб
 
-// Копируем файл из каталога для временного хранения файлов:
-if (copy($_FILES['uploadfile']['tmp_name'][$i], $uploadfile)) {
-	//echo "<h3>Upload success!!!</h3>";
-} else {
-	$errors = error_get_last();
-	echo "<h3>Upload error (2)!</h3> Error type: ".$errors['type']. ". Message: " .$errors['message'];
-	exit;
-}
+	// Копируем файл из каталога для временного хранения файлов:
+	if (copy($_FILES['uploadfile']['tmp_name'][$i], $uploadfile)) {
+		//echo "<h3>Upload success!!!</h3>";
+	} else {
+		$errors = error_get_last();
+		echo "<h3>Upload error (2)!</h3> Error type: ".$errors['type']. ". Message: " .$errors['message'];
+		exit;
+	}
 }
 
 
@@ -72,7 +72,7 @@ if($_GET['btn_f2']){send_file('function_2');}
 
 
 function send_file($option){
-	$out = []	
+	$out = [];	
 	$radios = document.getElementsByName('file_radio');
 	for($i = 0; $i < $radios.length; $i++){
 		if($radios[$i].checked){
@@ -105,11 +105,8 @@ function send_file($option){
 	?>
 	<p>
 	<button id="btnfun1" name="btn_vol" onClick='location.href="?btn_f1=1"'>Increase volume</button>
-	<input type="text" name="text_vol" id="text_vol" pattern="[0-9].[0-9].{3,}">
-	<script>
-	var text_vol = document.getElementById("text_vol");
+	<input type="text" name="text_vol" id="text_vol" pattern="[0-9]+\.+[0-9].{3,}">
 
-	</script>
 	</p>
 	<p>
 	<button id="btnfun2" name="btnfun2" onClick='location.href="?btn_f2=1"'>functon_2</button>
