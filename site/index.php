@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" >
-sdfasdfasdfasdfasdfsadfasdflasdyhdfkljassdlfkjhasdkljhfklajsdjfklhasdljkhdfjklasdljkhfalsdhfsahflkasjdhflkjassdklfjasdkljfhaslkjdhfaljskdhflaskhdfjl
 <head>
   	<meta charset="UTF-8">
  	<title>Cool site</title>
