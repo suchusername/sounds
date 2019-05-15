@@ -205,6 +205,22 @@ public:
 	void transform(WAV_File *, const string &) const;
 };
 
+class Merge : public Query {
+public:
+	// Merges two audio files	
+	
+	WAV_File *right; // second file
+	
+	Merge();
+	Merge(const string &, WAV_File *); // number of arguments = # of parameters
+	
+	int init(bytevector const &, const string &s = "");
+	bytevector serialize() const;
+	
+	void print() const;
+	void transform(WAV_File *, const string &) const;
+};
+
 class BitSampleRate : public Query {
 public:
 	// Reduces BitRate and SampleRate of a song
@@ -244,6 +260,12 @@ string sounds_speed(const string &name, const string &new_name, double mult);
 // name - name of a file to edit
 // new_name - save edited file as 
 // mult - speed multiplier (negative for reverse)
+// ...returns OK
+
+string sounds_merge(const string &left, const string &right, const string &new_name);
+// left - name of left file to merge
+// right - name of right file to merge
+// new_name - save merged file as
 // ...returns OK
 
 vector<double> sounds_classify(const string &name);
