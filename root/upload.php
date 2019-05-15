@@ -132,9 +132,7 @@ if(isset($_POST['btn_vol'])){
 function increase_volume(){
 	$file = $_POST['file_radio'];
 	$k = (float)$_POST['text_vol'];
-	echo '<script language="javascript">';
-	echo 'alert("Need to increase volume in '.$file.' by '.$k.' times.")';
-	echo '</script>';
+	
 	//вставить функцию
 }
 
@@ -148,23 +146,25 @@ function delete(){
 }
 
 ?>
-
-<form action="upload.php" enctype="multipart/form-data" method="POST">
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<form id="ajax-form" action="upload.php" enctype="multipart/form-data" method="POST">
 	<?php
-	$current_dir = '../Audios/Archive/';
 	/*
+	$current_dir = '../Audios/Archive/';
+	
 	$dir = opendir($current_dir);
 
 	echo "<p>Каталог загрузки: $current_dir</p>";
 	echo '<p>Содержимое каталога:</p><ul>';
 	while ($file = readdir($dir)) {
-		if($file != '.' && $file  != '..') {
+		if($file != '.' && $file  != '..' ) {
 			echo "<li>$file <input type='radio' id='$file' name='file_radio' value=$file></li>";
 		}
 	}
 	echo '</ul>';
 	closedir($dir);
 	*/
+	
 	for($i=0; $i<count($upload_files); $i++){
 		echo "<li>$upload_files[$i] <input type='radio' id='$upload_files[$i]' name='file_radio' value='$upload_files[$i]'></li>";
 		//echo "<li>$upload_files[0] <input type='radio' id='$upload_files[0]' name='file_radio' value='$upload_files[0]'></li>";
@@ -182,7 +182,16 @@ function delete(){
 	</p>
 
 </form>	
-
+<script>
+    $('#ajax-form').submit(function(e) {
+        e.preventDefault();
+        var method = $(this).attr('method');
+        var url = $(this).attr('url');
+        $[method](url, $(this).serialize(), function(data) {
+            $('#result').html(data);
+        });
+    });
+</script>
 
 	
 
