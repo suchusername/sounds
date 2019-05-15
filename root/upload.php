@@ -129,9 +129,6 @@ if(isset($_POST['btn_vol'])){
 function increase_volume(){
 	$file = $_POST['file_radio'];
 	$k = (float)$_POST['text_vol'];
-	echo '<script language="javascript">';
-	echo 'alert("Need to increase volume in '.$file.' by '.$k.' times.")';
-	echo '</script>';
 	//вставить функцию
 }
 
