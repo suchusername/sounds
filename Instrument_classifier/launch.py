@@ -158,10 +158,12 @@ X = []
 rate, data = get_wav_info(file)
 if (data.ndim > 1):
     data = np.delete(data, 1, 1) # Leaving only one channel.
-a = int((1 // window) * 10)
-b = int((1 // window) * dur) - 10
+#a = int((1 // window) * 10)
+#b = int((1 // window) * dur) - 10
+a = 0
+b = int(dur // window)
 
-for s in range(a, b, 20):
+for s in range(a, b, 2):
     data_ = data
     t1 = s * window
     t2 = t1 + window
