@@ -122,14 +122,26 @@ function weird_flex(){
 	}
 */
 
-function delete(){
-	$file = $_POST['file_radio'];
-	unlink($file) or die("Error while deleting");
+if(isset($_POST['btn_vol'])){
+	increase_volume();	
 }
+
 function increase_volume(){
 	$file = $_POST['file_radio'];
 	$k = (float)$_POST['text_vol'];
+	echo '<script language="javascript">';
+	echo 'alert("Need to increase volume in '.$file.' by '.$k.' times.")';
+	echo '</script>';
 	//вставить функцию
+}
+
+if(isset($_POST['btn_del'])){
+	delete();
+}
+
+function delete(){
+	$file = $_POST['file_radio'];
+	unlink($file) or die("Error while deleting");
 }
 
 ?>
@@ -150,23 +162,14 @@ function increase_volume(){
 	closedir($dir);
 	?>
 	<p>
-	<button id="btn_vol" name="btn_vol" onClick="foo('volume')">Increase volume</button>
+	<button id="btn_vol" name="btn_vol">Increase volume</button>
 
 	<input type="text" name="text_vol" id="text_vol" pattern="\d+(\.\d{1,})?" title = "Sample text" size ="3">
 
 	</p>
 	<p>
-	<button id="btn_del" name="btn_del" onClick="foo('delete')">Delete</button>
+	<button id="btn_del" name="btn_del">Delete</button>
 	</p>
-
-	<script>
-		function foo(option){
-			if (option == 'delete'){
-				alert("<?php delete(); ?>");}
-			else if (option == 'volume'){
-				alert("<?php increase_volume(); ?>");}	
-			}
-	</script>
 
 </form>	
 
