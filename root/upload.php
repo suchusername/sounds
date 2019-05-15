@@ -2,6 +2,7 @@
 
 // Проверим, успешно ли загружен файл
 //echo basename($_FILES['uploadfile']['tmp_name']);
+$upload_files = [];
 for($i=0;$i<count($_FILES['uploadfile']['name']);$i++) {
 	if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'][$i])) {
 	  echo "Upload error (1)!";
@@ -28,6 +29,8 @@ for($i=0;$i<count($_FILES['uploadfile']['name']);$i++) {
 	// Копируем файл из каталога для временного хранения файлов:
 	if (copy($_FILES['uploadfile']['tmp_name'][$i], $uploadfile)) {
 		//echo "<h3>Upload success!!!</h3>";
+		$upload_files[$i] = $uploadfile_name;
+
 	} else {
 		$errors = error_get_last();
 		echo "<h3>Upload error (2)!</h3> Error type: ".$errors['type']. ". Message: " .$errors['message'];
@@ -137,6 +140,7 @@ function increase_volume(){
 <form action="upload.php" enctype="multipart/form-data" method="POST">
 	<?php
 	$current_dir = '../Audios/Archive/';
+	/*
 	$dir = opendir($current_dir);
 
 	echo "<p>Каталог загрузки: $current_dir</p>";
@@ -148,6 +152,12 @@ function increase_volume(){
 	}
 	echo '</ul>';
 	closedir($dir);
+	*/
+	for($i=0; $i<count($upload_files); $i++){
+		echo "<li>$upload_files[$i] <input type='radio' id='$upload_files[$i]' name='file_radio' value='$upload_files[$i]'></li>";
+		//echo "<li>$upload_files[0] <input type='radio' id='$upload_files[0]' name='file_radio' value='$upload_files[0]'></li>";
+		//echo count($upload_files);
+	}
 	?>
 	<p>
 	<button id="btn_vol" name="btn_vol" onClick="foo('volume')">Increase volume</button>
