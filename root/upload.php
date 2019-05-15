@@ -95,7 +95,7 @@ echo "<BR>";
 echo "<A href=" . $uploadfile . ">Download file</A>";
 */
 
-
+/*
 if($_GET['btn_f1']){send_file('function_1');}
 
 if($_GET['btn_f2']){send_file('function_2');}
@@ -120,6 +120,17 @@ function send_file($option){
 function weird_flex(){
 	echo $_POST['text_vol'];
 	}
+*/
+
+function delete(){
+	$file = $_POST['file_radio'];
+	unlink($file) or die("Error while deleting");
+}
+function increase_volume(){
+	$file = $_POST['file_radio'];
+	$k = (float)$_POST['text_vol'];
+	//вставить функцию
+}
 
 ?>
 
@@ -139,18 +150,21 @@ function weird_flex(){
 	closedir($dir);
 	?>
 	<p>
-	<button id="btnfun1" name="btn_vol" onClick='location.href="?btn_f1=1"'>Increase volume</button>
+	<button id="btn_vol" name="btn_vol" onClick="foo('volume')">Increase volume</button>
 
 	<input type="text" name="text_vol" id="text_vol" pattern="\d+(\.\d{1,})?" title = "Sample text" size ="3">
 
 	</p>
 	<p>
-	<button id="btnfun2" name="btnfun2" onClick="test_foo()">functon_2</button>
+	<button id="btn_del" name="btn_del" onClick="foo('delete')">Delete</button>
 	</p>
 
 	<script>
-		function test_foo(){
-			alert("<?php weird_flex(); ?>");
+		function foo(option){
+			if (option == 'delete'){
+				alert("<?php delete(); ?>");}
+			else if (option == 'volume'){
+				alert("<?php increase_volume(); ?>");}	
 			}
 	</script>
 
