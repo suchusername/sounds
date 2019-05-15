@@ -2,73 +2,76 @@
 
 // Проверим, успешно ли загружен файл
 //echo basename($_FILES['uploadfile']['tmp_name']);
-if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'])) {
-  echo "Upload error (1)!";
-  exit;
-}
+for($i=0;$i<count($_FILES['uploadfile']['name']);$i++) {
+	if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'][$i])) {
+	  echo "Upload error (1)!";
+	  exit;
+	}
 
-// Каталог, в который мы будем принимать файл:
-$uploaddir = '../Audios/Archive/';
-$uploadfile_name = $_FILES['uploadfile']['name'];
-$uploadfile = $uploaddir.basename($_FILES['uploadfile']['name']); //разобраться с русскими буквами!
+	// Каталог, в который мы будем принимать файл:
+	$uploaddir = '../Audios/Archive/';
+	$uploadfile_name = $_FILES['uploadfile']['name'][$i];
+	$uploadfile = $uploaddir.basename($_FILES['uploadfile']['name'][$i]); //разобраться с русскими буквами!
 
-//проверим на допустимость расширения файла, mime-типа и размера
-$blacklist = array(".php", ".phtml", ".php3", ".php4", ".html", ".htm");
-foreach ($blacklist as $item)
-  if(preg_match("/$item\$/i", $uploadfile)){
-    echo "File type forbidden!";
-    exit;
-  }
-$type = $_FILES['uploadfile']['type'];
-$size = $_FILES['uploadfile']['size'];
-//if (($type != "audio/mpeg") && ($type != "audio/wav")) exit;
-//if ($size > 102400) exit; //размер не более 100кб
+	//проверим на допустимость расширения файла, mime-типа и размера
+	$blacklist = array(".php", ".phtml", ".php3", ".php4", ".html", ".htm");
+	foreach ($blacklist as $item)
+	  if(preg_match("/$item\$/i", $uploadfile)) {
+		echo "File type forbidden!";
+		exit;
+	  }
+	$type = $_FILES['uploadfile']['type'];
+	$size = $_FILES['uploadfile']['size'];
+	//if (($type != "audio/mpeg") && ($type != "audio/wav")) exit;
+	//if ($size > 102400) exit; //размер не более 100кб
 
-// Копируем файл из каталога для временного хранения файлов:
-if (copy($_FILES['uploadfile']['tmp_name'], $uploadfile))	{
-	//echo "<h3>Upload success!!!</h3>";
-} else {
-	$errors = error_get_last();
-	echo "<h3>Upload error (2)!</h3> Error type: ".$errors['type']. ". Message: " .$errors['message'];
-	exit;
-}
-
-echo "<BR>";
-
-echo $uploadfile;
-echo "<br>";
-echo $uploadfile_name;
-echo "<br>";
-$audio_info = sounds_info($uploadfile_name);
-for($i = 0; $i < 6; $i++) {
-    echo round($audio_info[$i], 2);
-    echo "<br>";
-}
-echo "<br>";
-/*$audio_probs = sounds_classify($uploadfile_name);
-$audio_tags = array('accordion', 'piano', 'violin', 'guitar', 'noise');
-echo "probabilities: <br>";
-for ($i = 0; $i < 5; $i++) {
-	echo $audio_tags[$i];
-	echo " ";
-	echo $audio_probs[$i];
+	// Копируем файл из каталога для временного хранения файлов:
+	if (copy($_FILES['uploadfile']['tmp_name'][$i], $uploadfile)) {
+		//echo "<h3>Upload success!!!</h3>";
+	} else {
+		$errors = error_get_last();
+		echo "<h3>Upload error (2)!</h3> Error type: ".$errors['type']. ". Message: " .$errors['message'];
+		exit;
+	}
+	echo "<BR>";
+	echo $uploadfile;
 	echo "<br>";
-}*/
-echo sounds_speed('alltta_bucket.wav', 'whew.wav', 1.5);
-echo "<br>";
-echo "<br>";
+	echo $uploadfile_name;
+	echo "<br>";
+	$audio_info = sounds_info($uploadfile_name);
+	for($j = 0; $j < 6; $j++) {
+		echo round($audio_info[$j], 2);
+		echo "<br>";
+	}
+	echo "<br>";
+	/*$audio_probs = sounds_classify($uploadfile_name);
+	$audio_tags = array('accordion', 'piano', 'violin', 'guitar', 'noise');
+	echo "probabilities: <br>";
+	for ($i = 0; $i < 5; $i++) {
+		echo $audio_tags[$i];
+		echo " ";
+		echo $audio_probs[$i];
+		echo "<br>";
+	}
+	echo sounds_speed('alltta_bucket.wav', 'whew.wav', 1.5);
+	echo "<br>";
+	echo "<br>";
+	$arr_test = sounds_test(5);
+	echo $arr_test[0];
+	echo "<br>";
+	echo $arr_test[1];
+	echo "<br>";
+	echo $arr_test[2];
+	echo "<br>";*/
+}
 
-/*$arr_test = sounds_test(5);
-echo $arr_test[0];
-echo "<br>";
-echo $arr_test[1];
-echo "<br>";
-echo $arr_test[2];
-echo "<br>";*/
 
+
+/*
+echo "<BR>";
 //Вставить код обработки файла
 echo "ArcType: ".$_POST['ArcType']."<BR>";
-switch($_POST['ArcType']){
+switch($_POST['ArcType']) {
 	case 0:
 		echo "0";
 		break;
@@ -87,8 +90,72 @@ switch($_POST['ArcType']){
 }
 /*exec('ls -l', $output);
 foreach ($output as $item) echo $item."<BR>";
-*/
+
 echo "<BR>";
 echo "<A href=" . $uploadfile . ">Download file</A>";
+*/
+
+
+if($_GET['btn_f1']){send_file('function_1');}
+
+if($_GET['btn_f2']){send_file('function_2');}
+
+
+
+function send_file($option){
+	$out = [];	
+	$radios = document.getElementsByName('file_radio');
+	for($i = 0; $i < $radios.length; $i++){
+		if($radios[$i].checked){
+			$fname = $radios[i].id;
+			$out = [$fname, $option];
+			
+			echo '<script language="javascript">';
+			echo 'alert("('.$out[0].', '.$out[1].')")';
+			echo '</script>';	
+		}
+	}
+}
+
+function weird_flex(){
+	echo $_POST['text_vol'];
+	}
 
 ?>
+
+<form action="upload.php" enctype="multipart/form-data" method="POST">
+	<?php
+	$current_dir = '../Audios/Archive/';
+	$dir = opendir($current_dir);
+
+	echo "<p>Каталог загрузки: $current_dir</p>";
+	echo '<p>Содержимое каталога:</p><ul>';
+	while ($file = readdir($dir)) {
+		if($file != '.' && $file  != '..') {
+			echo "<li>$file <input type='radio' id='$file' name='file_radio' value=$file></li>";
+		}
+	}
+	echo '</ul>';
+	closedir($dir);
+	?>
+	<p>
+	<button id="btnfun1" name="btn_vol" onClick='location.href="?btn_f1=1"'>Increase volume</button>
+
+	<input type="text" name="text_vol" id="text_vol" pattern="\d+(\.\d{1,})?" title = "Sample text" size ="3">
+
+	</p>
+	<p>
+	<button id="btnfun2" name="btnfun2" onClick="test_foo()">functon_2</button>
+	</p>
+
+	<script>
+		function test_foo(){
+			alert("<?php weird_flex(); ?>");
+			}
+	</script>
+
+</form>	
+
+
+	
+
