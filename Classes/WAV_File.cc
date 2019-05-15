@@ -96,6 +96,7 @@ int WAV_File::init(bytevector const &v, const string &fcode) {
 	
 	//cout << fcode << " " << file_id << endl;
 	bool file_exists = (fcode == file_id); // whether needed file already exists (if init() was called from load())
+	php_printf("fcode = %s, file_id = %s, exists = %d<br>", fcode.c_str(), file_id.c_str(), (int) file_exists);
 	if (!file_exists) v.write_to_file(fcode);
 	
 	

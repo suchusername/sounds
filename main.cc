@@ -27,8 +27,8 @@ int main() {
 		/*Speed S("", 0.8);
 		S.transform(&A, "Audios/Archive/sped_up_bucket.wav");*/
 		
-		Crop C("", 0, 100000);
-		C.transform(&A, "Audios/Archive/bayan_c.wav");
+		Speed C("", 1.4);
+		C.transform(&A, "Audios/Archive/whew.wav");
 		
 		/*Volume V("", 0);
 		//V.print();

@@ -1,2 +1,2 @@
-[Wed May 15 02:00:51.980687 2019] [:error] [pid 9006] [client ::1:53064] PHP Notice:  Undefined index: ArcType in /Users/apple/Desktop/MIPT/ICT/SoundProject/root/upload.php on line 70, referer: http://localhost/
-[Wed May 15 02:00:51.980859 2019] [:error] [pid 9006] [client ::1:53064] PHP Notice:  Undefined index: ArcType in /Users/apple/Desktop/MIPT/ICT/SoundProject/root/upload.php on line 71, referer: http://localhost/
+[Wed May 15 12:20:18.712047 2019] [:error] [pid 21383] [client ::1:50222] PHP Notice:  Undefined index: ArcType in /Users/apple/Desktop/MIPT/ICT/SoundProject/root/upload.php on line 70, referer: http://localhost/
+[Wed May 15 12:20:18.712180 2019] [:error] [pid 21383] [client ::1:50222] PHP Notice:  Undefined index: ArcType in /Users/apple/Desktop/MIPT/ICT/SoundProject/root/upload.php on line 71, referer: http://localhost/
