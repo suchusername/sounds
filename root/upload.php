@@ -128,8 +128,8 @@ if(isset($_POST['btn_vol'])){
 
 function increase_volume(){
 	$file = $_POST['file_radio'];
-	$k = (float)$_POST['text_vol'];
-	//вставить функцию
+	$k = (double)$_POST['text_vol'];
+	sounds_volume($file, 'changed_'.$file, $k);
 }
 
 if(isset($_POST['btn_del'])){
