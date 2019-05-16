@@ -10,7 +10,7 @@ for($i=0;$i<count($_FILES['uploadfile']['name']);$i++) {
 	}
 
 	// Каталог, в который мы будем принимать файл:
-	$uploaddir = '../Audios/Archive/';
+	$uploaddir = '../Audios/Sounds/';
 	$uploadfile_name = $_FILES['uploadfile']['name'][$i];
 	$uploadfile = $uploaddir.basename($_FILES['uploadfile']['name'][$i]); //разобраться с русскими буквами!
 
@@ -125,15 +125,20 @@ function weird_flex(){
 	}
 */
 
+
+?>
+<?php
+
 if(isset($_POST['btn_vol'])){
 	increase_volume();	
 }
 
 function increase_volume(){
 	$file = $_POST['file_radio'];
-	$k = (float)$_POST['text_vol'];
-	
-	//вставить функцию
+	$k = (double)$_POST['text_vol'];
+	sounds_volume($file, 'changed_'.$file, $k);
+	$uploadfile = '../Audios/Archive/'.'changed_'.$file;
+	echo "<A href=" . $uploadfile . ">Download file</A>";
 }
 
 if(isset($_POST['btn_del'])){
@@ -144,13 +149,11 @@ function delete(){
 	$file = $_POST['file_radio'];
 	unlink($file) or die("Error while deleting");
 }
-
 ?>
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<form id="ajax-form" action="upload.php" enctype="multipart/form-data" method="POST">
+<form action="upload.php" enctype="multipart/form-data" method="POST">
 	<?php
-	/*
-	$current_dir = '../Audios/Archive/';
+	
+	$current_dir = '../Audios/Sounds/';
 	
 	$dir = opendir($current_dir);
 
@@ -163,13 +166,14 @@ function delete(){
 	}
 	echo '</ul>';
 	closedir($dir);
-	*/
 	
+	/*
 	for($i=0; $i<count($upload_files); $i++){
 		echo "<li>$upload_files[$i] <input type='radio' id='$upload_files[$i]' name='file_radio' value='$upload_files[$i]'></li>";
 		//echo "<li>$upload_files[0] <input type='radio' id='$upload_files[0]' name='file_radio' value='$upload_files[0]'></li>";
 		//echo count($upload_files);
 	}
+	*/
 	?>
 	<p>
 	<button id="btn_vol" name="btn_vol">Increase volume</button>
@@ -182,16 +186,7 @@ function delete(){
 	</p>
 
 </form>	
-<script>
-    $('#ajax-form').submit(function(e) {
-        e.preventDefault();
-        var method = $(this).attr('method');
-        var url = $(this).attr('url');
-        $[method](url, $(this).serialize(), function(data) {
-            $('#result').html(data);
-        });
-    });
-</script>
+
 
 	
 
