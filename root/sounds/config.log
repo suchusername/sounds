@@ -22,7 +22,20 @@ uname -v = #1 SMP Fri Apr 20 16:44:24 UTC 2018
 /bin/arch              = x86_64
 /usr/bin/arch -k       = unknown
 /usr/convex/getsysinfo = unknown
+<<<<<<< HEAD
 /usr/bin/hostinfo      = unknown
+=======
+/usr/bin/hostinfo      = Mach kernel version:
+	 Darwin Kernel Version 16.7.0: Thu Jun 15 17:36:27 PDT 2017; root:xnu-3789.70.16~2/RELEASE_X86_64
+Kernel configured for up to 4 processors.
+2 processors are physically available.
+4 processors are logically available.
+Processor type: x86_64h (Intel x86-64h Haswell)
+Processors active: 0 1 2 3
+Primary memory available: 8.00 gigabytes
+Default processor set: 266 tasks, 1043 threads, 4 processors
+Load average: 1.90, Mach factor: 2.08
+>>>>>>> a28b367b892e74bdefde819b9c01207da1d2838a
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown

@@ -7,6 +7,7 @@
 PHP_FUNCTION(sounds_crop);
 PHP_FUNCTION(sounds_volume);
 PHP_FUNCTION(sounds_speed);
+PHP_FUNCTION(sounds_merge);
 PHP_FUNCTION(sounds_info);
 PHP_FUNCTION(sounds_classify);
 PHP_FUNCTION(sounds_test);
