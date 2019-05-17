@@ -152,7 +152,8 @@ function increase_speed(){
 	$filename = strtok($file, '.');
 	$extension = strtok('.');
 	$mult = (double)$_POST['text_spd'];
-	sounds_speed($file, $filename.'(1).'.$extension);
+
+	sounds_speed('Sounds/'.$file, 'Sounds/'.$filename.'(1).'.$extension, $mult);
 }
 
 if(isset($_POST['btn_cut'])){
@@ -165,7 +166,7 @@ function crop(){
 	$extension = strtok('.');
 	$l_border = (int)$_POST['text_cut_left'];
 	$r_border = (int)$_POST['text_cut_right'];
-	sounds_crop($file, $filename.'_cutted.'.$extension);
+	sounds_crop('Sounds/'.$file, 'Sounds/'.$filename.'_cutted.'.$extension, $l_border, $r_border);
 }
 
 if(isset($_POST['btn_rename'])){
@@ -176,6 +177,7 @@ function rename_file(){
 	$file = $_POST['file_radio'];
 	//$filename = substr(strrchr($file, "/"), 1);
 	$newname = '../Audios/Archive/Sounds/'.$_POST['text_rename'].'.wav';
+	echo $newname;
 	rename($file, $newname);	
 }
 
@@ -228,10 +230,10 @@ function delete_file(){
 	</p>
 	
 	<p>
-	<button id="btn_cut" name="btn_cut"></button>
+	<button id="btn_cut" name="btn_cut">Cut</button>
 
-	<input type="text" name="text_cut_left" id="text_cut_left" pattern="\d" title = "Left border (in ms), 0 for minimum border" size ="3">
-	<input type="text" name="text_cut_left" id="text_cut_left" pattern="\d" title = "Right border (in ms), -1 for maximum border" size ="3">
+	<input type="text" name="text_cut_left" id="text_cut_left" title = "Left border (in ms), 0 for minimum border" size ="3">
+	<input type="text" name="text_cut_left" id="text_cut_left" title = "Right border (in ms), -1 for maximum border" size ="3">
 
 	</p>
 	
