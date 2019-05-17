@@ -58,7 +58,7 @@ void Speed::transform(WAV_File *file, const string &new_id) const {
 	
 	int new_len = floor(old_arr.delta_x * (len - 1)) + 1;
 	
-	php_printf("new_len = %d, len = %d<br>", new_len, len);
+	//php_printf("new_len = %d, len = %d<br>", new_len, len);
 	
 	UniformDataSamples arr(new_len);
 	arr.x_0 = 0;
@@ -96,7 +96,7 @@ void Speed::transform(WAV_File *file, const string &new_id) const {
 	
 	for (int i = 0; i < arr.N; i++) writeShort((int) arr[i], b, 44+2*i);
 	
-	php_printf("bytevector size = %d<br>", b.size);
+	//php_printf("bytevector size = %d<br>", b.size);
 	
 	file->init(b, new_id);	
 }

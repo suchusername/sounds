@@ -16,6 +16,7 @@ static zend_function_entry sounds_functions[] = {
 	PHP_FE(sounds_crop, NULL)
 	PHP_FE(sounds_volume, NULL)
 	PHP_FE(sounds_speed, NULL)
+	PHP_FE(sounds_merge, NULL)
 	PHP_FE(sounds_info, NULL)
 	PHP_FE(sounds_classify, NULL)
 	PHP_FE(sounds_test, NULL)
@@ -130,6 +131,33 @@ PHP_FUNCTION(sounds_speed) {
 	//php_printf("ret = %s\n", ret.c_str());
 	
 	RETURN_NULL();	
+}
+
+PHP_FUNCTION(sounds_merge) {
+	close(2);
+	int fdout = open("logs", O_RDWR | O_CREAT | O_TRUNC, 0666);
+	
+	char *left;
+	int left_len;
+	char *right;
+	int right_len;
+	char *new_name;
+	int new_name_len;
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss", &left, &left_len, &right, &right_len, &new_name, &new_name_len) == FAILURE) {
+		RETURN_NULL();
+	}
+	
+	string left_str(left);
+	string right_str(right);
+	string new_name_str(new_name);
+	left_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + left_str;
+	right_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + right_str;
+	new_name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + new_name_str;
+	
+	string ret = sounds_merge(left_str, right_str, new_name_str);
+	
+	RETURN_NULL();
 }
 
 

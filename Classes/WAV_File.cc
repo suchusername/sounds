@@ -96,7 +96,7 @@ int WAV_File::init(bytevector const &v, const string &fcode) {
 	
 	//cout << fcode << " " << file_id << endl;
 	bool file_exists = (fcode == file_id); // whether needed file already exists (if init() was called from load())
-	php_printf("fcode = %s, file_id = %s, exists = %d<br>", fcode.c_str(), file_id.c_str(), (int) file_exists);
+	//php_printf("fcode = %s, file_id = %s, exists = %d<br>", fcode.c_str(), file_id.c_str(), (int) file_exists);
 	if (!file_exists) v.write_to_file(fcode);
 	
 	
@@ -129,7 +129,17 @@ int WAV_File::init(bytevector const &v, const string &fcode) {
 	
 	this->Subchunk1Size = data[4];
 	this->AudioFormat = data[5] % (1 << 16);
-	if (AudioFormat != 1) {
+	//cout << AudioFormat << endl;
+	/* Audio formats:
+		1 = PCM/Uncompressed
+		2 = Microsoft ADPCM
+		17 = IMA ADPCM
+		80 = MPEG
+	*/
+	if ((AudioFormat != 1) && 1) {
+		if (AudioFormat == 2) throw "WAV_File::init(): parsing error: audio format (= 2) is Microsoft ADPCM.";
+		if (AudioFormat == 17) throw "WAV_File::init(): parsing error: audio format (= 17) is IMA ADPCM.";
+		if (AudioFormat == 80) throw "WAV_File::init(): parsing error: audio format (= 80) is MPEG.";
 		throw "WAV_File::init(): parsing error: audio format is not PCM (Pulse-code modulation) at byte #5.";
 	}
 	this->NumChannels = data[5] >> 16;
@@ -213,8 +223,7 @@ UniformDataSamples WAV_File::getSamples() const {
 			for (int i = 0; i < NumSamples; i++) {
 				u[i] = (double) (short) (data[11+offset/4+i] % (1 << 16));
 			}
-		}
-		if (offset % 4 == 2) {
+		} else if (offset % 4 == 2) {
 			for (int i = 0; i < NumSamples; i++) {
 				u[i] = (double) (short) (data[11+offset/4+i] >> 16);
 				//if (13500 < i && i < 13510) cout << u[i] << endl;

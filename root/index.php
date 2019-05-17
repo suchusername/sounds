@@ -7,8 +7,6 @@
  	<title>Cool site</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="script.js"></script>
-		
-	
 </head>
 
 <body>

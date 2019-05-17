@@ -10,6 +10,7 @@
 #include "Classes/Queries/Crop.cc"
 #include "Classes/Queries/Volume.cc"
 #include "Classes/Queries/Speed.cc"
+#include "Classes/Queries/Merge.cc"
 #include "Classes/Queries/BitSampleRate.cc"
 
 #include <iostream>
@@ -22,7 +23,7 @@ string sounds_crop(const string &name, const string &new_name, double left, doub
 		bytevector b;
 		b.read_from_file(name);
 		WAV_File A;
-		A.init(b, new_name);
+		A.init(b, DEFAULT_FCODE);
 		
 		int l = (int) (left / 1000 * A.SampleRate);
 		int r = (int) (right / 1000 * A.SampleRate);
@@ -48,7 +49,7 @@ string sounds_volume(const string &name, const string &new_name, double k, doubl
 		bytevector b;
 		b.read_from_file(name);
 		WAV_File A;
-		A.init(b, new_name);
+		A.init(b, DEFAULT_FCODE);
 		
 		int l = (int) (left / 1000 * A.SampleRate);
 		int r = (int) (right / 1000 * A.SampleRate);
@@ -67,11 +68,10 @@ string sounds_volume(const string &name, const string &new_name, double k, doubl
 
 string sounds_speed(const string &name, const string &new_name, double mult) {
 	try {
-		
 		bytevector b;
 		b.read_from_file(name);
 		WAV_File A;
-		A.init(b, new_name);
+		A.init(b, DEFAULT_FCODE);
 		
 		Speed Q("", mult);
 		Q.transform(&A, new_name);
@@ -84,6 +84,30 @@ string sounds_speed(const string &name, const string &new_name, double mult) {
 	
 	return "OK";
 }
+
+
+string sounds_merge(const string &left, const string &right, const string &new_name) {
+	try {
+		bytevector bl, br;
+		bl.read_from_file(left);
+		br.read_from_file(right);
+		WAV_File L, R;
+		
+		L.init(bl, DEFAULT_FCODE);
+		R.init(br, DEFAULT_FCODE_2);
+		
+		Merge Q("", &R);
+		Q.transform(&L, new_name);
+		
+	} catch (const char *err) {
+		printf("%s\n", err);
+		string error(err);
+		return error;
+	}
+	
+	return "OK";
+}
+
 
 vector<double> sounds_info(const string &name) {
 	

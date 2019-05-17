@@ -13,6 +13,7 @@
 #include "Classes/Queries/Volume.cc"
 #include "Classes/Queries/BitSampleRate.cc"
 #include "Classes/Queries/Speed.cc"
+#include "Classes/Queries/Merge.cc"
 
 #include <iostream>
 using namespace std;
@@ -21,14 +22,18 @@ int main() {
 	
 	try {
 		WAV_File A;
-		A.load("Audios/alltta_bucket.wav");
-		//A.print();
+		A.load("Audios/Archive/cleanbass-E-twang01.wav");
+		A.print();
 		
-		/*Speed S("", 0.8);
-		S.transform(&A, "Audios/Archive/sped_up_bucket.wav");*/
+		Crop C1("", 0, 10000);
+		C1.transform(&A, "Audios/Archive/nn.wav");
 		
-		Speed C("", 1.4);
-		C.transform(&A, "Audios/Archive/whew.wav");
+		//WAV_File B,C;
+		//B.load("Audios/Archive/short.wav");
+		//C.load("Audios/Archive/short.wav");
+		
+		//Merge M("", &C);
+		//M.transform(&B, "Audios/Archive/merged.wav");
 		
 		/*Volume V("", 0);
 		//V.print();
