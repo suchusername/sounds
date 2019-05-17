@@ -127,6 +127,9 @@ function weird_flex(){
 
 
 ?>
+
+
+
 <?php
 
 if(isset($_POST['btn_clsfy'])){
@@ -134,7 +137,17 @@ if(isset($_POST['btn_clsfy'])){
 }
 
 function classify();{
-	$file = $_POST['file_radio'];
+	$path = 'Sounds/'.$_POST['file_radio'];
+	$probs = sounds_classify();
+	$instruments = array('accordion', 'piano', 'violin', 'guitar', 'smth else');
+	
+	for($i = 0; $i < 5; $i++ ){
+	echo "<script>";
+	echo "var info = documnet.createElement('li');";
+	echo "info.innerHTML = ".$instruments[$i]." : ".(string)(100*$probs[$i])."% ;"  ;
+	echo "document.getELementById(' ').appendChild(info);";
+	echo "</script>";
+	}
 }
 
 if(isset($_POST['btn_vol'])){
@@ -224,8 +237,11 @@ function delete_file(){
 	?>
 	<p>
 	<button id="btn_clsfy" name="btn_clsfy">Classify</button>
+	
+	<div id="clsfy_res"></div>
 	</p>
 
+	
 	
 	<p>
 	<button id="btn_vol" name="btn_vol">Increase volume</button>
@@ -244,8 +260,8 @@ function delete_file(){
 	<p>
 	<button id="btn_cut" name="btn_cut">Cut</button>
 
-	<input type="text" name="text_cut_left" id="text_cut_left" title = "Left border (in ms), 0 for minimum border" size ="3">
-	<input type="text" name="text_cut_left" id="text_cut_left" title = "Right border (in ms), -1 for maximum border" size ="3">
+	<input type="text" name="text_cut_left" id="text_cut_left" pattern = "^[ 0-9]+$" title = "Left border (in ms), 0 for minimum border" size ="3">
+	<input type="text" name="text_cut_right" id="text_cut_right" pattern = "^[ 0-9]+$" title = "Right border (in ms), -1 for maximum border" size ="3">
 
 	</p>
 	
