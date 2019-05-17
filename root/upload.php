@@ -136,11 +136,11 @@ if(isset($_POST['btn_clsfy'])){
 	classify();
 }
 
-function classify();{
+function classify(){
 	$path = 'Sounds/'.$_POST['file_radio'];
-	$probs = sounds_classify();
+	$probs = sounds_classify($path);
 	$instruments = array('accordion', 'piano', 'violin', 'guitar', 'smth else');
-	
+	echo "TEST".$probs[0];
 	for($i = 0; $i < 5; $i++ ){
 	echo "<script>";
 	echo "var info = documnet.createElement('li');";
