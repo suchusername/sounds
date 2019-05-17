@@ -132,6 +132,18 @@ function increase_volume(){
 	sounds_volume($file, 'changed_'.$file, $k);
 }
 
+if(isset($_POST['btn_spd'])){
+	increase_speed();
+}
+
+function increase_speed(){
+	$file = $_POST['file_radio'];
+	$filename = strtok($file, '.');
+	$extension = strtok('.');
+	$mult = (double)$_POST['text_spd'];
+	sounds_speed($file, $filename.'(1).'.$extension);
+}
+
 if(isset($_POST['btn_del'])){
 	delete();
 }
@@ -164,6 +176,14 @@ function delete(){
 	<input type="text" name="text_vol" id="text_vol" pattern="\d+(\.\d{1,})?" title = "Sample text" size ="3">
 
 	</p>
+	
+	<p>
+	<button id="btn_spd" name="btn_spd">Increase speed</button>
+
+	<input type="text" name="text_spd" id="text_spd" pattern="\d+(\.\d{1,})?" title = "Sample text" size ="3">
+
+	</p>
+	
 	<p>
 	<button id="btn_del" name="btn_del">Delete</button>
 	</p>
