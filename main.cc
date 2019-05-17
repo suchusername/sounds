@@ -22,18 +22,18 @@ int main() {
 	
 	try {
 		WAV_File A;
-		A.load("Audios/alltta_bucket.wav");
-		//A.print();
+		A.load("Audios/Archive/cleanbass-E-twang01.wav");
+		A.print();
 		
-		Crop C1("", 1000000, 1100000);
-		C1.transform(&A, "Audios/Archive/short.wav");
+		Crop C1("", 0, 10000);
+		C1.transform(&A, "Audios/Archive/nn.wav");
 		
-		WAV_File B,C;
-		B.load("Audios/Archive/short.wav");
-		C.load("Audios/Archive/short.wav");
+		//WAV_File B,C;
+		//B.load("Audios/Archive/short.wav");
+		//C.load("Audios/Archive/short.wav");
 		
-		Merge M("", &C);
-		M.transform(&B, "Audios/Archive/merged.wav");
+		//Merge M("", &C);
+		//M.transform(&B, "Audios/Archive/merged.wav");
 		
 		/*Volume V("", 0);
 		//V.print();

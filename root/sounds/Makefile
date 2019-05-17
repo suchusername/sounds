@@ -1,16 +1,16 @@
-srcdir = /proj/sounds/root/sounds
-builddir = /proj/sounds/root/sounds
-top_srcdir = /proj/sounds/root/sounds
-top_builddir = /proj/sounds/root/sounds
+srcdir = /Users/apple/Desktop/MIPT/ICT/SoundProject/root/sounds
+builddir = /Users/apple/Desktop/MIPT/ICT/SoundProject/root/sounds
+top_srcdir = /Users/apple/Desktop/MIPT/ICT/SoundProject/root/sounds
+top_builddir = /Users/apple/Desktop/MIPT/ICT/SoundProject/root/sounds
 EGREP = /usr/bin/grep -E
 SED = /usr/bin/sed
-CONFIGURE_COMMAND = './configure'
-CONFIGURE_OPTIONS =
-SHLIB_SUFFIX_NAME = so
+CONFIGURE_COMMAND = './configure' '--enable-sounds'
+CONFIGURE_OPTIONS = '--enable-sounds'
+SHLIB_SUFFIX_NAME = dylib
 SHLIB_DL_SUFFIX_NAME = so
 ZEND_EXT_TYPE = zend_extension
 RE2C = exit 0;
-AWK = gawk
+AWK = awk
 SOUNDS_SHARED_LIBADD = -lstdc++
 shared_objects_sounds = sounds.lo
 PHP_PECL_EXTENSION = sounds
@@ -22,7 +22,7 @@ prefix = /usr
 exec_prefix = $(prefix)
 libdir = ${exec_prefix}/lib
 prefix = /usr
-phplibdir = /proj/sounds/root/sounds/modules
+phplibdir = /Users/apple/Desktop/MIPT/ICT/SoundProject/root/sounds/modules
 phpincludedir = /usr/include/php
 CC = cc
 CFLAGS = -g -O2
@@ -32,7 +32,7 @@ CPPFLAGS = -DHAVE_CONFIG_H
 CXX = g++
 CXXFLAGS = -std=c++11 -Wno-deprecated-register
 CXXFLAGS_CLEAN = $(CXXFLAGS)
-EXTENSION_DIR = /usr/lib64/php/modules
+EXTENSION_DIR = /usr/lib/php/extensions/no-debug-non-zts-20131226
 PHP_EXECUTABLE = /usr/bin/php
 EXTRA_LDFLAGS =
 EXTRA_LIBS =
@@ -55,7 +55,7 @@ all: $(all_targets)
 	@echo "Build complete."
 	@echo "Don't forget to run 'make test'."
 	@echo
-	
+
 build-modules: $(PHP_MODULES) $(PHP_ZEND_EX)
 
 build-binaries: $(PHP_BINARIES)
@@ -98,7 +98,7 @@ install-headers:
 			paths="$$paths $(INSTALL_ROOT)$(phpincludedir)/$$i"; \
 		done; \
 		$(mkinstalldirs) $$paths && \
-		echo "Installing header files:          $(INSTALL_ROOT)$(phpincludedir)/" && \
+		echo "Installing header files:           $(INSTALL_ROOT)$(phpincludedir)/" && \
 		for i in `echo $(INSTALL_HEADERS)`; do \
 			if test "$(PHP_PECL_EXTENSION)"; then \
 				src=`echo $$i | $(SED) -e "s#ext/$(PHP_PECL_EXTENSION)/##g"`; \
@@ -131,7 +131,7 @@ PHP_TEST_SHARED_EXTENSIONS =  ` \
 PHP_DEPRECATED_DIRECTIVES_REGEX = '^(magic_quotes_(gpc|runtime|sybase)?|(zend_)?extension(_debug)?(_ts)?)[\t\ ]*='
 
 test: all
-	-@if test ! -z "$(PHP_EXECUTABLE)" && test -x "$(PHP_EXECUTABLE)"; then \
+	@if test ! -z "$(PHP_EXECUTABLE)" && test -x "$(PHP_EXECUTABLE)"; then \
 		INI_FILE=`$(PHP_EXECUTABLE) -d 'display_errors=stderr' -r 'echo php_ini_loaded_file();' 2> /dev/null`; \
 		if test "$$INI_FILE"; then \
 			$(EGREP) -h -v $(PHP_DEPRECATED_DIRECTIVES_REGEX) "$$INI_FILE" > $(top_builddir)/tmp-php.ini; \
@@ -147,7 +147,9 @@ test: all
 		TEST_PHP_SRCDIR=$(top_srcdir) \
 		CC="$(CC)" \
 			$(PHP_EXECUTABLE) -n -c $(top_builddir)/tmp-php.ini $(PHP_TEST_SETTINGS) $(top_srcdir)/run-tests.php -n -c $(top_builddir)/tmp-php.ini -d extension_dir=$(top_builddir)/modules/ $(PHP_TEST_SHARED_EXTENSIONS) $(TESTS); \
+		TEST_RESULT_EXIT_CODE=$$?; \
 		rm $(top_builddir)/tmp-php.ini; \
+		exit $$TEST_RESULT_EXIT_CODE; \
 	else \
 		echo "ERROR: Cannot run tests without CLI sapi."; \
 	fi
@@ -158,16 +160,25 @@ clean:
 	find . -name \*.la -o -name \*.a | xargs rm -f 
 	find . -name \*.so | xargs rm -f
 	find . -name .libs -a -type d|xargs rm -rf
-	rm -f libphp$(PHP_MAJOR_VERSION).la $(SAPI_CLI_PATH) $(OVERALL_TARGET) modules/* libs/*
+	rm -f libphp$(PHP_MAJOR_VERSION).la $(SAPI_CLI_PATH) $(SAPI_CGI_PATH) $(SAPI_MILTER_PATH) $(SAPI_LITESPEED_PATH) $(SAPI_FPM_PATH) $(OVERALL_TARGET) modules/* libs/*
 
 distclean: clean
-	rm -f Makefile config.cache config.log config.status Makefile.objects Makefile.fragments libtool main/php_config.h stamp-h sapi/apache/libphp$(PHP_MAJOR_VERSION).module buildmk.stamp
+	rm -f Makefile config.cache config.log config.status Makefile.objects Makefile.fragments libtool main/php_config.h main/internal_functions_cli.c main/internal_functions.c stamp-h sapi/apache/libphp$(PHP_MAJOR_VERSION).module sapi/apache_hooks/libphp$(PHP_MAJOR_VERSION).module buildmk.stamp Zend/zend_dtrace_gen.h Zend/zend_dtrace_gen.h.bak Zend/zend_config.h TSRM/tsrm_config.h
+	rm -f php5.spec main/build-defs.h scripts/phpize
+	rm -f ext/date/lib/timelib_config.h ext/mbstring/oniguruma/config.h ext/mbstring/libmbfl/config.h ext/oci8/oci8_dtrace_gen.h ext/oci8/oci8_dtrace_gen.h.bak
+	rm -f scripts/man1/phpize.1 scripts/php-config scripts/man1/php-config.1 sapi/cli/php.1 sapi/cgi/php-cgi.1 ext/phar/phar.1 ext/phar/phar.phar.1
+	rm -f sapi/fpm/php-fpm.conf sapi/fpm/init.d.php-fpm sapi/fpm/php-fpm.service sapi/fpm/php-fpm.8 sapi/fpm/status.html
+	rm -f ext/iconv/php_have_bsd_iconv.h ext/iconv/php_have_glibc_iconv.h ext/iconv/php_have_ibm_iconv.h ext/iconv/php_have_iconv.h ext/iconv/php_have_libiconv.h ext/iconv/php_iconv_aliased_libiconv.h ext/iconv/php_iconv_supports_errno.h ext/iconv/php_php_iconv_h_path.h ext/iconv/php_php_iconv_impl.h
+	rm -f ext/phar/phar.phar ext/phar/phar.php
+	if test "$(srcdir)" != "$(builddir)"; then \
+	  rm -f ext/phar/phar/phar.inc; \
+	fi
 	$(EGREP) define'.*include/php' $(top_srcdir)/configure | $(SED) 's/.*>//'|xargs rm -f
 
 .PHONY: all clean install distclean test
 .NOEXPORT:
-sounds.lo: /proj/sounds/root/sounds/sounds.cc
-	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/proj/sounds/root/sounds $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /proj/sounds/root/sounds/sounds.cc -o sounds.lo 
+sounds.lo: /Users/apple/Desktop/MIPT/ICT/SoundProject/root/sounds/sounds.cc
+	$(LIBTOOL) --mode=compile $(CXX)  -I. -I/Users/apple/Desktop/MIPT/ICT/SoundProject/root/sounds $(COMMON_FLAGS) $(CXXFLAGS_CLEAN) $(EXTRA_CXXFLAGS)  -c /Users/apple/Desktop/MIPT/ICT/SoundProject/root/sounds/sounds.cc -o sounds.lo 
 $(phplibdir)/sounds.la: ./sounds.la
 	$(LIBTOOL) --mode=install cp ./sounds.la $(phplibdir)
 
