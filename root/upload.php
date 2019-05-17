@@ -2,18 +2,18 @@
 
 // Проверим, успешно ли загружен файл
 //echo basename($_FILES['uploadfile']['tmp_name']);
-$upload_files = [];
 for($i=0;$i<count($_FILES['uploadfile']['name']);$i++) {
+	
 	if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'][$i])) {
 	  echo "Upload error (1)!";
 	  exit;
 	}
 
 	// Каталог, в который мы будем принимать файл:
-	$uploaddir = '../Audios/Sounds/';
-	$uploadfile_name = $_FILES['uploadfile']['name'][$i];
+	$uploaddir = '../Audios/Archive/Sounds/';
+	$uploadfile_name = './Sounds/'.$_FILES['uploadfile']['name'][$i];
 	$uploadfile = $uploaddir.basename($_FILES['uploadfile']['name'][$i]); //разобраться с русскими буквами!
-
+	
 	//проверим на допустимость расширения файла, mime-типа и размера
 	$blacklist = array(".php", ".phtml", ".php3", ".php4", ".html", ".htm");
 	foreach ($blacklist as $item)
@@ -135,17 +135,19 @@ if(isset($_POST['btn_vol'])){
 
 function increase_volume(){
 	$file = $_POST['file_radio'];
+	$file_dir = 'Sounds/'.$file;
+	$uploadfile = './Sounds/next/changed_'.$file;
 	$k = (double)$_POST['text_vol'];
-	sounds_volume($file, 'changed_'.$file, $k);
-	$uploadfile = '../Audios/Archive/'.'changed_'.$file;
-	echo "<A href=" . $uploadfile . ">Download file</A>";
+	sounds_volume($file_dir, $uploadfile, $k);
+	
+	//echo "<A href=" . $uploadfile . ">Download file</A>";
 }
 
 if(isset($_POST['btn_del'])){
-	delete();
+	delete_file();
 }
 
-function delete(){
+function delete_file(){
 	$file = $_POST['file_radio'];
 	unlink($file) or die("Error while deleting");
 }
@@ -153,7 +155,7 @@ function delete(){
 <form action="upload.php" enctype="multipart/form-data" method="POST">
 	<?php
 	
-	$current_dir = '../Audios/Sounds/';
+	$current_dir = '../Audios/Archive/Sounds/';
 	
 	$dir = opendir($current_dir);
 
@@ -161,7 +163,7 @@ function delete(){
 	echo '<p>Содержимое каталога:</p><ul>';
 	while ($file = readdir($dir)) {
 		if($file != '.' && $file  != '..' ) {
-			echo "<li>$file <input type='radio' id='$file' name='file_radio' value=$file></li>";
+			echo "<li> <input type='radio' id='$file' name='file_radio' value=$file> $file </li>";
 		}
 	}
 	echo '</ul>';
