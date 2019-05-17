@@ -74,6 +74,30 @@ function increase_speed(){
 	sounds_speed($file, $filename.'(1).'.$extension);
 }
 
+if(isset($_POST['btn_cut'])){
+	crop();
+}
+
+function crop(){
+	$file = $_POST['file_radio'];
+	$filename = strtok($file, '.');
+	$extension = strtok('.');
+	$l_border = (int)$_POST['text_cut_left'];
+	$r_border = (int)$_POST['text_cut_right'];
+	sounds_crop($file, $filename.'_cutted.'.$extension);
+}
+
+if(isset($_POST['btn_rename'])){
+	rename_file();
+}
+
+function rename_file(){
+	$file = $_POST['file_radio'];
+	//$filename = substr(strrchr($file, "/"), 1);
+	$newname = '../Audios/Archive/Sounds/'.$_POST['text_rename'].'.wav';
+	rename($file, $newname);	
+}
+
 if(isset($_POST['btn_del'])){
 	delete_file();
 }
@@ -102,19 +126,32 @@ function delete_file(){
 	<p>
 	<button id="btn_vol" name="btn_vol">Increase volume</button>
 
-	<input type="text" name="text_vol" id="text_vol" pattern="\d+(\.\d{1,})?" title = "Sample text" size ="3">
+	<input type="text" name="text_vol" id="text_vol" pattern="\d+(\.\d{1,})?" title = "Increase by ... times" size ="3">
 
 	</p>
 	
 	<p>
 	<button id="btn_spd" name="btn_spd">Increase speed</button>
 
-	<input type="text" name="text_spd" id="text_spd" pattern="\d+(\.\d{1,})?" title = "Sample text" size ="3">
+	<input type="text" name="text_spd" id="text_spd" pattern="\d+(\.\d{1,})?" title = "Increase by ... times" size ="3">
+
+	</p>
+	
+	<p>
+	<button id="btn_cut" name="btn_cut"></button>
+
+	<input type="text" name="text_cut_left" id="text_cut_left" pattern="\d" title = "Left border (in ms), 0 for minimum border" size ="3">
+	<input type="text" name="text_cut_left" id="text_cut_left" pattern="\d" title = "Right border (in ms), -1 for maximum border" size ="3">
 
 	</p>
 	
 	<p>
 	<button id="btn_del" name="btn_del">Delete</button>
+	</p>
+	
+	<p>
+	<button id="btn_rename" name="btn_rename">Rename</button>
+	<input type="text" name="text_rename" id="text_rename" title = "Input your new filename" size ="10" value = "new_filename">.wav	
 	</p>
 
 </form>	
