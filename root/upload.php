@@ -136,7 +136,7 @@ if(isset($_POST['btn_vol'])){
 function increase_volume(){
 	$file = $_POST['file_radio'];
 	$file_dir = 'Sounds/'.$file;
-	$uploadfile = './Sounds/next/changed_'.$file;
+	$uploadfile = './Sounds/changed_'.$file;
 	$k = (double)$_POST['text_vol'];
 	sounds_volume($file_dir, $uploadfile, $k);
 	
