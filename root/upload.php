@@ -185,8 +185,7 @@ function rename_file(){
 	$file = $_POST['file_radio'];
 	//$filename = substr(strrchr($file, "/"), 1);
 	$newname = '../Audios/Archive/Sounds/'.$_POST['text_rename'].'.wav';
-	echo $newname;
-	rename($file, $newname);	
+	rename('../Audios/Archive/Sounds/'.$file, $newname);	
 }
 
 if(isset($_POST['btn_del'])){
@@ -195,7 +194,7 @@ if(isset($_POST['btn_del'])){
 
 function delete_file(){
 	$file = $_POST['file_radio'];
-	unlink($file) or die("Error while deleting");
+	unlink('../Audios/Archive/Sounds/'.$file) or die("Error while deleting");
 }
 ?>
 <form action="" enctype="multipart/form-data" method="POST">
@@ -205,11 +204,11 @@ function delete_file(){
 	
 	$dir = opendir($current_dir);
 
-	echo "<p>Каталог загрузки: $current_dir</p>";
-	echo '<p>Содержимое каталога:</p><ul>';
+	//echo "<p>Каталог загрузки: $current_dir</p>";
+	echo '<p>Your files:</p><ul>';
 	while ($file = readdir($dir)) {
 		if($file != '.' && $file  != '..' ) {
-			echo "<li> <input type='radio' id='$file' name='file_radio' value=$file> $file </li>";
+			echo "<ul> <input type='radio' id='$file' name='file_radio' value=$file> $file </ul>";
 		}
 	}
 	echo '</ul>';
