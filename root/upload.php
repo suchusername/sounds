@@ -47,87 +47,7 @@ for($i=0;$i<count($_FILES['uploadfile']['name']);$i++) {
 		echo "<br>";
 	}
 	echo "<br>";
-	/*$audio_probs = sounds_classify($uploadfile_name);
-	$audio_tags = array('accordion', 'piano', 'violin', 'guitar', 'noise');
-	echo "probabilities: <br>";
-	for ($i = 0; $i < 5; $i++) {
-		echo $audio_tags[$i];
-		echo " ";
-		echo $audio_probs[$i];
-		echo "<br>";
-	}
-	echo sounds_speed('alltta_bucket.wav', 'whew.wav', 1.5);
-	echo "<br>";
-	echo "<br>";
-	$arr_test = sounds_test(5);
-	echo $arr_test[0];
-	echo "<br>";
-	echo $arr_test[1];
-	echo "<br>";
-	echo $arr_test[2];
-	echo "<br>";*/
 }
-
-
-
-/*
-echo "<BR>";
-//Вставить код обработки файла
-echo "ArcType: ".$_POST['ArcType']."<BR>";
-switch($_POST['ArcType']) {
-	case 0:
-		echo "0";
-		break;
-	case 1:
-		echo "1";
-		break;
-	case 2:
-		echo "2";
-		break;
-	case 3:
-		echo "3";
-		break;
-	case 4:
-		echo "4";
-		break;
-}
-/*exec('ls -l', $output);
-foreach ($output as $item) echo $item."<BR>";
-
-echo "<BR>";
-echo "<A href=" . $uploadfile . ">Download file</A>";
-*/
-
-/*
-if($_GET['btn_f1']){send_file('function_1');}
-
-if($_GET['btn_f2']){send_file('function_2');}
-
-
-
-function send_file($option){
-	$out = [];	
-	$radios = document.getElementsByName('file_radio');
-	for($i = 0; $i < $radios.length; $i++){
-		if($radios[$i].checked){
-			$fname = $radios[i].id;
-			$out = [$fname, $option];
-			
-			echo '<script language="javascript">';
-			echo 'alert("('.$out[0].', '.$out[1].')")';
-			echo '</script>';	
-		}
-	}
-}
-
-function weird_flex(){
-	echo $_POST['text_vol'];
-	}
-*/
-
-
-?>
-<?php
 
 if(isset($_POST['btn_vol'])){
 	increase_volume();	
@@ -140,7 +60,6 @@ function increase_volume(){
 	$k = (double)$_POST['text_vol'];
 	sounds_volume($file_dir, $uploadfile, $k);
 	
-	//echo "<A href=" . $uploadfile . ">Download file</A>";
 }
 
 if(isset($_POST['btn_del'])){
@@ -151,10 +70,7 @@ function delete_file(){
 	$file = $_POST['file_radio'];
 	unlink($file) or die("Error while deleting");
 }
-?>
-<form action="upload.php" enctype="multipart/form-data" method="POST">
-	<?php
-	
+
 	$current_dir = '../Audios/Archive/Sounds/';
 	
 	$dir = opendir($current_dir);
@@ -163,20 +79,14 @@ function delete_file(){
 	echo '<p>Содержимое каталога:</p><ul>';
 	while ($file = readdir($dir)) {
 		if($file != '.' && $file  != '..' ) {
-			echo "<li> <input type='radio' id='$file' name='file_radio' value=$file> $file </li>";
+			echo "<lu> <input type='radio' id='$file' name='file_radio' value=$file> $file </lu>";
 		}
 	}
 	echo '</ul>';
 	closedir($dir);
-	
-	/*
-	for($i=0; $i<count($upload_files); $i++){
-		echo "<li>$upload_files[$i] <input type='radio' id='$upload_files[$i]' name='file_radio' value='$upload_files[$i]'></li>";
-		//echo "<li>$upload_files[0] <input type='radio' id='$upload_files[0]' name='file_radio' value='$upload_files[0]'></li>";
-		//echo count($upload_files);
-	}
-	*/
-	?>
+?>
+<form action="" enctype="multipart/form-data" method="POST">
+
 	<p>
 	<button id="btn_vol" name="btn_vol">Increase volume</button>
 
