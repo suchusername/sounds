@@ -129,6 +129,14 @@ function weird_flex(){
 ?>
 <?php
 
+if(isset($_POST['btn_clsfy'])){
+	classify();
+}
+
+function classify();{
+	$file = $_POST['file_radio'];
+}
+
 if(isset($_POST['btn_vol'])){
 	increase_volume();	
 }
@@ -216,6 +224,11 @@ function delete_file(){
 	*/
 	?>
 	<p>
+	<button id="btn_clsfy" name="btn_clsfy">Classify</button>
+	</p>
+
+	
+	<p>
 	<button id="btn_vol" name="btn_vol">Increase volume</button>
 
 	<input type="text" name="text_vol" id="text_vol" pattern="\d+(\.\d{1,})?" title = "Increase by ... times" size ="3">
@@ -245,6 +258,8 @@ function delete_file(){
 	<button id="btn_rename" name="btn_rename">Rename</button>
 	<input type="text" name="text_rename" id="text_rename" title = "Input your new filename" size ="10" value = "new_filename">.wav	
 	</p>
+
+	
 
 </form>	
 
