@@ -127,27 +127,17 @@ function weird_flex(){
 
 
 ?>
-
-
-
+<body>
 <?php
 
-if(isset($_POST['btn_clsfy'])){
-	classify();
-}
 
 function classify(){
 	$path = 'Sounds/'.$_POST['file_radio'];
 	$probs = sounds_classify($path);
 	$instruments = array('accordion', 'piano', 'violin', 'guitar', 'smth else');
-	echo "TEST".$probs[0];
-	for($i = 0; $i < 5; $i++ ){
-	echo "<script>";
-	echo "var info = documnet.createElement('li');";
-	echo "info.innerHTML = ".$instruments[$i]." : ".(string)(100*$probs[$i])."% ;"  ;
-	echo "document.getELementById(' ').appendChild(info);";
-	echo "</script>";
-	}
+	
+	
+	return $probs;
 }
 
 if(isset($_POST['btn_vol'])){
@@ -210,7 +200,10 @@ function delete_file(){
 	unlink('../Audios/Archive/Sounds/'.$file) or die("Error while deleting");
 }
 ?>
+
+
 <form action="" enctype="multipart/form-data" method="POST">
+
 	<?php
 	
 	$current_dir = '../Audios/Archive/Sounds/';
@@ -238,11 +231,19 @@ function delete_file(){
 	<p>
 	<button id="btn_clsfy" name="btn_clsfy">Classify</button>
 	
-	<div id="clsfy_res"></div>
+	<div id="clsfy"></div>
 	</p>
-
-	
-	
+	<script src='js/upload.js'></script>
+	<?php
+	if(isset($_POST['btn_clsfy'])){
+		//$probs[] = classify();
+		$instruments = array('accordion', 'piano', 'violin', 'guitar', 'smth else');
+		for($i=0; $i<5; $i++){
+			echo "<script>GenerateDiv('$instruments[$i]');</script>";
+		}
+		
+	} 
+	?>
 	<p>
 	<button id="btn_vol" name="btn_vol">Increase volume</button>
 
@@ -277,7 +278,7 @@ function delete_file(){
 	
 
 </form>	
-
+</body>
 
 	
 
