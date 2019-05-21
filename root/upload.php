@@ -277,7 +277,22 @@ function delete_file(){
 
 	
 
-</form>	
+</form>
+<div id="waveform"></div>
+
+<div id="wave-spectrogram"></div>
+
+<button class="btn btn-primary" onclick="wavesurfer.playPause()">
+  <i class="glyphicon glyphicon-play"></i>
+  Play/Pause
+</button>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/plugin/wavesurfer.spectrogram.min.js'></script>
+
+  
+
+<script  src="js/waveform.js"></script>
 </body>
 
 	
