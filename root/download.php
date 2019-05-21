@@ -1,6 +1,6 @@
 <?php
-$path = '/proj/sounds/Audios/Archive/Sounds/';
-ini_set('include_path', '/proj/sounds/Audios/Archive/Sounds/');
+$path = '../Audios/Archive/Sounds/';
+ini_set('include_path', '../Audios/Archive/Sounds/');
 //set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 header('Content-Type: text/html; charset=utf-8');
 if (isset($_GET['file']) and preg_match("/wav$/", $_GET['file']) and file_exists($path.$_GET['file'])) 
