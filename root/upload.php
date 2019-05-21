@@ -4,7 +4,6 @@
 //echo basename($_FILES['uploadfile']['tmp_name']);
 if (!empty($_FILES)){
 	for($i=0;$i<count($_FILES['uploadfile']['name']);$i++) {
-		echo "+++++++++++++++++++++++++++++++++++++++";
 		if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'][$i])) {
 		  echo "Upload error (1)!";
 		  exit;
