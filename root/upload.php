@@ -131,16 +131,6 @@ function weird_flex(){
 <body>
 <?php
 
-
-function classify(){
-	$path = 'Sounds/'.$_POST['file_radio'];
-	$probs = sounds_classify($path);
-	$instruments = array('accordion', 'piano', 'violin', 'guitar', 'smth else');
-	
-	
-	return $probs;
-}
-
 if(isset($_POST['btn_vol'])){
 	increase_volume();	
 }
@@ -216,6 +206,8 @@ function delete_file(){
 	while ($file = readdir($dir)) {
 		if($file != '.' && $file  != '..' ) {
 			echo "<ul> <input type='radio' id='$file' name='file_radio' value=$file> $file </ul>";
+			$file_dir = $file;
+			echo "<a href='download.php?file=$file_dir'>Download</a>";
 		}
 	}
 	echo '</ul>';
@@ -236,11 +228,18 @@ function delete_file(){
 	</p>
 	<script src='js/upload.js'></script>
 	<?php
+	function classify(){
+		$path = 'Sounds/'.$_POST['file_radio'];
+		//$probs = sounds_classify($path);
+		
+		return $path;
+	}
 	if(isset($_POST['btn_clsfy'])){
-		//$probs[] = classify();
+		//$prob= classify();
+		echo $prob;
 		$instruments = array('accordion', 'piano', 'violin', 'guitar', 'smth else');
 		for($i=0; $i<5; $i++){
-			echo "<script>GenerateDiv('$instruments[$i]');</script>";
+			echo "<script>GenerateDiv('$instruments[$i]', '228');</script>";
 		}
 		
 	} 
