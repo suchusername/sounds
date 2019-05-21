@@ -14,4 +14,4 @@ wavesurfer.on('ready', function () {
   });
 });
 
-wavesurfer.load('../Audios/Archive/Sounds/new.wav');
+wavesurfer.load('https://wavesurfer-js.org/example/media/demo.wav');
