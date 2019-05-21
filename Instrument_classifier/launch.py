@@ -148,7 +148,7 @@ def inst_probability(Y):
     return res
 
 # Let's define the "window size" of an audioclip which then will be turned into a spectrogram
-window = 0.2  # sec
+window = 1.0  # sec
 file = sys.argv[1]
 dur = get_duration_wav(file)
 
@@ -174,7 +174,7 @@ for s in range(a, b, 2):
     X.append(x)
 
 X = np.array(X)
-model = load_model('../Instrument_classifier/my_model.h5')
+model = load_model('../Instrument_classifier/my_model_one_sec_19.h5')
 maxElement = 16462066.603519555
 X = X / maxElement # Normalizing data.
 
