@@ -22,18 +22,23 @@ int main() {
 	
 	try {
 		WAV_File A;
-		A.load("Audios/Archive/cleanbass-E-twang01.wav");
-		A.print();
+		A.load("Audios/Archive/bayan.wav");
+		//A.print();
 		
-		Crop C1("", 0, 10000);
-		C1.transform(&A, "Audios/Archive/nn.wav");
+		Crop Q1("", 0, 150000);
+		Q1.transform(&A, "Audios/Archive/b1.wav");
 		
-		//WAV_File B,C;
-		//B.load("Audios/Archive/short.wav");
-		//C.load("Audios/Archive/short.wav");
+	 
+		WAV_File B,C;
+		B.load("Audios/Archive/b1.wav");
+		C.load("Audios/Archive/ShepardTone.wav");
+		B.print();
+		C.print();
 		
-		//Merge M("", &C);
-		//M.transform(&B, "Audios/Archive/merged.wav");
+		Merge M("", &C);
+		M.transform(&B, "Audios/Archive/merged.wav");
+		B.load("Audios/Archive/merged.wav");
+		B.print();
 		
 		/*Volume V("", 0);
 		//V.print();

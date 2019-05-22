@@ -25,8 +25,8 @@ string sounds_crop(const string &name, const string &new_name, double left, doub
 		WAV_File A;
 		A.init(b, DEFAULT_FCODE);
 		
-		int l = (int) (left / 1000 * A.SampleRate);
-		int r = (int) (right / 1000 * A.SampleRate);
+		int l = (int) (left / 1000 * A.SampleRate) * A.NumChannels;
+		int r = (int) (right / 1000 * A.SampleRate) * A.NumChannels;
 		
 		Crop Q("", l, r);
 		Q.transform(&A, new_name);
@@ -51,8 +51,8 @@ string sounds_volume(const string &name, const string &new_name, double k, doubl
 		WAV_File A;
 		A.init(b, DEFAULT_FCODE);
 		
-		int l = (int) (left / 1000 * A.SampleRate);
-		int r = (int) (right / 1000 * A.SampleRate);
+		int l = (int) (left / 1000 * A.SampleRate) * A.NumChannels;
+		int r = (int) (right / 1000 * A.SampleRate) * A.NumChannels;
 		
 		Volume Q("", k, l, r, smooth);
 		Q.transform(&A, new_name);
@@ -153,7 +153,7 @@ vector<double> sounds_info(const string &name) {
 	} catch (const char *err) {
 		printf("%s\n", err);
 		string error(err);
-		php_printf("error: %s<br>", error.c_str());
+		//php_printf("error: %s<br>", error.c_str());
 		//return error;
 	}
 	

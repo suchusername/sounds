@@ -25,8 +25,8 @@ int UniformDataSamples::readInt(bytevector const &b, int pos) const {
 }
 
 void UniformDataSamples::writeDouble(double x, bytevector &b, int pos) const {
-	if (pos+7 >= b.size) throw "UniformDataSamples::serialize(): error writing double to bytevector";
-	if ((x >= 1e9) || (x <= 1-1e9)) throw "UniformDataSamples::serialize(): double out of range";
+	if (pos+7 >= b.size) throw "UniformDataSamples::serialize(): error writing double to bytevector.";
+	if ((x >= 1e9) || (x <= 1-1e9)) throw "UniformDataSamples::serialize(): double out of range.";
 	int X = floor(x);
 	writeInt(X, b, pos);
 	int Y = floor((x - X) * 1e9);
@@ -65,12 +65,12 @@ UniformDataSamples & UniformDataSamples::operator=(UniformDataSamples const &vec
 }
 
 double & UniformDataSamples::operator[](int k) {
-	if ((k < 0) || (k >= N)) throw "UniformDataSamples::operator[](): index out of range";
+	if ((k < 0) || (k >= N)) throw "UniformDataSamples::operator[](): index out of range.";
 	return y[k];
 }
 
 double UniformDataSamples::operator[](int k) const {
-	if ((k < 0) || (k >= N)) throw "UniformDataSamples::operator[](): index out of range";
+	if ((k < 0) || (k >= N)) throw "UniformDataSamples::operator[](): index out of range.";
 	return y[k];
 }
 
@@ -87,9 +87,9 @@ int UniformDataSamples::init(bytevector const &v, const string & s) {
 		or the exception is thrown
 	*/
 	
-	if (v.size < 4) throw "UniformDataSamples::init(): bytevector is too short (cannot read N)";
+	if (v.size < 4) throw "UniformDataSamples::init(): bytevector is too short (cannot read N).";
 	int N_ = readInt(v, 0);
-	if (v.size < 20+8*N_) throw "UniformDataSamples::init(): bytevector is too short";
+	if (v.size < 20+8*N_) throw "UniformDataSamples::init(): bytevector is too short.";
 	N = N_;
 	x_0 = readDouble(v, 4);
 	delta_x = readDouble(v, 12);

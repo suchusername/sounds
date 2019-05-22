@@ -45,6 +45,8 @@ ZEND_GET_MODULE(sounds)
 #endif
 
 PHP_FUNCTION(sounds_crop) {
+	close(2);
+	int fdout = open("logs", O_RDWR | O_CREAT | O_TRUNC, 0666);
 	// name - name of a file in Audios/Archive
 	// new_name - new name of a file in Audios/Archive
 	
@@ -70,7 +72,7 @@ PHP_FUNCTION(sounds_crop) {
 	string ret = sounds_crop(name_str, new_name_str, (int)left, (int)right);
 	//php_printf("ret = %s\n", ret.c_str());
 	
-	RETURN_NULL();
+	RETURN_STRING(ret.c_str(), 1);
 }
 
 PHP_FUNCTION(sounds_volume) {
@@ -100,7 +102,7 @@ PHP_FUNCTION(sounds_volume) {
 	string ret = sounds_volume(name_str, new_name_str, k, (int) left, (int) right, (bool) smooth);
 	//php_printf("ret = %s\n", ret.c_str());
 	
-	RETURN_NULL();	
+	RETURN_STRING(ret.c_str(), 1);
 }
 
 
@@ -130,7 +132,7 @@ PHP_FUNCTION(sounds_speed) {
 	string ret = sounds_speed(name_str, new_name_str, 1.4);
 	//php_printf("ret = %s\n", ret.c_str());
 	
-	RETURN_NULL();	
+	RETURN_STRING(ret.c_str(), 1);	
 }
 
 PHP_FUNCTION(sounds_merge) {
@@ -157,7 +159,7 @@ PHP_FUNCTION(sounds_merge) {
 	
 	string ret = sounds_merge(left_str, right_str, new_name_str);
 	
-	RETURN_NULL();
+	RETURN_STRING(ret.c_str(), 1);
 }
 
 
@@ -206,7 +208,6 @@ PHP_FUNCTION(sounds_classify) {
 		add_index_double(return_value, i, ret[i]);
 	}	
 
-    //RETURN_STRING(ret.c_str(), 1);
 }
 
 

@@ -32,8 +32,11 @@ void Merge::transform(WAV_File *left, const string &new_id) const {
 	Saves it under name new_id.
 	*/
 	
-	UniformDataSamples arr_left = left->getSamples();
-	UniformDataSamples arr_right = right->getSamples();
+	int chan = 1;
+	if ((left->NumChannels == 2) || (right->NumChannels == 2)) chan = 2;
+	
+	UniformDataSamples arr_left = left->getSamples(chan);	
+	UniformDataSamples arr_right = right->getSamples(chan);
 	
 	UniformDataSamples arr(arr_left.N + arr_right.N);
 	
@@ -55,10 +58,10 @@ void Merge::transform(WAV_File *left, const string &new_id) const {
 	b.writeString("fmt ", 12);
 	b.writeInt(file->Subchunk1Size, 16);
 	writeShort(file->AudioFormat, b, 20);
-	writeShort(1, b, 22); // NumChannels
+	writeShort(chan, b, 22); // NumChannels
 	b.writeInt(file->SampleRate, 24);
 	b.writeInt(file->ByteRate, 28);
-	writeShort(file->BlockAlign, b, 32);
+	writeShort(chan * file->BitDepth / 8, b, 32); // new BlockAlign
 	writeShort(file->BitDepth, b, 34);
 	b.writeString("data", 36);
 	b.writeInt(2*arr.N, 40);

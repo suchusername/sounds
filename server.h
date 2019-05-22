@@ -115,7 +115,7 @@ public:
 	int init(bytevector const &, const string &fcode = DEFAULT_FCODE); // parsing "WAVparse.cc"
 	bytevector serialize() const; // compressing to a file of WAV format
 	
-	UniformDataSamples getSamples() const; // returns a container with data points
+	UniformDataSamples getSamples(int channels = 1) const; // returns a container with data points
 	vector<double> classify() const;
 	void print() const;
 };

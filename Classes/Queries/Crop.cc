@@ -33,8 +33,9 @@ void Crop::transform(WAV_File *file, const string &new_id) const {
 	Saves it under name new_id.
 	*/
 	
-	UniformDataSamples arr = file->getSamples();
+	UniformDataSamples arr = file->getSamples(file->NumChannels);
 	
+	//cout << "left = " << left << ", right = " << right << endl;
 	arr.crop(left, right, 0);
 	
 	bytevector b(44 + 2*arr.N); 
@@ -44,7 +45,7 @@ void Crop::transform(WAV_File *file, const string &new_id) const {
 	b.writeString("fmt ", 12);
 	b.writeInt(file->Subchunk1Size, 16);
 	writeShort(file->AudioFormat, b, 20);
-	writeShort(1, b, 22); // NumChannels
+	writeShort(file->NumChannels, b, 22); // NumChannels
 	b.writeInt(file->SampleRate, 24);
 	b.writeInt(file->ByteRate, 28);
 	writeShort(file->BlockAlign, b, 32);

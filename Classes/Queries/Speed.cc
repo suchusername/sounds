@@ -89,7 +89,7 @@ void Speed::transform(WAV_File *file, const string &new_id) const {
 	writeShort(1, b, 22); // NumChannels
 	b.writeInt(file->SampleRate, 24);
 	b.writeInt(file->ByteRate, 28);
-	writeShort(file->BlockAlign, b, 32);
+	writeShort(file->BitDepth / 8, b, 32); // new BlockAlign
 	writeShort(file->BitDepth, b, 34);
 	b.writeString("data", 36);
 	b.writeInt(2*arr.N, 40);

@@ -192,50 +192,105 @@ bytevector WAV_File::serialize() const {
 	return v;
 }
 
-UniformDataSamples WAV_File::getSamples() const {
+UniformDataSamples WAV_File::getSamples(int channels) const {
 	/*
 	Returns a container with all data points
-	If sound is stereo, then only first channel is considered (TODO: change?)
+	If sound is stereo and channels = 1, then only first channel is considered 
+	
+	If channels = 2, then samples from 2 channels alternate in the return vector
 	*/
 	
-	UniformDataSamples u(NumSamples);
-	u.x_0 = 0;
-	u.delta_x = 1 / ((double) SampleRate);
-	if (NumChannels == 1) {
-		if (offset % 4 == 0) {
-			for (int i = 0; i < NumSamples / 2; i++) {
-				u[2*i] = (double) (short) (data[11+offset/4+i] % (1 << 16));
-				u[2*i+1] = (double) (short) (data[11+offset/4+i] >> 16);
+	if ((channels != 1) && (channels != 2)) throw "WAV_File::getSamples(): 'channels' must be either 1 or 2.";
+	
+	if (channels == 1) {
+		UniformDataSamples u(NumSamples);
+		u.x_0 = 0;
+		u.delta_x = 1 / ((double) SampleRate);
+		if (NumChannels == 1) {
+			if (offset % 4 == 0) {
+				for (int i = 0; i < NumSamples / 2; i++) {
+					u[2*i] = (double) (short) (data[11+offset/4+i] % (1 << 16));
+					u[2*i+1] = (double) (short) (data[11+offset/4+i] >> 16);
+				}
+			} else if (offset % 4 == 2) {
+				u[0] = (double) (short) (data[11+offset/4] >> 16);
+				for (int i = 0; i < NumSamples / 2 - 1; i++) {
+					u[2*i+1] = (double) (short) (data[11+offset/4+i] % (1 << 16));
+					u[2*i+2] = (double) (short) (data[11+offset/4+i] >> 16);
+				}
+				u[NumSamples-1] = (double) (short) (data[11 + offset/4 + NumSamples/2 - 1] % (1 << 16));
+			} else {
+				throw "WAV_File::getSamples(): offset must be even.";
 			}
-		} else if (offset % 4 == 2) {
-			u[0] = (double) (short) (data[11+offset/4] >> 16);
-			for (int i = 0; i < NumSamples / 2 - 1; i++) {
-				u[2*i+1] = (double) (short) (data[11+offset/4+i] % (1 << 16));
-				u[2*i+2] = (double) (short) (data[11+offset/4+i] >> 16);
+		
+		} else if (NumChannels == 2) {
+			if (offset % 4 == 0) {
+				for (int i = 0; i < NumSamples; i++) {
+					u[i] = (double) (short) (data[11+offset/4+i] % (1 << 16));
+				}
+			} else if (offset % 4 == 2) {
+				for (int i = 0; i < NumSamples; i++) {
+					u[i] = (double) (short) (data[11+offset/4+i] >> 16);
+					//if (13500 < i && i < 13510) cout << u[i] << endl;
+				}			
+			} else {
+				throw "WAV_File::getSamples(): offset must be even.";
 			}
-			u[NumSamples-1] = (double) (short) (data[11 + offset/4 + NumSamples/2 - 1] % (1 << 16));
+		
 		} else {
-			throw "WAV_File::getSamples(): offset must be even.";
+			throw "WAV_File::getSamples(): Audio can only have 1 or 2 channels.";
+		}
+		return u;
+		
+	} else { // channels = 2
+		UniformDataSamples u(NumSamples * 2);
+		u.x_0 = 0;
+		u.delta_x = 1 / ((double) SampleRate);
+		
+		if (NumChannels == 2) {
+			if (offset % 4 == 0) {
+				for (int i = 0; i < NumSamples; i++) {
+					u[2*i] = (double) (short) (data[11+offset/4+i] % (1 << 16));
+				}
+			} else if (offset % 4 == 2) {
+				for (int i = 0; i < NumSamples; i++) {
+					u[2*i] = (double) (short) (data[11+offset/4+i] >> 16);
+					//if (13500 < i && i < 13510) cout << u[i] << endl;
+				}			
+			} else {
+				throw "WAV_File::getSamples(): offset must be even.";
+			}
+			
+			int offset_ = offset + 2; // considering second channel by shifting the offset by 2 bytes
+			
+			if (offset_ % 4 == 0) {
+				for (int i = 0; i < NumSamples; i++) {
+					u[2*i+1] = (double) (short) (data[11+offset_/4+i] % (1 << 16));
+				}
+			} else if (offset_ % 4 == 2) {
+				for (int i = 0; i < NumSamples; i++) {
+					u[2*i+1] = (double) (short) (data[11+offset_/4+i] >> 16);
+					//if (13500 < i && i < 13510) cout << u[i] << endl;
+				}			
+			} else {
+				throw "WAV_File::getSamples(): offset must be even.";
+			}
+			
+		} else if (NumChannels == 1) { //
+			
+			UniformDataSamples uu = getSamples(1);
+			for (int i = 0; i < NumSamples; i++) {
+				u[2*i] = uu[i];
+				u[2*i+1] = uu[i];
+			}
+			
+		} else {
+			throw "WAV_File::getSamples(): Audio can only have 1 or 2 channels.";
 		}
 		
-	} else if (NumChannels == 2) {
-		if (offset % 4 == 0) {
-			for (int i = 0; i < NumSamples; i++) {
-				u[i] = (double) (short) (data[11+offset/4+i] % (1 << 16));
-			}
-		} else if (offset % 4 == 2) {
-			for (int i = 0; i < NumSamples; i++) {
-				u[i] = (double) (short) (data[11+offset/4+i] >> 16);
-				//if (13500 < i && i < 13510) cout << u[i] << endl;
-			}			
-		} else {
-			throw "WAV_File::getSamples(): offset must be even.";
-		}
-		
-	} else {
-		throw "WAV_File::getSamples(): Audio can only have 1 or 2 channels.";
+		return u;
 	}
-	return u;
+	
 }
 
 
