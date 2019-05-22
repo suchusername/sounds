@@ -139,6 +139,7 @@ if (!empty($_FILES)){
 
 	function delete_file(){
 		$file = $_POST['file_radio'];
+		$uploaddir = '../Audios/Archive/'.session_id().'/';
 		unlink($uploaddir.$file);//or die("Error while deleting");
 	}
 	?>
@@ -179,7 +180,7 @@ if (!empty($_FILES)){
 		}
 		$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
 		for($i=0; $i<5; $i++){
-			echo "<script>GenerateDiv('$instruments[$i]', '');</script>";
+			echo "<script>GenerateDiv('$instruments[$i]', 'vvv');</script>";
 		}
 		
 	} 
