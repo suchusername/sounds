@@ -129,7 +129,7 @@ PHP_FUNCTION(sounds_speed) {
 	name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + name_str;
 	new_name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + new_name_str;
 	
-	string ret = sounds_speed(name_str, new_name_str, 1.4);
+	string ret = sounds_speed(name_str, new_name_str, mult);
 	//php_printf("ret = %s\n", ret.c_str());
 	
 	RETURN_STRING(ret.c_str(), 1);	

@@ -82,6 +82,8 @@ string sounds_speed(const string &name, const string &new_name, double mult) {
 		return error;
 	}
 	
+	//php_printf("mult = %f<br>", mult);
+	
 	return "OK";
 }
 
