@@ -139,6 +139,7 @@ if (!empty($_FILES)){
 
 	function delete_file(){
 		$file = $_POST['file_radio'];
+		$uploaddir = '../Audios/Archive/'.session_id().'/';
 		unlink($uploaddir.$file);//or die("Error while deleting");
 	}
 	?>
