@@ -1,6 +1,5 @@
 <?php
 	session_start();
-	//mkdir("../")
 ?>
 <!DOCTYPE html>
 <html lang="en" >
@@ -30,15 +29,19 @@
 // Проверим, успешно ли загружен файл
 //echo basename($_FILES['uploadfile']['tmp_name']);
 if (!empty($_FILES)){
+	
+	$uploaddir = '../Audios/Archive/'.session_id().'/';
+	mkdir($uploaddir);//Надо ли сначала проверить наличие папки?
 	for($i=0;$i<count($_FILES['uploadfile']['name']);$i++) {
 		if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'][$i])) {
 		  echo "Upload error (1)!";
-		  exit;
+		  break;
+		  //exit;
 		}
 
 		// Каталог, в который мы будем принимать файл:
-		$uploaddir = '../Audios/Archive/Sounds/';
-		$uploadfile_name = './Sounds/'.$_FILES['uploadfile']['name'][$i];
+		//$uploaddir = '../Audios/Archive/Sounds/';
+		$uploadfile_name = './'.session_id().'/'.$_FILES['uploadfile']['name'][$i];
 		$uploadfile = $uploaddir.basename($_FILES['uploadfile']['name'][$i]); //разобраться с русскими буквами!
 		
 		//проверим на допустимость расширения файла, mime-типа и размера
@@ -86,8 +89,8 @@ if (!empty($_FILES)){
 
 	function increase_volume(){
 		$file = $_POST['file_radio'];
-		$file_dir = 'Sounds/'.$file;
-		$uploadfile = './Sounds/changed_'.$file;
+		$file_dir = session_id().'/'.$file;
+		$uploadfile = './'.session_id().'/changed_'.$file;
 		$k = (double)$_POST['text_vol'];
 		sounds_volume($file_dir, $uploadfile, $k);
 	}
@@ -102,7 +105,7 @@ if (!empty($_FILES)){
 		$extension = strtok('.');
 		$mult = (double)$_POST['text_spd'];
 
-		sounds_speed('Sounds/'.$file, 'Sounds/'.$filename.'(1).'.$extension, $mult);
+		sounds_speed(session_id().'/'.$file, session_id().'/'.$filename.'(1).'.$extension, $mult);
 	}
 
 	if(isset($_POST['btn_cut'])){
@@ -115,7 +118,7 @@ if (!empty($_FILES)){
 		$extension = strtok('.');
 		$l_border = (int)$_POST['text_cut_left'];
 		$r_border = (int)$_POST['text_cut_right'];
-		sounds_crop('Sounds/'.$file, 'Sounds/'.$filename.'_cutted.'.$extension, $l_border, $r_border);
+		sounds_crop(session_id().'/'.$file, session_id().'/'.$filename.'_cutted.'.$extension, $l_border, $r_border);
 	}
 
 	if(isset($_POST['btn_rename'])){
@@ -124,9 +127,10 @@ if (!empty($_FILES)){
 
 	function rename_file(){
 		$file = $_POST['file_radio'];
+		$uploaddir = '../Audios/Archive/'.session_id().'/';
 		//$filename = substr(strrchr($file, "/"), 1);
-		$newname = '../Audios/Archive/Sounds/'.$_POST['text_rename'].'.wav';
-		rename('../Audios/Archive/Sounds/'.$file, $newname);	
+		$newname = $uploaddir .$_POST['text_rename'].'.wav';
+		rename($uploaddir .$file, $newname);	
 	}
 
 	if(isset($_POST['btn_del'])){
@@ -135,12 +139,12 @@ if (!empty($_FILES)){
 
 	function delete_file(){
 		$file = $_POST['file_radio'];
-		unlink('../Audios/Archive/Sounds/'.$file);//or die("Error while deleting");
+		unlink($uploaddir.$file);//or die("Error while deleting");
 	}
 	?>
 	<?php
 	
-	$current_dir = '../Audios/Archive/Sounds/';
+	$current_dir = '../Audios/Archive/'.session_id().'/';
 	
 	$dir = opendir($current_dir);
 
@@ -149,8 +153,7 @@ if (!empty($_FILES)){
 	while ($file = readdir($dir)) {
 		if($file != '.' && $file  != '..' ) {
 			echo "<ul> <input type='radio' id='$file' name='file_radio' value=$file> $file </ul>";
-			$file_dir = $file;
-			echo "<a href='download.php?file=$file_dir'>Download</a>";
+			echo "<a href='download.php?file=$file'>Download</a>";
 		}
 	}
 	echo '</ul>';
@@ -165,7 +168,7 @@ if (!empty($_FILES)){
 	<script src='js/upload.js'></script>
 	<?php
 	function classify(){
-		$path = 'Sounds/'.$_POST['file_radio'];
+		$path = session_id().'/'.$_POST['file_radio'];
 		$probs = sounds_classify($path);
 		return $probs;
 	}
@@ -211,8 +214,6 @@ if (!empty($_FILES)){
 	<button id="btn_rename" name="btn_rename">Rename</button>
 	<input type="text" name="text_rename" id="text_rename" title = "Input your new filename" size ="10" value = "new_filename">.wav	
 	</p>
-
-	
 
 </form>
 </td>
