@@ -9,6 +9,7 @@
  	<title>Cool site</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="script.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
 <body>
@@ -133,12 +134,11 @@ if (!empty($_FILES)){
 		rename($uploaddir .$file, $newname);	
 	}
 
-	if(isset($_POST['btn_del'])){
-		delete_file();
-	}
 
-	function delete_file(){
-		$file = $_POST['file_radio'];
+	
+	function delete_file($file){
+		//$file = $_POST['file_radio'];
+		print($file);
 		$uploaddir = '../Audios/Archive/'.session_id().'/';
 		unlink($uploaddir.$file);//or die("Error while deleting");
 	}
@@ -151,13 +151,37 @@ if (!empty($_FILES)){
 
 	//echo "<p>Каталог загрузки: $current_dir</p>";
 	echo 'Your files:<ul>';
+	echo "<table>";
 	while ($file = readdir($dir)) {
 		if($file != '.' && $file  != '..' ) {
-			echo "<ul> <input type='radio' id='$file' name='file_radio' value=$file> $file </ul>";
-			echo "<a href='download.php?file=$file'>Download</a>";
+			echo "<tr>";
+			echo "<td> <input type='radio' id='$file' name='file_radio' value=$file> $file </td>";  //Radio
+			
+			echo "<td> <input type='button' value = 'i' class = 'list_btn'> </td>"; //Info
+			
+			echo "<form action = ".htmlspecialchars('download.php?file='.$file).">";
+			echo "<td> <button type='submit' class = 'list_btn'> &#11015; </button> </td>"; //Download
+			echo "</form>";
+			
+			echo "<td> <input type='button' value = '&#10006;' class = 'list_btn' name = 'btn_del_".$file."'> </td>"; //Delete
+			//echo "<td> <a href='download.php?file=$file'>Download</a> </td>";
+			echo "</tr>";
 		}
 	}
+	echo "</table>";
 	echo '</ul>';
+	
+	while ($file = readdir($dir)) {
+		if($file != '.' && $file  != '..' ) {
+			if(isset($_POST['btn_del_'.$file])){
+				echo "KEK";
+				delete_file($file);
+			}
+
+		
+		}
+	}
+	
 	closedir($dir);
 	
 	?>
@@ -178,7 +202,6 @@ if (!empty($_FILES)){
 		if($probs[0]==-1) {
 			echo "classify error!";
 		}
-		echo $probs[3].'<br>';
 		$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
 		for($i=0; $i<5; $i++){
 			echo "<script>GenerateDiv('$instruments[$i]', 'vvv');</script>";
