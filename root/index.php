@@ -178,6 +178,7 @@ if (!empty($_FILES)){
 		if($probs[0]==-1) {
 			echo "classify error!";
 		}
+		echo $probs[3].'<br>';
 		$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
 		for($i=0; $i<5; $i++){
 			echo "<script>GenerateDiv('$instruments[$i]', '');</script>";
