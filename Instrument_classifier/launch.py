@@ -50,10 +50,10 @@ It also outputs mean probabilities of each instrument.
 2 -- violin
 3 -- guitar
 4 -- noise
-5 -- error
+5 -- flute
 
 To use it, please:
-    1) Make sure you have my_model.h5, launch.py and an audio file you would like
+    1) Make sure you have my_model_one_sec_19.h5, launch.py and an audio file you would like
     to work with placed in one directory (for example, .../Instrument_classifier).
     2) Open a terminal and go to that directory.
     3) Then use this command:
