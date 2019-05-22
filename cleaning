@@ -1,0 +1,1 @@
+find /proj/sounds/Audios/Archive/* -maxdepth 1 -amin +180 -type d -name "*" \-exec rm -r {} \;
