@@ -88,11 +88,14 @@ if (!empty($_FILES)){
 	}
 
 	function increase_volume(){
+		
 		$file = $_POST['file_radio'];
-		$file_dir = session_id().'/'.$file;
-		$uploadfile = './'.session_id().'/changed_'.$file;
+		$filename = strtok($file, '.');
+		$extension = strtok('.');
 		$k = (double)$_POST['text_vol'];
-		sounds_volume($file_dir, $uploadfile, $k);
+
+		sounds_volume(session_id().'/'.$file, session_id().'/'.$filename.'_louder.'.$extension, $k);
+		
 	}
 
 	if(isset($_POST['btn_spd'])){
@@ -105,7 +108,7 @@ if (!empty($_FILES)){
 		$extension = strtok('.');
 		$mult = (double)$_POST['text_spd'];
 
-		sounds_speed(session_id().'/'.$file, session_id().'/'.$filename.'(1).'.$extension, $mult);
+		sounds_speed(session_id().'/'.$file, session_id().'/'.$filename.'_sped_up.'.$extension, $mult);
 	}
 
 	if(isset($_POST['btn_cut'])){
@@ -118,7 +121,7 @@ if (!empty($_FILES)){
 		$extension = strtok('.');
 		$l_border = (int)$_POST['text_cut_left'];
 		$r_border = (int)$_POST['text_cut_right'];
-		sounds_crop(session_id().'/'.$file, session_id().'/'.$filename.'_cutted.'.$extension, $l_border, $r_border);
+		sounds_crop(session_id().'/'.$file, session_id().'/'.$filename.'_cropped.'.$extension, $l_border, $r_border);
 	}
 
 	if(isset($_POST['btn_rename'])){
@@ -178,10 +181,9 @@ if (!empty($_FILES)){
 		if($probs[0]==-1) {
 			echo "classify error!";
 		}
-		echo $probs[3].'<br>';
 		$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
 		for($i=0; $i<5; $i++){
-			echo "<script>GenerateDiv('$instruments[$i]', 'vvv');</script>";
+			echo "<script>GenerateDiv('$instruments[$i]', '$probs[$i]');</script>";
 		}
 		
 	} 
@@ -201,7 +203,7 @@ if (!empty($_FILES)){
 	</p>
 	
 	<p>
-	<button id="btn_cut" name="btn_cut">Cut</button>
+	<button id="btn_cut" name="btn_cut">Crop</button>
 
 	<input type="text" name="text_cut_left" id="text_cut_left" pattern = "^[ 0-9]+$" title = "Left border (in ms), 0 for minimum border" size ="3">
 	<input type="text" name="text_cut_right" id="text_cut_right" pattern = "^[ 0-9]+$" title = "Right border (in ms), -1 for maximum border" size ="3">
