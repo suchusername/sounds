@@ -31,12 +31,12 @@
 if (!empty($_FILES)){
 	
 	$uploaddir = '../Audios/Archive/'.session_id().'/';
-	mkdir($uploaddir);//Надо ли сначала проверить наличие папки?
+	if (!is_dir($uploaddir)) mkdir($uploaddir);
 	for($i=0;$i<count($_FILES['uploadfile']['name']);$i++) {
 		if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'][$i])) {
-		  echo "Upload error (1)!";
-		  break;
-		  //exit;
+			echo "Upload error (1)!";
+			break;
+			//exit;
 		}
 
 		// Каталог, в который мы будем принимать файл:
@@ -47,10 +47,10 @@ if (!empty($_FILES)){
 		//проверим на допустимость расширения файла, mime-типа и размера
 		$blacklist = array(".php", ".phtml", ".php3", ".php4", ".html", ".htm");
 		foreach ($blacklist as $item)
-		  if(preg_match("/$item\$/i", $uploadfile)) {
-			echo "File type forbidden!";
-			exit;
-		  }
+			if(preg_match("/$item\$/i", $uploadfile)) {
+				echo "File type forbidden!";
+				exit;
+			}
 		$type = $_FILES['uploadfile']['type'];
 		$size = $_FILES['uploadfile']['size'];
 		/*
@@ -150,18 +150,23 @@ if (!empty($_FILES)){
 	
 	$current_dir = '../Audios/Archive/'.session_id().'/';
 	
-	$dir = opendir($current_dir);
+	
 
 	//echo "<p>Каталог загрузки: $current_dir</p>";
 	echo 'Your files:<ul>';
-	while ($file = readdir($dir)) {
-		if($file != '.' && $file  != '..' ) {
-			echo "<ul> <input type='radio' id='$file' name='file_radio' value=$file> $file </ul>";
-			echo "<a href='download.php?file=$file'>Download</a>";
+	if (is_dir($current_dir)) {
+		$dir = opendir($current_dir);
+		
+		while ($file = readdir($dir)) {
+			if($file != '.' && $file  != '..') {
+				echo "<ul> <input type='radio' id='$file' name='file_radio' value=$file> $file </ul>";
+				echo "<a href='download.php?file=$file'>Download</a>";
+			}
 		}
+
+		closedir($dir);
 	}
 	echo '</ul>';
-	closedir($dir);
 	
 	?>
 	<p>
@@ -180,12 +185,12 @@ if (!empty($_FILES)){
 		$probs = classify();
 		if($probs[0]==-1) {
 			echo "classify error!";
+		} else {
+			$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
+			for($i=0; $i<5; $i++){
+				echo "<script>GenerateDiv('$instruments[$i]', '$probs[$i]');</script>";
+			}
 		}
-		$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
-		for($i=0; $i<5; $i++){
-			echo "<script>GenerateDiv('$instruments[$i]', '$probs[$i]');</script>";
-		}
-		
 	} 
 	?>
 	<p>

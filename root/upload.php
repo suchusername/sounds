@@ -150,14 +150,19 @@ if (!empty($_FILES)){
 
 	//echo "<p>Каталог загрузки: $current_dir</p>";
 	echo 'Your files:<ul>';
-	while ($file = readdir($dir)) {
-		if($file != '.' && $file  != '..' ) {
-			echo "<ul> <input type='radio' id='$file' name='file_radio' value=$file> $file </ul>";
-			echo "<a href='download.php?file=$file'>Download</a>";
+	echo $dir;
+	
+	if ($dir) {
+		while ($file = readdir($dir)) {
+			if($file != '.' && $file  != '..' ) {
+				echo "<ul> <input type='radio' id='$file' name='file_radio' value=$file> $file </ul>";
+				echo "<a href='download.php?file=$file'>Download</a>";
+			}
 		}
+		closedir($dir);
 	}
 	echo '</ul>';
-	closedir($dir);
+	
 	
 	?>
 	<p>
@@ -179,7 +184,7 @@ if (!empty($_FILES)){
 		}
 		$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
 		for($i=0; $i<5; $i++){
-			echo "<script>GenerateDiv('$instruments[$i]', '');</script>";
+			echo "<script>GenerateDiv('$instruments[$i]');</script>";
 		}
 		
 	} 

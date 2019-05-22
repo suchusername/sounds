@@ -199,14 +199,13 @@ PHP_FUNCTION(sounds_classify) {
 	string name_str(name);
 	name_str = PATH_TO_AUDIOS_PHP + "/" + FILE_SAVE_DIRECTORY + "/" + name_str;
 	
-	write(2, "hellu\n", 6);
 	vector<double> ret = sounds_classify(name_str);
 	
 	array_init(return_value);
 	
 	for (int i = 0; i < 5; i++) {
 		add_index_double(return_value, i, ret[i]);
-	}	
+	}
 
 }
 

@@ -179,6 +179,8 @@ vector<double> sounds_classify(const string &name) {
 		
 		ret = A.classify();
 		
+		//php_printf("... %f %f %f %f %f<br>", ret[0], ret[1], ret[2], ret[3], ret[4]);
+		
 	} catch (const char *err) {
 		printf("%s\n", err);
 		string error(err);
