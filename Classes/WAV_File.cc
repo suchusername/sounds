@@ -346,7 +346,7 @@ vector<double> WAV_File::classify() const {
 	ifstream in_file(ANSWER_FILE_NAME.c_str(), ios::in);
 	if (!in_file.is_open()) throw "WAV_File:: unable to open the file with answers.";
 	in_file >> instrument_guess;
-	for (int i = 0; i < 4; i++) in_file >> guess_prob[i];
+	for (int i = 0; i < 5; i++) in_file >> guess_prob[i];
 	in_file.close();
 	
 	return guess_prob;

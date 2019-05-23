@@ -9,6 +9,7 @@
  	<title>Cool site</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="script.js"></script>
+	<script src="js/slider.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 
@@ -16,7 +17,7 @@
 <table>
 <tr>
 <td width = "25%" valign="top">
-<form id="" action="" enctype="multipart/form-data" method="POST">
+<form id="" class = "uploadform" action="" enctype="multipart/form-data" method="POST">
 		<div id = "div"> </div>
 		<button type="button" onclick="generateForm()">Add more</button>
 		<button type="submit">Upload</button>
@@ -32,12 +33,12 @@
 if (!empty($_FILES)){
 	
 	$uploaddir = '../Audios/Archive/'.session_id().'/';
-	mkdir($uploaddir);//Надо ли сначала проверить наличие папки?
+	if (!is_dir($uploaddir)) mkdir($uploaddir);
 	for($i=0;$i<count($_FILES['uploadfile']['name']);$i++) {
 		if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'][$i])) {
-		  echo "Upload error (1)!";
-		  break;
-		  //exit;
+			echo "Upload error (1)!";
+			break;
+			//exit;
 		}
 
 		// Каталог, в который мы будем принимать файл:
@@ -48,14 +49,14 @@ if (!empty($_FILES)){
 		//проверим на допустимость расширения файла, mime-типа и размера
 		$blacklist = array(".php", ".phtml", ".php3", ".php4", ".html", ".htm");
 		foreach ($blacklist as $item)
-		  if(preg_match("/$item\$/i", $uploadfile)) {
-			echo "File type forbidden!";
-			exit;
-		  }
+			if(preg_match("/$item\$/i", $uploadfile)) {
+				echo "File type forbidden!";
+				exit;
+			}
 		$type = $_FILES['uploadfile']['type'];
 		$size = $_FILES['uploadfile']['size'];
 		/*
-		if (($type != "audio/mpeg") && ($type != "audio/wav")) {
+		if (($type &#8733;!= "audio/mpeg") && ($type != "audio/wav")) {
 			echo "Unsupported file";
 			exit;
 		}
@@ -84,16 +85,25 @@ if (!empty($_FILES)){
 <form action="" enctype="multipart/form-data" method="POST">
 	<?php
 
+	function remove_ext($file){
+		return explode('.', $file)[0];
+	}
+	
+
 	if(isset($_POST['btn_vol'])){
 		increase_volume();	
 	}
 
 	function increase_volume(){
+		
 		$file = $_POST['file_radio'];
-		$file_dir = session_id().'/'.$file;
-		$uploadfile = './'.session_id().'/changed_'.$file;
-		$k = (double)$_POST['text_vol'];
-		sounds_volume($file_dir, $uploadfile, $k);
+		$filename = strtok($file, '.');
+		$extension = strtok('.');
+		$k = ((double)$_POST['vol_mult'])/100;
+		//echo $_POST['vol_mult'];
+
+		sounds_volume(session_id().'/'.$file, session_id().'/'.$filename.'_louder.'.$extension, $k);
+		
 	}
 
 	if(isset($_POST['btn_spd'])){
@@ -105,8 +115,7 @@ if (!empty($_FILES)){
 		$filename = strtok($file, '.');
 		$extension = strtok('.');
 		$mult = (double)$_POST['text_spd'];
-
-		sounds_speed(session_id().'/'.$file, session_id().'/'.$filename.'(1).'.$extension, $mult);
+		sounds_speed(session_id().'/'.$file, session_id().'/'.$filename.'_sped_up.'.$extension, $mult);
 	}
 
 	if(isset($_POST['btn_cut'])){
@@ -115,11 +124,11 @@ if (!empty($_FILES)){
 
 	function crop(){
 		$file = $_POST['file_radio'];
-		$filename = strtok($file, '.');
-		$extension = strtok('.');
+		$filename = remove_ext($file);
+		$extension = 'wav';
 		$l_border = (int)$_POST['text_cut_left'];
 		$r_border = (int)$_POST['text_cut_right'];
-		sounds_crop(session_id().'/'.$file, session_id().'/'.$filename.'_cutted.'.$extension, $l_border, $r_border);
+		sounds_crop(session_id().'/'.$file, session_id().'/'.$filename.'_cropped.'.$extension, $l_border, $r_border);
 	}
 
 	if(isset($_POST['btn_rename'])){
@@ -138,7 +147,7 @@ if (!empty($_FILES)){
 	
 	function delete_file($file){
 		//$file = $_POST['file_radio'];
-		print($file);
+		//print($file);
 		$uploaddir = '../Audios/Archive/'.session_id().'/';
 		unlink($uploaddir.$file);//or die("Error while deleting");
 	}
@@ -146,47 +155,66 @@ if (!empty($_FILES)){
 	<?php
 	
 	$current_dir = '../Audios/Archive/'.session_id().'/';
-	
-	$dir = opendir($current_dir);
 
 	//echo "<p>Каталог загрузки: $current_dir</p>";
-	echo 'Your files:<ul>';
-	echo "<table>";
-	while ($file = readdir($dir)) {
-		if($file != '.' && $file  != '..' ) {
-			echo "<tr>";
-			echo "<td> <input type='radio' id='$file' name='file_radio' value=$file> $file </td>";  //Radio
-			
-			echo "<td> <input type='button' value = 'i' class = 'list_btn'> </td>"; //Info
-			
-			echo "<form action = ".htmlspecialchars('download.php?file='.$file).">";
-			echo "<td> <button type='submit' class = 'list_btn'> &#11015; </button> </td>"; //Download
-			echo "</form>";
-			
-			echo "<td> <input type='button' value = '&#10006;' class = 'list_btn' name = 'btn_del_".$file."'> </td>"; //Delete
-			//echo "<td> <a href='download.php?file=$file'>Download</a> </td>";
-			echo "</tr>";
-		}
+	/*if(isset($_POST['btn_del_changed_bayan.wav'])){
+		print("KEK");
+		delete_file();
+	}*/
+	
+	if (is_dir($current_dir)) {
+		$dir = opendir($current_dir);
+		echo "<table>";
+		while ($file = readdir($dir)) {
+			//echo 'btn_del_'.$file.'<br>';
+			if($file != '.' && $file  != '..' ) {
+				if(isset($_POST['btn_del_'.remove_ext($file)])){
+					//print("KEK");
+					delete_file($file);
+				}			
+			}
+		}		
+		closedir($dir);
 	}
+	
+	
+	
+	echo 'Your files:<ul>';
+	if (is_dir($current_dir)) {
+		$dir = opendir($current_dir);
+		echo "<table>";
+		while ($file = readdir($dir)) {
+			if($file != '.' && $file  != '..' ) {
+				echo "<tr>";
+				echo "<td width = '300px'> <input type='radio' id='$file' name='file_radio' value=$file> <a class = 'link2button' title='Click to download'  href='download.php?file=$file'> $file </a>  </td>";  //Radio
+				
+				echo "<td> <button title='Info' class = 'list_btn'> <b> &#63; </b> </button> </td>"; //Info
+				
+				//echo "<form action = 'download.php?file=$file'>";
+				//echo "<td> <button type='submit' class = 'list_btn'> &#11015;   </button>   </td>"; //Download
+				//echo "</form>";
+				//echo "<td> <a class = 'link2button' href='download.php?file=$file'> &#11015; </a> </td>";
+				
+				
+				echo "<td> <button class = 'list_btn' name = 'btn_del_".remove_ext($file)."' title='Delete file'>  &#10006; </button>  </td>"; //Delete
+				
+				echo "</tr>";
+				//echo htmlspecialchars('download.php?file=$file');
+				
+				//echo "<td> <a href='/proj/sounds/Audios/Archive/".session_id()."/bayan.wav'>Download</a> </td>";
+			}
+		}
+		closedir($dir);
+	}
+
 	echo "</table>";
 	echo '</ul>';
 	
-	while ($file = readdir($dir)) {
-		if($file != '.' && $file  != '..' ) {
-			if(isset($_POST['btn_del_'.$file])){
-				echo "KEK";
-				delete_file($file);
-			}
+	
 
-		
-		}
-	}
-	
-	closedir($dir);
-	
 	?>
 	<p>
-	<button id="btn_clsfy" name="btn_clsfy">Classify</button>
+	<button id="btn_clsfy" name="btn_clsfy">Classify &#8733;</button>
 	
 	<div id="clsfy"></div>
 	</p>
@@ -198,10 +226,18 @@ if (!empty($_FILES)){
 		return $probs;
 	}
 	if(isset($_POST['btn_clsfy'])){
+		/*
 		$probs = classify();
 		if($probs[0]==-1) {
 			echo "classify error!";
+		} else {
+			$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
+			for($i=0; $i<5; $i++){
+				echo "<script>GenerateDiv('$instruments[$i]', '$probs[$i]');</script>";
+			}
 		}
+		*/
+
 		$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
 		for($i=0; $i<5; $i++){
 			echo "<script>GenerateDiv('$instruments[$i]', 'vvv');</script>";
@@ -210,34 +246,47 @@ if (!empty($_FILES)){
 	} 
 	?>
 	<p>
-	<button id="btn_vol" name="btn_vol">Increase volume</button>
+	<button id="btn_vol" name="btn_vol">Increase volume &#9836;</button>
 
-	<input type="text" name="text_vol" id="text_vol" pattern="\d+(\.\d{1,})?" title = "Increase by ... times" size ="3">
+	<input class="slider" type="range" id="vol_slider" value="100" min="0" max="500" step="5">
+	New volume: <span id="vol_slider_out" > </span> %
+	<input type="hidden" id="vol_hidden" name = "vol_mult" >
+    
+	<script>
+		var vol_slider = document.getElementById("vol_slider");
+		var vol_out = document.getElementById("vol_slider_out");
+		var hidden_out = document.getElementById("vol_hidden");
+		vol_out.innerHTML = vol_slider.value;
+		hidden_out.value = vol_slider.value;
+
+		vol_slider.oninput = function() {
+			vol_out.innerHTML = this.value;
+			hidden_out.value = vol_slider.value;
+		}		 
+
+	</script>	
+	
+	</p>
+	
+	<p>
+	<button id="btn_spd" name="btn_spd">Increase speed &#8623;</button>
+
+	<input type="text" class="text_inputs" name="text_spd" id="text_spd" pattern="\d+(\.\d{1,})?" title = "Increase by ... times" size ="3">
+	
 
 	</p>
 	
 	<p>
-	<button id="btn_spd" name="btn_spd">Increase speed</button>
+	<button id="btn_cut" name="btn_cut">Crop &#9988;</button>
 
-	<input type="text" name="text_spd" id="text_spd" pattern="\d+(\.\d{1,})?" title = "Increase by ... times" size ="3">
+	<input type="text" class="text_inputs" name="text_cut_left" id="text_cut_left" pattern = "^[ 0-9]+$" title = "Left border (in ms), 0 for minimum border" size ="3">
+	<input type="text" class="text_inputs" name="text_cut_right" id="text_cut_right" pattern = "^[ 0-9]+$" title = "Right border (in ms), -1 for maximum border" size ="3">
 
-	</p>
+	</p>	
 	
 	<p>
-	<button id="btn_cut" name="btn_cut">Cut</button>
-
-	<input type="text" name="text_cut_left" id="text_cut_left" pattern = "^[ 0-9]+$" title = "Left border (in ms), 0 for minimum border" size ="3">
-	<input type="text" name="text_cut_right" id="text_cut_right" pattern = "^[ 0-9]+$" title = "Right border (in ms), -1 for maximum border" size ="3">
-
-	</p>
-	
-	<p>
-	<button id="btn_del" name="btn_del">Delete</button>
-	</p>
-	
-	<p>
-	<button id="btn_rename" name="btn_rename">Rename</button>
-	<input type="text" name="text_rename" id="text_rename" title = "Input your new filename" size ="10" value = "new_filename">.wav	
+	<button id="btn_rename" name="btn_rename">Rename &#9997;</button>
+	<input type="text" class="text_inputs" name="text_rename" id="text_rename" title = "Input your new filename" size ="10" value = "new_filename">.wav	
 	</p>
 
 </form>

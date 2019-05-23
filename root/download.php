@@ -18,7 +18,7 @@ else {
 	echo $_GET['file'];
 	echo "<br>file not found";
 	echo "<script> function back() {history.back();}</script>";
-	echo "<button onclick='back();'>back</button>";
+	echo "<button onclick='back()'>back</button>";
 	exit();
 }
 ?>

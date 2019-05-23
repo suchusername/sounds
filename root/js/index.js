@@ -1,10 +1,14 @@
 var j = 1;
 
 function generateForm(){
+	if(j > 5){
+		return;
+	}
 	
 	var d = document.createElement("div");
 	d.setAttribute('id', "div"+j);
 	var i = document.createElement("input"); //input element, text
+	i.setAttribute('class',"inputfile");
 	i.setAttribute('type',"file");
 	i.setAttribute('name',"uploadfile[]");
 	i.setAttribute('id',"uploadfile");
