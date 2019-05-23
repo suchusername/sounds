@@ -195,27 +195,25 @@
 \hline
 \multicolumn{1}{|c|}{Член команды} & \multicolumn{1}{c|}{Задача}  \\ \hline
  &   \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{Бухараев Алим}} & \multicolumn{1}{c|}{Изучение сверточных и рекуррентных нейронных сетей} \\ \cline{2-2} 
+\multicolumn{1}{|c|}{\multirow{5}{*}{Бухараев Алим}} & \multicolumn{1}{c|}{Изучение сверточных и рекуррентных нейронных сетей} \\ \cline{2-2} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{\makecell{Поиск большого числа мелодий, пригодных для использования \\ в качестве обучающей выборки}} \\ \cline{2-2} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Проектирование и обучение модели-классификатора} \\ \cline{2-2} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Написание отчета и документации} \\ \cline{2-2} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} \\ \hline
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Подготовка презентации} \\ \hline
  &   \\ \hline
-\multicolumn{1}{|c|}{\multirow{5}{*}{Прохоров Юрий}} & \multicolumn{1}{c|}{Реализация анализатора файла формата .WAV} \\ \cline{2-2} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Различные преобразования аудиозаписей} \\ \cline{2-2} 
+\multicolumn{1}{|c|}{\multirow{4}{*}{Прохоров Юрий}} & \multicolumn{1}{c|}{Реализация анализатора файла формата .WAV} \\ \cline{2-2} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Различные преобразования аудиозаписей и реализация библиотеки C++} \\ \cline{2-2} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Реализация программного интерфейса расширения PHP} \\ \cline{2-2} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Написание отчета и документации} \\ \cline{2-2} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{}  \\ \hline
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Написание отчета и документации}\\ \hline
   &  \\ \hline
-\multicolumn{1}{|c|}{\multirow{3}{*}{Савелов Михаил}} & \multicolumn{1}{c|}{Изучение PHP, HTML5, JavaScript и CSS} \\ \cline{2-2} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Моделирование пользовательского интерфейса}  \\ \cline{2-2} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{}  \\ \hline
-  &  \\ \hline
-\multicolumn{1}{|c|}{\multirow{5}{*}{Яушев Фарух}} & \multicolumn{1}{c|}{Изучение PHP, HTML5, JavaScript и CSS} \\ \cline{2-2} 
+\multicolumn{1}{|c|}{\multirow{4}{*}{Савелов Михаил}} & \multicolumn{1}{c|}{Изучение PHP, HTML5, JavaScript и CSS} \\ \cline{2-2} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Моделирование пользовательского интерфейса} \\ \cline{2-2} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{}  \\ \cline{2-2} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{}  \\ \cline{2-2} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{}  \\ \hline
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Разработка структуры веб-страницы}  \\ \cline{2-2} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Дизайн} \\ \hline 
+  &  \\ \hline
+\multicolumn{1}{|c|}{\multirow{4}{*}{Яушев Фарух}} & \multicolumn{1}{c|}{Изучение PHP, HTML5, JavaScript и CSS} \\ \cline{2-2} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Моделирование пользовательского интерфейса} \\ \cline{2-2} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Разработка структуры веб-страницы}  \\ \cline{2-2} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{Дизайн} \\ \hline 
 \end{tabularx}
 \end{table}
 
@@ -570,15 +568,87 @@ sounds_merge($left, $right, $new_name);
 
 \section[Результаты]{\huge Результаты}
 
+\subsection{Веб-приложение}
+
+Пользовательский интерфейс реализован в виде клиент-серверного приложения, которое доступно через браузер. \\
+
+При открытии страницы пользователь сразу видит рабочее поле приложения. Он имеет возможность загрузить один или несколько файлов формата WAV. В дальнейшем будет возможно загружать и обрабатывать файлы и других форматов. Загруженные файлы отображаются в центральном поле. Далее клиент может выбрать один из загруженных на сервер файлов и применить к нему одну из следующих операций:
+\begin{enumerate}
+\item Просмотреть статистику о файле:
+    \begin{itemize}
+    \item частота дискретизации, число аудиоканалов, длительность и прочее
+    \item спектрограмма
+    \end{itemize}
+\item Воспроизвести файл в браузере.
+\item Преобразовать аудиозапись:
+    \begin{itemize}
+    \item увеличить громкость
+    \item ускорить (в частности, воспроизвести в обратную сторону)
+    \item обрезать
+    \item слить с другой аудиозаписью
+    \item переименовать
+    \end{itemize}
+\item Распознать музыкальный инструмент на аудиозаписи:
+    \begin{itemize}
+    \item аккордион
+    \item пианино
+    \item скрипка
+    \item гитара
+    \item флейта
+    \end{itemize}
+\item Скачать загруженную или преобразованную аудиозапись.
+\end{enumerate}
+
 \subsection{Нейронная сеть}
 
 Для работы с аудиофайлами обычно используются рекуррентные нейронные сети. Тем не менее, решение задачи классификации музыкальных инструментов мы решили свести к задаче классификации изображений и использовать для этого более простой тип нейронных сетей — свёрточные. \\
 
 Исходный аудиофайл разбивается на фрагменты длиной в одну секунду, после чего для каждого из них строится спектрограмма. Все такие спектрограммы подавались на вход нейронной сети, которая по картинке определяла, что это за инструмент. Архитектура модели была тщательна подобрана, что подтверждается высоким процентом корректных ответов на тестовых данных.
 
-%\newpage
+\subsection{Внутренняя реализация}
 
-%\section[Ссылки]{\huge Ссылки}
+После загрузки аудиозаписей на сервер, там происходит побайтовая ''распаковка'' файла (рис. 1). Это позволяет точно определить необходимые для последующей обработки параметры файла.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{img/wave_format.png}
+\caption{Внутренняя структура файла формата WAV.}
+\label{fig:wave_format}
+\end{figure}
+
+Когда пользователь выбирает функцию, которая подразумевает непосредственную работу с содержимым аудиофайла (например, классификация по музыкальному инструменту или обрезка), то вызывается соответствующая функция расширения PHP. Расширение PHP представляет собой модуль с определенным набором методов, который загружается наравне со встроенными модулями языка PHP. Модуль вызывает метод из скомпилированной заранее библиотеки C++ (использует объектный .so файл). Схематически вызовы изображены на рисунке 2.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{img/diagram.png}
+\caption{Схема вызова методов.}
+\label{fig:diagram}
+\end{figure}
+
+Если выбранная операция является преобразованием аудиофайла, то соответствующий библиотечный метод выполняет это операцию и сохраняет новый файл под другим именем. Если пользователь запросил классификацию аудиозаписи, то на сервере запускается интерпретатор Python3, который получает предсказание заранее обученной нейронной сети. \\
+
+Работа веб-приложения возможна в параллельном режиме, что осуществляется веб-сервером Apache. Для каждой пользовательской сессии извлекается ее уникальный $128$-битный идентификатор сессии, и для каждого такого подключения создается директория, чтобы избегать конфликтов между различными пользователями. Если сессия неактивна в течение определенного времени, то директория сессии на сервере удаляется.
+
+\newpage
+
+\section[Источники]{\huge Источники}
+
+\begin{enumerate}
+\item Hojjat Salehinejad, Sharan Sankar: Recent Advances in Recurrent Neural Networks, 2017. \\
+URL: https://arxiv.org/abs/1801.01078
+\item Asifullah Khan, Anabia Sohail: A Survey of the Recent Architectures of Deep Convolutional Neural Networks, 2019. \\
+URL: https://arxiv.org/abs/1901.06032
+\item Mingqing Yun, Jing Bi: Deep Learning for Musical Instrument Recognition, 2017
+\item Apache HTTP Server Version 2.4 Documentation \\
+URL: https://httpd.apache.org/docs/2.4/
+\item WAVE PCM soundfile format \\
+URL: http://soundfile.sapp.org/doc/WaveFormat/
+\item Sara Goleman: Extension Writing Part I: Introduction to PHP and Zend, 2005 \\
+URL: https://devzone.zend.com/303/extension-writing-part-i-introduction-to-php-and-zend/
+\item Sara Goleman: Extension Writing Part II: Parameters, Arrays, and ZVALs, 2005 \\
+URL: https://devzone.zend.com/317/extension-writing-part-ii-parameters-arrays-and-zvals/ \\
+URL: https://devzone.zend.com/318/extension-writing-part-ii-parameters-arrays-and-zvals-continued/
+\end{enumerate}
 
 \end{document}
 
