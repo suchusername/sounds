@@ -262,15 +262,19 @@ if (!empty($_FILES)){
 		}		
 		closedir($dir);
 	}
+	?>
 	
-	
-	
-	echo 'Your files:<ul>';
+	<ul>
+	<div class="container">
+	<table>
+	<?php
 	if (is_dir($current_dir)) {
 		$dir = opendir($current_dir);
-		echo "<table>";
+		
+		
 		while ($file = readdir($dir)) {
 			if($file != '.' && $file  != '..' ) {
+				
 				echo "<tr>";
 				$file_with_path = session_id().'/'.$file;
 				echo "<td class = '1st_col'> <input type='radio' id='$file' name='file_radio' value=$file>$file</td>"; //Radio
@@ -294,13 +298,15 @@ if (!empty($_FILES)){
 		}
 		closedir($dir);
 	}
-
-	echo "</table>";
-	echo '</ul>';
-	
-	
-
 	?>
+	
+	</table>
+	</div>
+	</ul>
+	
+	
+
+
 	<p>
 	<button  class="page_btn" id="btn_clsfy" name="btn_clsfy">Classify &#8733;</button>
 	
@@ -338,7 +344,7 @@ if (!empty($_FILES)){
 	<button id="btn_vol" class="page_btn" name="btn_vol">Increase volume &#9836;</button>
 
 	<input class="slider" type="range" id="vol_slider" value="0" min="-20" max="20" step="0.2">
-	Added volume: <span id="vol_slider_out" > </span> dB
+	<span id="vol_slider_out" > </span> dB
 	<input type="hidden" id="vol_hidden" name = "vol_mult" >
     
 	<script>
@@ -360,7 +366,7 @@ if (!empty($_FILES)){
 	<p>
 	<button id="btn_spd" class="page_btn" name="btn_spd">Increase speed &#8623;</button>
 
-	<input type="text" class="text_inputs" name="text_spd" id="text_spd" pattern="\d+(\.\d{1,})?" title = "Increase by ... times" size ="3">
+	<input type="text" class="text_inputs" name="text_spd" id="text_spd" pattern="-?\d+(\.\d{1,})?" title = "Increase by ... times" size ="3">
 	
 
 	</p>

@@ -3,6 +3,14 @@ body{
 	color : #311F37;
 }
 
+.container{
+	overflow: scroll; /* Добавляем полосы прокрутки */
+    /*width: 500px;*/ /* Ширина блока */
+    height: 150px; /* Высота блока */
+    padding: 5px; /* Поля вокруг текста */
+    border: solid 1px black; /* Параметры рамки */
+}
+
 .upload_form{
 	position : relative;
 	background-color : #FFFFFF;
@@ -10,12 +18,6 @@ body{
 	border-radius : 10px;
 	height : 300px;
 	width : 300px;
-}
-
-
-.1st_col{
-	width : 200px;
-	background : #000000;
 }
 
 
@@ -52,27 +54,11 @@ body{
 	border-radius : 10px;
 }
 
-.form_btn{
+.page_btn, .form_btn{
 	background-color: #FFFFFF;
 	border: none;
 	color:  #311F37;
 	padding: 5px 10px;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	font-size: 15px;
-	border-radius : 10px;
-}
-
-.page_btn{
-	background-color: #FFFFFF;
-	border: none;
-	width: 200px;
-	height: 30px;
-	vertical-align: middle;
-	color:  #311F37;
-	padding: 5px 10px;
-	margin-right: 20px;
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;
