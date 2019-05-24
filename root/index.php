@@ -17,15 +17,15 @@
 <table>
 <tr>
 <td width = "25%" valign="top">
-<form id="" class = "uploadform" action="" enctype="multipart/form-data" method="POST">
-		<div id = "div"> </div>
-		<button type="button" onclick="generateForm()">Add more</button>
-		<button type="submit">Upload</button>
-	</form>		
+<form id="" class = "upload_form" action="" enctype="multipart/form-data" method="POST">
+		<div id ="form_div"> </div>
+		<div class="2_btn_form">
+			<button class="form_btn" type="button" onclick="generateForm()">Add more <b> &#43;</b> </button>
+			<button id="upload_btn" class="form_btn" type="submit">Upload <b> &#8593; </b> </button>
+		</div>
+</form>		
 	<script  src="js/index.js"></script>
 
-	
-</form>
 
 <?php
 // Проверим, успешно ли загружен файл
@@ -36,7 +36,7 @@ if (!empty($_FILES)){
 	if (!is_dir($uploaddir)) mkdir($uploaddir);
 	for($i=0;$i<count($_FILES['uploadfile']['name']);$i++) {
 		if(!is_uploaded_file($_FILES['uploadfile']['tmp_name'][$i])) {
-			echo "Upload error (1)!";
+			echo "<script> alert('Upload error!'); </script> ";
 			break;
 			//exit;
 		}
@@ -47,12 +47,17 @@ if (!empty($_FILES)){
 		$uploadfile = $uploaddir.basename($_FILES['uploadfile']['name'][$i]); //разобраться с русскими буквами!
 		
 		//проверим на допустимость расширения файла, mime-типа и размера
-		$blacklist = array(".php", ".phtml", ".php3", ".php4", ".html", ".htm");
-		foreach ($blacklist as $item)
-			if(preg_match("/$item\$/i", $uploadfile)) {
-				echo "File type forbidden!";
-				exit;
+		//$blacklist = array(".php", ".phtml", ".php3", ".php4", ".html", ".htm");
+		$whitelist = array(".wav");
+		$flag = 0;
+		foreach ($whitelist as $item)
+			if( !preg_match("/$item\$/i", $uploadfile)) {
+				echo "<script> alert('File type forbidden!!'); </script> ";
+				$flag=1;
 			}
+		if($flag == 1)
+				break;
+			
 		$type = $_FILES['uploadfile']['type'];
 		$size = $_FILES['uploadfile']['size'];
 		/*
@@ -84,11 +89,80 @@ if (!empty($_FILES)){
 <td valign="top">
 <form action="" enctype="multipart/form-data" method="POST">
 	<?php
-
+	$current_dir = '../Audios/Archive/'.session_id().'/';
 	function remove_ext($file){
 		return explode('.', $file)[0];
 	}
 	
+	if (is_dir($current_dir)) {
+		$dir = opendir($current_dir);
+		while ($file = readdir($dir)) {
+			//echo 'btn_del_'.$file.'<br>';
+			if($file != '.' && $file  != '..' ) {
+				if(isset($_POST['btn_info_'.remove_ext($file)])){
+					//print($file);
+					$info = sounds_info(session_id().'/'.$file);
+					if($info[1] == 1)
+						$ch = "mono";
+					else
+						$ch = "stereo";
+					$properties = array(
+						"size" => ((string)$info[0])." bytes",
+						"channels" =>  $ch,
+						"sample_rate" => ((string)$info[2]),
+						"bit_depth" => (string)$info[3],
+						"sample_amt" =>(string)$info[4],
+						"length" => ((string)$info[5])." sec.",
+					);
+					//print($properties[size]);
+					popup($properties);
+				}			
+			}
+		}		
+		closedir($dir);
+	}
+
+	function popup($properties){
+		
+		echo '<div style="position: absolute; z-index:9999;">
+
+				
+				<div id="tr_popup1" class="tr_overlay">
+				<div class="tr_popup">
+				<h2 id="tr_statsHeading">Info</h2>
+				<button class="tr_close" href="#">&times;</button>
+				<div class="tr_content">
+						<div id="tr_tableStats-container" style="position: absolute; margin: 0 0 0 10px;">
+							<table id="tr_tableStats" style="margin: 20px;">
+								<tr>
+									<td> File size: </td> <td> '.$properties["size"].' </td>
+								</tr>
+								<tr>
+									<td> Mono/stereo: </td> <td> '.$properties["channels"].' </td>
+								</tr>
+								<tr>
+									<td> Sample rate: </td> <td> '.$properties["sample_rate"].' </td>
+								</tr>
+								<tr>
+									<td> Bit depth: </td> <td> '.$properties["bit_depth"].' </td>
+								</tr>
+								<tr>
+									<td> Samples amount: </td> <td> '.$properties["sample_amt"].' </td>
+								</tr>
+								<tr>
+									<td> Length: </td> <td> '.$properties["length"].' </td>
+								</tr>
+								
+								
+							</table>	
+						</div>
+					
+				</div>
+				</div>
+				</div>
+				</div>';
+		
+	}
 
 	if(isset($_POST['btn_vol'])){
 		increase_volume();	
@@ -143,7 +217,17 @@ if (!empty($_FILES)){
 		rename($uploaddir .$file, $newname);	
 	}
 
-
+	if(isset($_POST['btn_merge'])){
+			merge_files();
+	}
+	
+	function merge_files(){
+			$file1 = $_POST['1_file_4_merge'];
+			$file2 = $_POST['2_file_4_merge'];
+			$uploaddir = session_id().'/';
+			$newname = $uploaddir.'merged_'.remove_ext($file1).'_'.remove_ext($file2).'.wav';
+			sounds_merge(session_id().'/'.$file1, session_id().'/'.$file2, $newname);
+	}
 	
 	function delete_file($file){
 		//$file = $_POST['file_radio'];
@@ -154,7 +238,7 @@ if (!empty($_FILES)){
 	?>
 	<?php
 	
-	$current_dir = '../Audios/Archive/'.session_id().'/';
+	//$current_dir = '../Audios/Archive/'.session_id().'/';
 
 	//echo "<p>Каталог загрузки: $current_dir</p>";
 	/*if(isset($_POST['btn_del_changed_bayan.wav'])){
@@ -186,14 +270,15 @@ if (!empty($_FILES)){
 		while ($file = readdir($dir)) {
 			if($file != '.' && $file  != '..' ) {
 				echo "<tr>";
-				echo "<td width = '300px'> <input type='radio' id='$file' name='file_radio' value=$file> <a class = 'link2button' title='Click to download'  href='download.php?file=$file'> $file </a>  </td>";  //Radio
+				//$file_with_path = session_id().'/'.$file;
+				echo "<td class = '1st_col'> <input type='radio' id='$file' name='file_radio' value=$file>$file</td>"; //Radio
+				//echo "<td width = '300px'> <input type='radio' id='$file' name='file_radio' value=$file> <a title='Click to download'  href='download.php?file=$file'> $file </a>  </td>";  //Radio
 				
-				echo "<td> <button title='Info' class = 'list_btn'> <b> &#63; </b> </button> </td>"; //Info
+				//echo "<td> <a class = 'link2button' title='Click to download' href='Audios/Archive/$file_with_path'> <b>  &#8595; </b> </a> </td>";
+				echo "<td> <a class = 'link2button' title='Click to download' href='download.php?file=$file'> <b>  &#8595; </b> </a> </td>"; //Download
 				
-				//echo "<form action = 'download.php?file=$file'>";
-				//echo "<td> <button type='submit' class = 'list_btn'> &#11015;   </button>   </td>"; //Download
-				//echo "</form>";
-				//echo "<td> <a class = 'link2button' href='download.php?file=$file'> &#11015; </a> </td>";
+				echo "<td> <button title='Info' name = 'btn_info_".remove_ext($file)."' class = 'list_btn'> <b> &#63; </b> </button> </td>"; //Info
+				//echo "<td> <a class = 'link2button' title='Info' href='#tr_popup1'> <b>  &#63; </b> </a> </td>"; //Info2.0
 				
 				
 				echo "<td> <button class = 'list_btn' name = 'btn_del_".remove_ext($file)."' title='Delete file'>  &#10006; </button>  </td>"; //Delete
@@ -202,6 +287,7 @@ if (!empty($_FILES)){
 				//echo htmlspecialchars('download.php?file=$file');
 				
 				//echo "<td> <a href='/proj/sounds/Audios/Archive/".session_id()."/bayan.wav'>Download</a> </td>";
+
 			}
 		}
 		closedir($dir);
@@ -214,7 +300,7 @@ if (!empty($_FILES)){
 
 	?>
 	<p>
-	<button id="btn_clsfy" name="btn_clsfy">Classify &#8733;</button>
+	<button  class="page_btn" id="btn_clsfy" name="btn_clsfy">Classify &#8733;</button>
 	
 	<div id="clsfy"></div>
 	</p>
@@ -246,7 +332,7 @@ if (!empty($_FILES)){
 	} 
 	?>
 	<p>
-	<button id="btn_vol" name="btn_vol">Increase volume &#9836;</button>
+	<button id="btn_vol" class="page_btn" name="btn_vol">Increase volume &#9836;</button>
 
 	<input class="slider" type="range" id="vol_slider" value="100" min="0" max="500" step="5">
 	New volume: <span id="vol_slider_out" > </span> %
@@ -269,7 +355,7 @@ if (!empty($_FILES)){
 	</p>
 	
 	<p>
-	<button id="btn_spd" name="btn_spd">Increase speed &#8623;</button>
+	<button id="btn_spd" class="page_btn" name="btn_spd">Increase speed &#8623;</button>
 
 	<input type="text" class="text_inputs" name="text_spd" id="text_spd" pattern="\d+(\.\d{1,})?" title = "Increase by ... times" size ="3">
 	
@@ -277,7 +363,7 @@ if (!empty($_FILES)){
 	</p>
 	
 	<p>
-	<button id="btn_cut" name="btn_cut">Crop &#9988;</button>
+	<button id="btn_cut" class="page_btn" name="btn_cut">Crop &#9988;</button>
 
 	<input type="text" class="text_inputs" name="text_cut_left" id="text_cut_left" pattern = "^[ 0-9]+$" title = "Left border (in ms), 0 for minimum border" size ="3">
 	<input type="text" class="text_inputs" name="text_cut_right" id="text_cut_right" pattern = "^[ 0-9]+$" title = "Right border (in ms), -1 for maximum border" size ="3">
@@ -285,16 +371,58 @@ if (!empty($_FILES)){
 	</p>	
 	
 	<p>
-	<button id="btn_rename" name="btn_rename">Rename &#9997;</button>
-	<input type="text" class="text_inputs" name="text_rename" id="text_rename" title = "Input your new filename" size ="10" value = "new_filename">.wav	
+	<button id="btn_rename" class="page_btn" name="btn_rename">Rename &#9997;</button>
+	<input type="text" class="text_inputs" name="text_rename" id="text_rename" title = "Input your new filename" size ="10" >.wav	
+	</p>
+	
+	<p>
+	<button id="btn_merge" class="page_btn" name="btn_merge"> Merge &harr;</button>
+	
+	<select class="merge_select" name="1_file_4_merge">
+	<?php 
+	if (is_dir($current_dir)) {
+		$dir = opendir($current_dir);
+		while ($file = readdir($dir)) {
+			if($file != '.' && $file  != '..' ) {
+				echo "<option> $file </option>";
+			}
+		}
+		closedir($dir);
+	}
+	?>
+	</select>
+	
+	<b> &amp; </b>
+	
+	<select class="merge_select" name="2_file_4_merge">
+	<?php 
+	if (is_dir($current_dir)) {
+		$dir = opendir($current_dir);
+		while ($file = readdir($dir)) {
+			if($file != '.' && $file  != '..' ) {
+				echo "<option> ".$file." </option>";
+			}
+		}
+		closedir($dir);
+	}
+	?>
+	</select>
+	
 	</p>
 
 </form>
 </td>
+<td id="left_thing">
+
+</td>
 </tr>
+
 </table>
+
 </body>
 </html>
+
+
 
 	
 

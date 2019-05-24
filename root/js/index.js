@@ -27,7 +27,8 @@ function generateForm(){
 	//document.getElementsByTagName('form')[0].appendChild(r);
 	d.appendChild(i);
 	d.appendChild(r);
-	document.getElementsByTagName('div')[0].appendChild(d);
+	//document.getElementsByTagName('div')[0].appendChild(d);
+	document.getElementById('form_div').appendChild(d);
 	j++;
 }
 generateForm();
