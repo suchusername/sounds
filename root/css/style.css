@@ -4,6 +4,7 @@ body{
 }
 
 .container{
+	display: inline-block;
 	overflow: scroll; /* Добавляем полосы прокрутки */
     /*width: 500px;*/ /* Ширина блока */
     height: 150px; /* Высота блока */
@@ -54,9 +55,24 @@ body{
 	border-radius : 10px;
 }
 
-.page_btn, .form_btn{
+.form_btn{
 	background-color: #FFFFFF;
 	border: none;
+	color:  #311F37;
+	padding: 5px 10px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 15px;
+	border-radius : 10px;
+}
+
+.page_btn{
+	background-color: #FFFFFF;
+	border: none;
+	width: 150px;
+	height: 30px;
+	vertical-align: middle;
 	color:  #311F37;
 	padding: 5px 10px;
 	text-align: center;
@@ -125,6 +141,14 @@ body{
 tr, td {
   padding: 3px;
   text-align: left;
+}
+
+.files_td {
+	width: 50px;
+}
+
+.files_td1 {
+	width: 550px;
 }
 
 #tr_coordsOutput 
@@ -276,7 +300,7 @@ tr, td {
 
 #tr_tableStats tbody 
 {
-	height: 490px;
+	height: 260px;
 }
 
 #tr_tableStats tr
