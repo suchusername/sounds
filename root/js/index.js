@@ -1,7 +1,7 @@
 var j = 1;
 
-function generateForm(){
-	if(j > 5){
+function generateForm() {
+	if (j > 10) {
 		return;
 	}
 	
@@ -33,8 +33,9 @@ function generateForm(){
 }
 generateForm();
 
-function deleteEl(elementID){
+function deleteEl(elementID) {
 	var elem = document.getElementById(elementID);
 	elem.remove();
+	j--;
 }
 

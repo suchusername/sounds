@@ -173,7 +173,9 @@ if (!empty($_FILES)){
 		$file = $_POST['file_radio'];
 		$filename = strtok($file, '.');
 		$extension = strtok('.');
-		$k = ((double)$_POST['vol_mult'])/100;
+		$k = ((double)$_POST['vol_mult']);
+		
+		$k = pow(10, $k/20);
 		//echo $_POST['vol_mult'];
 
 		sounds_volume(session_id().'/'.$file, session_id().'/'.$filename.'_louder.'.$extension, $k);
