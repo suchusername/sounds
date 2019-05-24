@@ -52,11 +52,27 @@ body{
 	border-radius : 10px;
 }
 
-.page_btn, .form_btn{
+.form_btn{
 	background-color: #FFFFFF;
 	border: none;
 	color:  #311F37;
 	padding: 5px 10px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 15px;
+	border-radius : 10px;
+}
+
+.page_btn{
+	background-color: #FFFFFF;
+	border: none;
+	width: 200px;
+	height: 30px;
+	vertical-align: middle;
+	color:  #311F37;
+	padding: 5px 10px;
+	margin-right: 20px;
 	text-align: center;
 	text-decoration: none;
 	display: inline-block;

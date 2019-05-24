@@ -112,7 +112,7 @@ if (!empty($_FILES)){
 						"sample_rate" => ((string)$info[2]),
 						"bit_depth" => (string)$info[3],
 						"sample_amt" =>(string)$info[4],
-						"length" => ((string)$info[5])." sec.",
+						"length" => ((string)round($info[5], 2))." sec",
 					);
 					//print($properties[size]);
 					popup($properties);
@@ -189,7 +189,7 @@ if (!empty($_FILES)){
 		$filename = strtok($file, '.');
 		$extension = strtok('.');
 		$mult = (double)$_POST['text_spd'];
-		sounds_speed(session_id().'/'.$file, session_id().'/'.$filename.'_sped_up.'.$extension, $mult);
+		sounds_speed(session_id().'/'.$file, session_id().'/'.$filename.'_faster.'.$extension, $mult);
 	}
 
 	if(isset($_POST['btn_cut'])){
@@ -270,12 +270,12 @@ if (!empty($_FILES)){
 		while ($file = readdir($dir)) {
 			if($file != '.' && $file  != '..' ) {
 				echo "<tr>";
-				//$file_with_path = session_id().'/'.$file;
+				$file_with_path = session_id().'/'.$file;
 				echo "<td class = '1st_col'> <input type='radio' id='$file' name='file_radio' value=$file>$file</td>"; //Radio
 				//echo "<td width = '300px'> <input type='radio' id='$file' name='file_radio' value=$file> <a title='Click to download'  href='download.php?file=$file'> $file </a>  </td>";  //Radio
 				
-				//echo "<td> <a class = 'link2button' title='Click to download' href='Audios/Archive/$file_with_path'> <b>  &#8595; </b> </a> </td>";
-				echo "<td> <a class = 'link2button' title='Click to download' href='download.php?file=$file'> <b>  &#8595; </b> </a> </td>"; //Download
+				echo "<td> <a class = 'link2button' title='Click to download' href='Audios/Archive/$file_with_path'> <b>  &#8595; </b> </a> </td>";
+				//echo "<td> <a class = 'link2button' title='Click to download' href='download.php?file=$file'> <b>  &#8595; </b> </a> </td>"; //Download
 				
 				echo "<td> <button title='Info' name = 'btn_info_".remove_ext($file)."' class = 'list_btn'> <b> &#63; </b> </button> </td>"; //Info
 				//echo "<td> <a class = 'link2button' title='Info' href='#tr_popup1'> <b>  &#63; </b> </a> </td>"; //Info2.0
@@ -312,30 +312,31 @@ if (!empty($_FILES)){
 		return $probs;
 	}
 	if(isset($_POST['btn_clsfy'])){
-		/*
+		
 		$probs = classify();
 		if($probs[0]==-1) {
 			echo "classify error!";
 		} else {
 			$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
 			for($i=0; $i<5; $i++){
+				$probs[$i] = round($probs[$i], 1);
 				echo "<script>GenerateDiv('$instruments[$i]', '$probs[$i]');</script>";
 			}
 		}
-		*/
+		
 
-		$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
+		/*$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
 		for($i=0; $i<5; $i++){
 			echo "<script>GenerateDiv('$instruments[$i]', 'vvv');</script>";
-		}
+		}*/
 		
 	} 
 	?>
 	<p>
 	<button id="btn_vol" class="page_btn" name="btn_vol">Increase volume &#9836;</button>
 
-	<input class="slider" type="range" id="vol_slider" value="100" min="0" max="500" step="5">
-	New volume: <span id="vol_slider_out" > </span> %
+	<input class="slider" type="range" id="vol_slider" value="0" min="-20" max="20" step="0.2">
+	Added volume: <span id="vol_slider_out" > </span> dB
 	<input type="hidden" id="vol_hidden" name = "vol_mult" >
     
 	<script>
@@ -365,8 +366,8 @@ if (!empty($_FILES)){
 	<p>
 	<button id="btn_cut" class="page_btn" name="btn_cut">Crop &#9988;</button>
 
-	<input type="text" class="text_inputs" name="text_cut_left" id="text_cut_left" pattern = "^[ 0-9]+$" title = "Left border (in ms), 0 for minimum border" size ="3">
-	<input type="text" class="text_inputs" name="text_cut_right" id="text_cut_right" pattern = "^[ 0-9]+$" title = "Right border (in ms), -1 for maximum border" size ="3">
+	<input type="text" class="text_inputs" name="text_cut_left" id="text_cut_left" pattern = "^[ 0-9]+$" title = "Left border (in ms), 0 for minimum border" size ="10">
+	<input type="text" class="text_inputs" name="text_cut_right" id="text_cut_right" pattern = "^[ 0-9]+$" title = "Right border (in ms), -1 for maximum border" size ="10"> (bounds in ms)
 
 	</p>	
 	
