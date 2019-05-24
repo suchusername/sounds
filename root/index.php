@@ -8,7 +8,6 @@
   	<meta charset="UTF-8">
  	<title>Cool site</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<script src="script.js"></script>
 	<script src="js/slider.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
@@ -298,42 +297,6 @@
 						?>
 					</table>
 	
-	
-
-
-					<p>
-						<button  class="page_btn" id="btn_clsfy" name="btn_clsfy">Classify &#8733;</button>
-	
-						<div id="clsfy"></div>
-					</p>
-					<script src='js/upload.js'></script>
-					<?php
-						function classify(){
-							$path = session_id().'/'.$_POST['file_radio'];
-							$probs = sounds_classify($path);
-							return $probs;
-						}
-						if(isset($_POST['btn_clsfy'])){
-		
-							$probs = classify();
-							if($probs[0]==-1) {
-								echo "classify error!";
-							} else {
-								$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
-								for($i=0; $i<5; $i++){
-									$probs[$i] = round($probs[$i], 1);
-									echo "<script>GenerateDiv('$instruments[$i]', '$probs[$i]');</script>";
-								}
-							}
-		
-
-							/*$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
-							for($i=0; $i<5; $i++){
-								echo "<script>GenerateDiv('$instruments[$i]', 'vvv');</script>";
-							}*/
-		
-						} 
-					?>
 					<p>
 						<button id="btn_vol" class="page_btn" name="btn_vol">Increase volume &#9836;</button>
 
@@ -410,10 +373,72 @@
 						</select>
 	
 					</p>
+					
+					<p>
+						<button  class="page_btn" id="btn_clsfy" name="btn_clsfy">Classify &#8733;</button>
+	
+						<div id="clsfy"></div>
+					</p>
+					
+					<script src='js/upload.js'></script>
+					<?php
+						function classify(){
+							$path = session_id().'/'.$_POST['file_radio'];
+							$probs = sounds_classify($path);
+							return $probs;
+						}
+						if(isset($_POST['btn_clsfy'])){
+		
+							$probs = classify();
+							if($probs[0]==-1) {
+								echo "classify error!";
+							} else {
+								$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
+								for($i=0; $i<5; $i++){
+									$probs[$i] = round($probs[$i], 1);
+									echo "<script>GenerateDiv('$instruments[$i]', '$probs[$i]');</script>";
+								}
+							}
+		
+
+							/*$instruments = array('accordion', 'piano', 'violin', 'guitar', 'flute');
+							for($i=0; $i<5; $i++){
+								echo "<script>GenerateDiv('$instruments[$i]', 'vvv');</script>";
+							}*/
+		
+						} 
+					?>
+
 
 				</form>
 			</td>
-			<td id="left_thing">
+			<td id="right_side" style="vertical-align: top; width: 18%">
+				<div style="border: 2px solid white; padding: 10px; background-color: white; border-radius : 10px;">
+				Welcome to Cool site!
+
+				Here you can:
+				<ul>
+					<li>Test the neural network for recognition of musical instruments</li>
+					<li>Transform your audio:</li>
+					<ol style="padding-left: 20px">
+						<li>Trim you audio</li>
+						<li>Increase it's volume</li>
+						<li>Speed it up or slow it down or even reverse it</li>
+						<li>Merge several audios</li>
+					</ol>
+					<li>Play it in your browser</li>
+					<li>Download it back</li>
+				</ul>
+				
+				
+				
+				Details:
+				<ul>
+					<li>For volume control, changing it by ~ +6 dB will make the amplitide twice as big.</li>
+					<li>For speed control, 1 - leaves audio unchanged, values &gt 1 will make it faster, values between 0 and 1 will make it slower, and negative values will reverse the audio.</li>
+					<li>To crop an audio, enter the bounds in milliseconds</li>
+				</ul>	
+			</div>		
 
 			</td>
 		</tr>
