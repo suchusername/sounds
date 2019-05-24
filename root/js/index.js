@@ -1,7 +1,7 @@
 var j = 1;
 
 function generateForm() {
-	if (j > 10) {
+	if (j > 5) {
 		return;
 	}
 	
