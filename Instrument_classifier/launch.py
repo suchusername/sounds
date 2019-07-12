@@ -174,7 +174,7 @@ for s in range(a, b, 2):
     X.append(x)
 
 X = np.array(X)
-model = load_model('../Instrument_classifier/my_model_one_sec_19.h5')
+model = load_model('Instrument_classifier/my_model_one_sec_19.h5')
 maxElement = 16462066.603519555
 X = X / maxElement # Normalizing data.
 
@@ -185,7 +185,7 @@ X = X.reshape(train_shape)
 Y = model.predict(X)
 
 # Printing results to answer.txt.
-with open('../Instrument_classifier/answer.txt', 'w+') as f:
+with open('Instrument_classifier/answer.txt', 'w+') as f:
     inst = what_is_it(Y)
     res = inst_probability(Y)
     f.write(str(inst) + '\n') 

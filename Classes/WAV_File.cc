@@ -318,7 +318,7 @@ vector<double> WAV_File::classify() const {
 		//string _path = "../" + file_id;
 		close(2);
 		int fdout = open("logs", O_RDWR | O_CREAT | O_TRUNC, 0666);
-		execlp("/Users/apple/miniconda3/bin/python3", "/Users/apple/miniconda3/bin/python3", "../Instrument_classifier/launch.py", file_id.c_str(), NULL);
+		execlp("/Users/apple/miniconda3/bin/python3", "/Users/apple/miniconda3/bin/python3", "Instrument_classifier/launch.py", file_id.c_str(), NULL);
 		perror("execl");
 		//php_printf("errno = %d<br>", errno);
 		throw "WAV_File::classify(): Error executing python file.";
@@ -344,7 +344,7 @@ vector<double> WAV_File::classify() const {
 	
 	
 	ifstream in_file(ANSWER_FILE_NAME.c_str(), ios::in);
-	if (!in_file.is_open()) throw "WAV_File:: unable to open the file with answers.";
+	if (!in_file.is_open()) throw "WAV_File::classify(): unable to open the file with answers.";
 	in_file >> instrument_guess;
 	for (int i = 0; i < 5; i++) in_file >> guess_prob[i];
 	in_file.close();
