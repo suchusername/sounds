@@ -276,7 +276,7 @@
 										echo "<td class = 'files_td1'> <input type='radio' id='$file' name='file_radio' value=$file>$file</td>"; //Radio
 										//echo "<td width = '300px'> <input type='radio' id='$file' name='file_radio' value=$file> <a title='Click to download'  href='download.php?file=$file'> $file </a>  </td>";  //Radio
 			
-										echo "<td class = 'files_td'> <a class = 'link2button' title='Click to download' href='Audios/Archive/$file_with_path'> <b>  &#8595; </b> </a> </td>";
+										echo "<td class = 'files_td'> <a class = 'link2button' title='Click to download' href='Audios/Archive/$file_with_path' target='_blank'> <b>  &#8595; </b> </a> </td>";
 										//echo "<td> <a class = 'link2button' title='Click to download' href='download.php?file=$file'> <b>  &#8595; </b> </a> </td>"; //Download
 			
 										echo "<td class = 'files_td'> <button title='Info' name = 'btn_info_".remove_ext($file)."' class = 'list_btn'> <b> &#63; </b> </button> </td>"; //Info
